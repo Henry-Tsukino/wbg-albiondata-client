@@ -1,0 +1,61 @@
+{
+  "RT_GROUP_ICON": {
+    "APP": {
+      "0000": [
+        "../icon/WBG albion data client.png",
+        "../icon/WBG albion data client.png"
+      ]
+    }
+  },
+  "RT_MANIFEST": {
+    "#1": {
+      "0409": {
+        "identity": {
+          "name": "WBG albion data client",
+          "version": "0.1.48"
+        },
+        "description": "WBG Albion Data Client",
+        "minimum-os": "win7",
+        "execution-level": "as invoker",
+        "ui-access": false,
+        "auto-elevate": false,
+        "dpi-awareness": "system",
+        "disable-theming": false,
+        "disable-window-filtering": false,
+        "high-resolution-scrolling-aware": false,
+        "ultra-high-resolution-scrolling-aware": false,
+        "long-path-aware": false,
+        "printer-driver-isolation": false,
+        "gdi-scaling": false,
+        "segment-heap": false,
+        "use-common-controls-v6": false
+      }
+    }
+  },
+  "RT_VERSION": {
+    "#1": {
+      "0000": {
+        "fixed": {
+          "file_version": "0.0.0.0",
+          "product_version": "0.0.0.0"
+        },
+        "info": {
+          "0409": {
+            "Comments": "Albion Online Data Client",
+            "CompanyName": "WBG",
+            "FileDescription": "WBG Albion Data Client",
+            "FileVersion": "0.1.48",
+            "InternalName": "wbg-albion-data-client",
+            "LegalCopyright": "",
+            "LegalTrademarks": "",
+            "OriginalFilename": "WBG-albion-data-client.exe",
+            "PrivateBuild": "",
+            "ProductName": "WBG Albion Data Client",
+            "ProductVersion": "0.1.48",
+            "SpecialBuild": ""
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+.idea/
+_vendor-[0-9]*
+.vscode/
+
+# Go build
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.log
+*.bak
+*.old
+*.syso
+*.psd
+*.lnk
+*.tmp
+*.swp
+*.DS_Store
+*.tar
+*.gz
+*.zip
+*.7z
+*.rar
+*.tar.gz
+*.out
+*.test
+*.coverage
+*.cov
+*.prof
+*.ncb
+*.sdf
+*.suo
+*.user
+*.db
+*.sqlite
+*.sqlite3
+*.iml
+.vscode/
+.idea/
+node_modules/
+# OS
+Thumbs.db
+.DS_Store
+# Editor
+*.vscode/
+*.idea/
+# Logs
+*.log*
+# Misc
+WBG-PAT.exe
+albiondata-client.exe
+WBG-albion-data-client.exe.bak
+.WBG-albion-data-client.exe.old
+rsrc_windows_amd64.syso
+icon/albiondata-client.log*
+icon/albiondata-client.psd
+thirdparty/rcedit/rcedit.exe
+bin/act
+Текстовый документ.txt
+
+

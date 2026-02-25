@@ -1,0 +1,9 @@
+# EnableWebsockets: False
+# AllowedWebsocketHosts:
+#   - www.example.com
+
+# Example ingest configuration:
+# PublicIngestBaseUrls: "https+pow://albion-online-data.com"
+# PrivateIngestBaseUrls: "nats://127.0.0.1:4222"
+# You can also set these via environment variables:
+#   PUBLIC_INGEST_BASE_URLS and PRIVATE_INGEST_BASE_URLS
