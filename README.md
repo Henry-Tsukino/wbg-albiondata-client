@@ -1,161 +1,117 @@
-# Albion Data Client
+# WBG Albion Online Data Client
 
-A distributed network monitoring client for the [Albion Online Data](https://www.albion-online-data.com/) project.
+Клиент мониторинга сетевого трафика, сделанный для [Albion Online Data Project](https://www.albion-online-data.com/).
 
-**This is a fork of [ao-data/albiondata-client](https://github.com/ao-data/albiondata-client). For the official project and upstream repository, please visit the original.**
+**Это форк [ao-data/albiondata-client](https://github.com/ao-data/albiondata-client). Для просмотра и использования официального проекта и его кода, пожалуйста, посетите оригинальный репозиторий.**
 
-## Overview
+`<u>`**[Инструкция по установке](https://github.com/Henry-Tsukino/wbg-albiondata-client?tab=readme-ov-file#работа-с-клиентом) находится сразу под разделом описания проекта** `</u>`
 
-The Albion Data Client monitors local network traffic, identifies UDP packets containing Albion Online game data, and transmits the information to a central NATS message server for distribution to subscribers. This enables community-driven data collection for market analytics, event tracking, and game state monitoring.
+## Описание проекта
 
-## Features
+### Суть работы
 
-- Real-time network traffic monitoring via libpcap
-- UDP packet filtering and analysis for Albion Online protocol
-- Integration with NATS distributed messaging
-- Cross-platform support (Windows, macOS, Linux)
-- System tray integration for Windows and macOS
-- Minimal resource footprint
-- Docker support
+Albion Data Client мониторит локальный сетевой трафик вашего устройства, идентифицирует UDP пакеты, содержащие данные игры Albion Online и после отправляет информацию на центральый сервер брокера сообщений NATS для дальнейшего распределения по другим сервисам. Таким образом получается сбор данных, осуществляемый силами сообщества, для аналитики рынка, слежения за событиями и мониторинга игровой статистики.
 
-## Legal Notice
+### Функции
 
-The following statement from SBI Games regarding network packet monitoring:
+- Мониторинг сетевого трафика в реальном времени с помощью libpcap
+- Фильтрование UDP пакетов и их дальнейший анализ для поиска протоколов Albion Online
+- Интеграция с системой брокера сообщений NATS
+- ~~Поддержка кросс-платформы (Windows, macOS, Linux)~~ (в процессе реализации, пока сделано только у оригинала)
+- Интеграция в системный трей Windows ~~and macOS~~
+- Минимальное потребление ресурсов системы:
+  - Примерно 20мб ОЗУ и 20мб памяти накопителя
+
+### Карается ли баном?
+
+Заявление от **SBI Games**(разработчика) касательно мониторинга сетевых пакетов:
 
 > Our position is quite simple. As long as you just look and analyze we are ok with it. The moment you modify or manipulate something or somehow interfere with our services we will react (e.g. perma-ban, take legal action, whatever).
 
+Перевод:
+
+> Наша позиция довольно проста. Пока вы просто наблюдаете и анализируете, нас это устраивает. Как только вы что-то измените или манипулируете, или каким-либо образом вмешаетесь в работу наших сервисов, мы отреагируем (например, перманентная блокировка, юридические действия и т. д.).
+
 — MadDave, Technical Lead for Albion Online
 
-Reference: https://forum.albiononline.com/index.php/Thread/51604-Is-it-allowed-to-scan-your-internet-trafic-and-pick-up-logs/?postID=512670#post512670
+Полный оригинал: https://forum.albiononline.com/index.php/Thread/51604-Is-it-allowed-to-scan-your-internet-trafic-and-pick-up-logs/?postID=512670#post512670
 
-Users must comply with Albion Online Terms of Service when using this application.
+Пользователи должны следовать [Договору об условиях предоставления услуг Albion Online](https://albiononline.com/terms_and_conditions), а также [Правилам игры AlbionOnline](https://albiononline.com/game-rules), при использовании этой программы.
 
-## Installation
+## Работа с клиентом
 
-Official releases are available at: https://github.com/ao-data/albiondata-client/releases
+### Инсталляция клиента
 
-### Windows
+Скачайте последний релиз клиента из: https://github.com/Henry-Tsukino/wbg-albiondata-client/releases
 
-1. Download the latest Windows release from the official releases page
-2. Run the installer or executable
-3. Configure the application using `config.yaml`
-4. Start the client (optionally set to run at startup via system tray)
+#### Windows
 
-### macOS
+1. Загрузите со [страницы с релизами](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) последний дистрибутив инсталятора клиента для Windows: **installer-WBG-tool.exe**
+2. Запустите скачанный файл установщика
+   **Если вам вылезло предупреждение о безопасности:** не переживайте, у нас просто не нашлось лишних денег чтоб купить лицензию на подпись гарантии о безопасности.
+   1. Выберите язык инсталятора
+   2. Согласитесь с принятием лицензии
+   3. Выберите **путь** установки программы
+   4. Выберите хотите ли **создать ярлык на рабочем столе**
+   5. Нажмите кнопку **Установить**
+   6. Дождитесь конца установки, снимите галочку с "Запустить приложение" и нажмите кнопку окончания инсталяции
+3. Сделайте запуск клиента от имени администратора
+   * Кликните ПКМ на ярлык клиента и после выберите "Запуск от имени администратора" в открывшемся меню
+4. Проведите дальнейшие настройки клиента через трей(информация как это сделать находится ниже)
 
-#### Using Finder
-1. Download `albiondata-client-amd64-mac.zip` from [Releases](https://github.com/ao-data/albiondata-client/releases)
-2. Unzip the file
-3. Double-click `run.command` (will request password for network permissions)
+#### macOS и Linux
 
-#### Using Terminal
-1. Download `update-darwin-amd64.gz` from [Releases](https://github.com/ao-data/albiondata-client/releases)
-2. Unzip: `gunzip update-darwin-amd64.gz`
-3. Make executable: `chmod +x albiondata-client`
-4. Run: `./albiondata-client`
+К сожалению, пока что дестрибутивов на эти системы нет, но они планируются в будущем.
 
-### Linux (Debian/Ubuntu)
+### Настройка клиента
 
-1. Create directory: `mkdir -p ~/.local/bin`
-2. Download binary: `curl -L https://github.com/ao-data/albiondata-client/releases/latest/download/update-linux-amd64.gz -o - | gzip -d > ~/.local/bin/albiondata-client`
-3. Make executable: `chmod u+x ~/.local/bin/albiondata-client`
-4. Install libpcap: `sudo apt install libpcap-dev`
-5. Grant capabilities: `sudo setcap cap_net_raw,cap_net_admin=eip ~/.local/bin/albiondata-client`
+Настройки, в частности закрытие консоли клиента, можно найти в системном трее Windows в правом нижнем углу экрана:
 
-## Building from Source
+![win-tray](image/README/1772163387922.png "Скриншот системного трея в среде Windows 11")
 
-### Requirements
+* **Hide Console** — Спрятать консоль
+* **Start on Windows** — Запуск приложения при старте Windows
+* **Quit** — Выключить программу
 
-- Go 1.16 or later
-- Platform-specific dependencies (libpcap on Unix-like systems)
+### Поиск и исправление неисправностей
 
-### Build Instructions
+**В случае, если клиент после запуска:**
 
-Build scripts are available for each platform:
+* Не появился в системном трее
+* Не запускается
+* Выдает ошибки
+* Ведет себя как-то странно
 
-```bash
-# Windows
-scripts/build-windows.sh
+**Сделайте следующие действия:**
 
-# macOS
-scripts/build-darwin.sh
+1. Зайдите в папку в которую вы установили клиент
+   * Кликните ПКМ на ярлык клиента и после выберите "Открыть расположение файла" в открывшемся меню
+2. Найдите в файлах клиента файл **albiondata-client.log**
+3. Скиньте данный файл одному из разработчиков, указанных ниже, связавшись с ним через Дискорд
+   * [pinok.entracte](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
+   * [henry.tsukino](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
 
-# Linux
-scripts/build-linux.sh
-```
+### Удаление клиента
 
-Go modules are automatically downloaded during the build process.
+1. Зайдите в папку в которую вы установили клиент
 
-## Configuration
+   * Кликните ПКМ на ярлык клиента и после выберите "Открыть расположение файла" в открывшемся меню
+2. В открывшемся проводнике нажмите на файл **unins000.exe**
 
-Create `config.yaml` based on the provided `config.yaml.example`. The configuration file controls:
+   ![win-uninst](image/README/1772161477979.png "Скриншот файлов установленого клиента в среде Windows Explorer")
+3. В открывшемся окне нажмите на кнопку подтверждения удаления
+4. Дождитесь удаления клиента и после нажмите **ОК**
 
-- Server connection settings
-- Network interface selection
-- NATS message broker configuration
-- Application behavior
+## Сообщество и поддержка
 
-## Docker
+Данный клиент был в первую очередь создан для нужд гильдии World Bank Group.
+По интерисующим вас вопросам можете связаться через следующие контакты:
 
-The project includes Docker support with `Dockerfile` for containerized deployment.
+* Дискорд ГИ: [https://discord.gg/kgXREFJzsS](https://discord.gg/kgXREFJzsS "Discord World Bank Group guild")
+* Дискорд разработчиков форка:
+  * [henry.tsukino](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
+  * [pinok.entracte](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
 
-## Development
+## Лицензия
 
-### Code Style
-
-Check code formatting: `scripts/validate-fmt.sh`
-
-Auto-format code: `scripts/fmt.sh`
-
-Follow standard Go conventions and best practices.
-
-### Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to this project.
-
-### Code of Conduct
-
-This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
-
-## Security
-
-For security-related inquiries, see [SECURITY.md](SECURITY.md).
-
-## Related Projects
-
-- [albiondata-deduper-dotNet](https://github.com/ao-data/albiondata-deduper-dotNet)
-- [albiondata-sql-dotNet](https://github.com/ao-data/albiondata-sql-dotNet)
-- [albiondata-api-dotNet](https://github.com/ao-data/albiondata-api-dotNet)
-- [AlbionData.Models](https://github.com/ao-data/albiondata-models-dotNet)
-- [albion-data-website](https://github.com/ao-data/albion-data-website)
-
-## Community
-
-The Albion Online community discusses this project on the Albion Online Fansites Discord server:
-- Channels: #proj-albiondata or #developers
-- Invite: https://discord.gg/TjWdq24
-
-For official project discussions, visit https://www.albion-online-data.com/
-
-## Project Information
-
-- **Official Project**: https://www.albion-online-data.com/
-- **Original Repository**: https://github.com/ao-data/albiondata-client
-- **Release Statistics**: https://tooomm.github.io/github-release-stats/?username=ao-data&repository=albiondata-client
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for the full text.
-
-## Acknowledgments
-
-### Original Project Maintainers and Contributors
-
-- [Regner](https://github.com/Regner) — Original developer
-- [pcdummy](https://github.com/pcdummy) — Original developer
-- [Ultraporing](https://github.com/Ultraporing) — Original developer
-- [broderickhyman](https://github.com/broderickhyman) — Maintainer and project funding
-- [Stanx](https://github.com/phendryx) — Primary maintainer and ongoing project funding
-- [Walkynn](https://github.com/walkeralencar) — Long-time contributor
-
-All contributors and community members who have supported this project are appreciated.
+Данный форк использует такую же лицензию "[MIT License](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/LICENSE "MIT License info")", как и оригинальный проект.
