@@ -97,6 +97,18 @@ func onReady() {
 	if client.ConfigGlobal.Minimize {
 		hideConsole()
 	}
+
+	// Enable auto-start if configured to do so
+	if client.ConfigGlobal.StartOnBoot {
+		if !isStartOnBootSafe() {
+			if err := setStartOnBoot(true); err != nil {
+				log.Errorf("Failed to enable auto-start on startup: %v", err)
+			} else {
+				log.Info("Auto-start enabled from configuration")
+			}
+		}
+	}
+
 	systray.SetIcon(trayIconData())
 	systray.SetTitle(appName())
 	systray.SetTooltip(appName())

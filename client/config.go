@@ -70,6 +70,7 @@ type config struct {
 	// customisations for tray app
 	AppName      string // name shown in tray and used for auto-start key
 	TrayIconPath string // optional path to .ico for the tray icon
+	StartOnBoot  bool   // enable auto-start on Windows logon by default
 
 	PrintVersion      bool
 	CheckUpdate       bool
@@ -260,6 +261,13 @@ func (config *config) setupCommonFlags() {
 		"tray-icon",
 		"",
 		"Path to a .ico file to use for the tray icon. If omitted the built‑in icon is used.",
+	)
+
+	flag.BoolVar(
+		&config.StartOnBoot,
+		"start-on-boot",
+		false,
+		"Enable auto-start on Windows logon by default.",
 	)
 
 	flag.StringVar(

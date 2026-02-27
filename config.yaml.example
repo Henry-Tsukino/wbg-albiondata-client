@@ -7,3 +7,6 @@
 # PrivateIngestBaseUrls: "nats://127.0.0.1:4222"
 # You can also set these via environment variables:
 #   PUBLIC_INGEST_BASE_URLS and PRIVATE_INGEST_BASE_URLS
+
+# Windows only: Enable auto-start on system logon by default
+# StartOnBoot: true
