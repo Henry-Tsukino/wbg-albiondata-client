@@ -7,6 +7,9 @@ import (
 	"io"
 	"os"
 
+	"runtime"
+	"time"
+
 	"github.com/ao-data/albiondata-client/log"
 	photon "github.com/ao-data/photon-spectator"
 	"github.com/google/gopacket"
@@ -33,8 +36,25 @@ func newListener(router *Router) *listener {
 	}
 }
 
+func openDeviceWithRetry(device string) (*pcap.Handle, error) {
+	// try once normally
+	h, err := pcap.OpenLive(device, 2048, false, pcap.BlockForever)
+	if err == nil {
+		return h, nil
+	}
+
+	// on Windows sometimes the adapter isn't ready on first invocation
+	if runtime.GOOS == "windows" {
+		log.Warnf("error opening adapter %s: %v, will retry", device, err)
+		time.Sleep(time.Second)
+		return pcap.OpenLive(device, 2048, false, pcap.BlockForever)
+	}
+
+	return nil, err
+}
+
 func (l *listener) startOnline(device string, port int) {
-	handle, err := pcap.OpenLive(device, 2048, false, pcap.BlockForever)
+	handle, err := openDeviceWithRetry(device)
 	if err != nil {
 		log.Panic(err)
 	}

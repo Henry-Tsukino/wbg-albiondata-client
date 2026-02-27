@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/ao-data/albiondata-client/client"
@@ -57,6 +58,38 @@ func onExit() {
 
 }
 
+// compute the application display name. falls back to basename of the executable
+func appName() string {
+	if client.ConfigGlobal.AppName != "" {
+		return client.ConfigGlobal.AppName
+	}
+	return filepath.Base(os.Args[0])
+}
+
+// registry key name should not contain spaces or punctuation
+func regKeyName() string {
+	name := appName()
+	name = strings.Map(func(r rune) rune {
+		if r == ' ' || r == '-' || r == '.' {
+			return -1
+		}
+		return r
+	}, name)
+	return name
+}
+
+// pick icon bytes, external file takes precedence
+func trayIconData() []byte {
+	if client.ConfigGlobal.TrayIconPath != "" {
+		if data, err := os.ReadFile(client.ConfigGlobal.TrayIconPath); err == nil {
+			return data
+		} else {
+			log.Errorf("Unable to load tray icon %s: %v", client.ConfigGlobal.TrayIconPath, err)
+		}
+	}
+	return icon.Data
+}
+
 func onReady() {
 	// Don't hide the console automatically
 	// Unless started from the scheduled task or with the parameter
@@ -64,9 +97,9 @@ func onReady() {
 	if client.ConfigGlobal.Minimize {
 		hideConsole()
 	}
-	systray.SetIcon(icon.Data)
-	systray.SetTitle("WBG Albion Data Client")
-	systray.SetTooltip("WBG Albion Data Client")
+	systray.SetIcon(trayIconData())
+	systray.SetTitle(appName())
+	systray.SetTooltip(appName())
 	mConHideShow := systray.AddMenuItem(GetActionTitle(), "Show/Hide Console")
 
 	// Start on Windows checkbox - with safe initialization
@@ -142,8 +175,9 @@ func isStartOnBoot() bool {
 	}
 
 	// Use PowerShell to check registry
+	key := regKeyName()
 	cmd := exec.Command("powershell", "-NoProfile", "-Command",
-		fmt.Sprintf(`(Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name 'WBGAlbionDataClient' -ErrorAction SilentlyContinue).WBGAlbionDataClient`))
+		fmt.Sprintf(`(Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name '%s' -ErrorAction SilentlyContinue).%s`, key, key))
 
 	output, err := cmd.Output()
 	if err != nil {
@@ -169,7 +203,8 @@ func setStartOnBoot(enable bool) error {
 
 	if enable {
 		// Store the path to the executable with -minimize flag
-		cmdStr := fmt.Sprintf(`Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name 'WBGAlbionDataClient' -Value '"%s" -minimize' -Force`, exe)
+		key := regKeyName()
+		cmdStr := fmt.Sprintf(`Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name '%s' -Value '"%s" -minimize' -Force`, key, exe)
 		cmd := exec.Command("powershell", "-NoProfile", "-Command", cmdStr)
 
 		err := cmd.Run()
@@ -180,7 +215,8 @@ func setStartOnBoot(enable bool) error {
 		log.Infof("Auto-start enabled")
 	} else {
 		// Delete the registry value
-		cmdStr := `Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name 'WBGAlbionDataClient' -ErrorAction SilentlyContinue`
+		key := regKeyName()
+		cmdStr := fmt.Sprintf(`Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name '%s' -ErrorAction SilentlyContinue`, key)
 		cmd := exec.Command("powershell", "-NoProfile", "-Command", cmdStr)
 
 		err := cmd.Run()

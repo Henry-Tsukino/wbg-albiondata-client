@@ -1,63 +1,66 @@
+# IDEs
 .idea/
-_vendor-[0-9]*
 .vscode/
+*.swp
+*.swo
+*~
 
-# Go build
-bin/
+# Go
+vendor/_vendor-[0-9]*
 *.exe
+*.exe~
 *.dll
 *.so
 *.dylib
-*.a
-*.log
-*.bak
-*.old
-*.syso
-*.psd
-*.lnk
-*.tmp
-*.swp
-*.DS_Store
-*.tar
-*.gz
-*.zip
-*.7z
-*.rar
-*.tar.gz
-*.out
-*.test
-*.coverage
-*.cov
-*.prof
-*.ncb
-*.sdf
-*.suo
-*.user
-*.db
-*.sqlite
-*.sqlite3
-*.iml
-.vscode/
-.idea/
-node_modules/
+
+# Test binaries
+scripts/albiondata-client
+
+# Build output
+albiondata-client-output.txt
+
+# Config and secrets
+config.yaml
+.secrets
+
 # OS
-Thumbs.db
 .DS_Store
-# Editor
-*.vscode/
-*.idea/
+Thumbs.db
+
+# Scripts
+act.sh
+buildall.sh
+run.sh
+
+# Network captures
+*.pcap
+*.gob
+
 # Logs
-*.log*
-# Misc
-WBG-PAT.exe
-albiondata-client.exe
-WBG-albion-data-client.exe.bak
-.WBG-albion-data-client.exe.old
+*.log
+*.log.*
+wtg.log
+
+# WBG-specific closed-source build scripts and files
+build-update-gz.ps1
+build-windows-custom.ps1
+sigtool.py
+
+# Resource files
+rsrc_windows_386.syso
 rsrc_windows_amd64.syso
-icon/albiondata-client.log*
-icon/albiondata-client.psd
-thirdparty/rcedit/rcedit.exe
-bin/act
-Текстовый документ.txt
+
+# Backups and temporary builds
+*.exe.bak
+WBG-albion-data-client.exe*
+update-windows-amd64*.exe*
+update-windows-amd64-*.exe*
+Installer-WBG-tool*.exe
+*-signed.exe
+
+# Build artifacts
+bin/
+/temp
+/out
 
 

@@ -2,8 +2,8 @@
   "RT_GROUP_ICON": {
     "APP": {
       "0000": [
-        "../icon/WBG albion data client.png",
-        "../icon/WBG albion data client.png"
+        "../icon/albiondata-client.png",
+        "../icon/albiondata-client.png"
       ]
     }
   },

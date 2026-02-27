@@ -23,6 +23,7 @@ func (client *Client) Run() error {
 	log.Infof("Starting Albion Data Client, version: %s", version)
 	log.Info("This is a third-party application and is in no way affiliated with Sandbox Interactive or Albion Online.")
 	log.Info("Additional parameters can listed by calling this file with the -h parameter.")
+	log.Info("On Windows the network adapter may not be available immediately; the client will automatically retry once if it fails to open the device.")
 
 	ConfigGlobal.setupDebugEvents()
 	ConfigGlobal.setupDebugOperations()

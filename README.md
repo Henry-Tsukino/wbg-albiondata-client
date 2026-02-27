@@ -95,6 +95,11 @@ Create `config.yaml` based on the provided `config.yaml.example`. The configurat
 - NATS message broker configuration
 - Application behavior
 
+The binary also accepts a couple of command‑line flags that are only used when the tray helper is running on macOS/Windows:
+
+* `-app-name` – override the display name shown in the system tray and the name used when creating the auto‑start registry entry on Windows. If you build a separate executable with a different filename there is no need to specify this; the program will default to its own name.
+* `-tray-icon` – path to an `.ico` file (Windows) or `.icns` (macOS) to use for the tray icon. When supplied the icon is read from disk at startup; otherwise the embedded default icon in the repository is used.
+
 ## Docker
 
 The project includes Docker support with `Dockerfile` for containerized deployment.

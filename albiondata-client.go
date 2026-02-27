@@ -27,7 +27,12 @@ func main() {
 		return
 	}
 
-	// startUpdater() -- DISABLED: Auto-update disabled for this build
+	if client.ConfigGlobal.CheckUpdate {
+		runUpdate()
+		return
+	}
+
+	startUpdater() // Auto-update enabled
 
 	// On macOS, the systray requires the Cocoa event loop to run on the main thread.
 	// So we run the client in a goroutine and systray on the main thread.
@@ -49,6 +54,36 @@ func runClient() {
 		log.Error("The program encountered an error. Press any key to close this window.")
 		var b = make([]byte, 1)
 		_, _ = os.Stdin.Read(b)
+	}
+}
+
+func runUpdate() {
+	if version == "" || strings.Contains(version, "dev") {
+		log.Infof("Cannot check for updates: version is not set or is a dev version (current: %s)", version)
+		os.Exit(1)
+	}
+
+	log.Infof("Checking for updates from %s/%s...", client.ConfigGlobal.UpdateGithubOwner, client.ConfigGlobal.UpdateGithubRepo)
+
+	u := updater.NewUpdater(
+		version,
+		client.ConfigGlobal.UpdateGithubOwner,
+		client.ConfigGlobal.UpdateGithubRepo,
+		"update-",
+	)
+
+	updated, err := u.BackgroundUpdater()
+	if err != nil {
+		log.Errorf("Update check failed: %v", err)
+		os.Exit(1)
+	}
+
+	if updated {
+		log.Info("Update applied successfully. Restart the application to use the new version.")
+		os.Exit(0)
+	} else {
+		log.Infof("Already running the latest version (%s)", version)
+		os.Exit(0)
 	}
 }
 

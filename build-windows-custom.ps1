@@ -2,8 +2,8 @@ $ErrorActionPreference = "Stop"
 
 Write-Host "=== WBG Albion Data Client Build ===" -ForegroundColor Green
 
-$AppVersion = "0.1.48"
-$OutputName = "WBG-albion-data-client.exe"
+$AppVersion = "1.2.5"
+$OutputName = "albiondata-client.exe"  # use standard name for update archive
 
 Write-Host "Checking Go installation..." -ForegroundColor Cyan
 $goVersion = go version

@@ -66,16 +66,22 @@ type config struct {
 	PrivateIngestBaseUrls          string
 	PublicIngestBaseUrls           string
 	NoCPULimit                     bool
-	PrintVersion                   bool
-	UpdateGithubOwner              string
-	UpdateGithubRepo               string
+
+	// customisations for tray app
+	AppName      string // name shown in tray and used for auto-start key
+	TrayIconPath string // optional path to .ico for the tray icon
+
+	PrintVersion      bool
+	CheckUpdate       bool
+	UpdateGithubOwner string
+	UpdateGithubRepo  string
 }
 
 // config global config data
 var ConfigGlobal = &config{
 	LogLevel:          "INFO",
-	UpdateGithubOwner: "ao-data",
-	UpdateGithubRepo:  "albiondata-client"}
+	UpdateGithubOwner: "Henry-Tsukino",
+	UpdateGithubRepo:  "wbg-albiondata-client"}
 
 func (config *config) SetupFlags() {
 	config.setupWebsocketFlags()
@@ -204,6 +210,13 @@ func (config *config) setupDebugFlags() {
 		"Use all available CPU cores",
 	)
 
+	flag.BoolVar(
+		&config.CheckUpdate,
+		"update",
+		false,
+		"Check for updates and exit",
+	)
+
 }
 
 func (config *config) setupCommonFlags() {
@@ -233,6 +246,20 @@ func (config *config) setupCommonFlags() {
 		"minimize",
 		false,
 		"Automatically minimize the window.",
+	)
+
+	// customization for tray application appearance
+	flag.StringVar(
+		&config.AppName,
+		"app-name",
+		"",
+		"Name used for tray tooltip/title and for the auto‑start registry key. Defaults to executable name.",
+	)
+	flag.StringVar(
+		&config.TrayIconPath,
+		"tray-icon",
+		"",
+		"Path to a .ico file to use for the tray icon. If omitted the built‑in icon is used.",
 	)
 
 	flag.StringVar(
@@ -272,9 +299,7 @@ func (config *config) setupLogs() {
 
 	log.SetLevel(level)
 
-	// Rotate existing log files before creating new one
-	rotateLogFiles()
-
+	// Log to file with truncation (complete overwrite each run)
 	// Always log to both file and terminal
 	// Use colors for terminal, strip ANSI codes for file
 	log.SetFormatter(&logrus.TextFormatter{FullTimestamp: true, DisableSorting: true, ForceColors: true})

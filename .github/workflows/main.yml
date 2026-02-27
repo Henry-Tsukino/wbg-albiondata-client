@@ -60,6 +60,12 @@ jobs:
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: update-windows-amd64.exe.gz
+    - name: upload versioned update
+      if: ${{ !env.ACT }}
+      uses: shogo82148/actions-upload-release-asset@v1
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: update-windows-amd64-${{ github.ref_name }}.exe.gz
 
     - uses: shogo82148/actions-upload-release-asset@v1
       if: ${{ !env.ACT }}
