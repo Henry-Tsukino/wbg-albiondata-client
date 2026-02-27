@@ -40,6 +40,10 @@
 
 * **Hide Console** — Спрятать консоль
 * **Start on Windows** — Запуск приложения при старте Windows
+> [!NOTE]
+> **Рекомендуется включить**, чтоб клиент не приходилось включать при каждом запуске игры
+> [!CAUTION]
+> В случае, **если ваше устройсво крайне слабое** и работа в фоне, даже такого маленького, приложения вам критична для производительности, **стоит оставить данную настройку выключенной**
 * **Quit** — Выключить программу
 
 ### Поиск и исправление неисправностей
@@ -103,7 +107,7 @@ Albion Data Client мониторит локальный сетевой траф
 
 Полный оригинал: https://forum.albiononline.com/index.php/Thread/51604-Is-it-allowed-to-scan-your-internet-trafic-and-pick-up-logs/?postID=512670#post512670
 
-Пользователи должны следовать [Договору об условиях предоставления услуг Albion Online](https://albiononline.com/terms_and_conditions), а также [Правилам игры AlbionOnline](https://albiononline.com/game-rules), при использовании этой программы.
+Пользователи должны следовать [Договору об условиях предоставления услуг Albion Online](https://albiononline.com/terms_and_conditions), а также [Правилам игры AlbionOnline](https://albiononline.com/game-rules), при использовании данной программы.
 
 ## Сообщество и поддержка
 
