@@ -1,5 +1,4 @@
 .idea/
-_vendor-[0-9]*
 .vscode/
 *.exe
 *.sh
@@ -19,13 +18,14 @@ config.yaml
 .secrets
 .DS_Store
 act.sh
+build.sh
+build-update.sh
 albiondata-client*
 buildall.sh
+LICENSE.txt
 run.sh
 *.log
 *.log.*
-# Бинарники в bin/
-bin/
 # Документация
 README.md
 lib/README.md
