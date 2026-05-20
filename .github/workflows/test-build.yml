@@ -1,5 +1,3 @@
-# .github/workflows/test-build.yaml
-
 on:
   push:
   pull_request:
@@ -10,64 +8,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.23"
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libpcap-dev
+
       - name: Build
-        run: make build-linux
+        run: bash build.sh --linux
 
       - uses: actions/upload-artifact@v4
-        if: ${{ env.ACT }}
         with:
-          name: files
-          path: albiondata-client
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ env.ACT }}
-        with:
-          name: files
-          path: update-linux-amd64.gz
+          name: linux-build
+          path: WBG-albion-data-client
 
   build-windows:
     name: Build Windows Client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.23"
-
-      - name: install nsis
-        run: sudo apt-get update; sudo apt-get -y install nsis
-
-      - name: Make
-        run: make build-windows
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ env.ACT }}
-        with:
-          name: files
-          path: albiondata-client.exe
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ env.ACT }}
-        with:
-          name: files
-          path: update-windows-amd64.exe.gz
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ env.ACT }}
-        with:
-          name: files
-          path: albiondata-client-amd64-installer.exe
-
-  build-darwin:
-    name: Build MacOS Client
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -75,31 +37,9 @@ jobs:
           go-version: "1.23"
 
       - name: Build
-        run: CGO_ENABLED=1 GOARCH=amd64 CC="clang -arch x86_64" CGO_LDFLAGS="-arch x86_64" go build -ldflags "-s -w -X main.version=$GITHUB_REF_NAME" .
+        run: bash build.sh --windows
 
-      - name: ls
-        run: ls -la
-
-      - name: gzip
-        run: gzip -k9 albiondata-client
-
-      - name: mv
-        run: mv albiondata-client.gz update-darwin-amd64.gz
-
-      - name: package
-        run: |
-          TEMP="albiondata-client"
-          ZIPNAME="albiondata-client-amd64-mac.zip"
-          rm -rfv ./scripts/$TEMP
-          rm -rfv ./$ZIPNAME
-          rm -rfv ./scripts/update-darwin-amd64.zip
-          mkdir -v ./scripts/$TEMP
-          cp -v albiondata-client ./scripts/$TEMP/albiondata-client-executable
-          cd scripts
-          cp -v run.command ./$TEMP/run.command
-          # chown -Rv ${USER}:${USER} ./$TEMP
-          chmod -v 777 ./$TEMP/*
-          zip -v ../$ZIPNAME -r ./"$TEMP"
-
-      - name: ls
-        run: ls -la
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: WBG-albion-data-client.exe

@@ -18,7 +18,7 @@ config.yaml
 .secrets
 .DS_Store
 act.sh
-build.sh
+
 build-update.sh
 albiondata-client*
 !albiondata-client.go
