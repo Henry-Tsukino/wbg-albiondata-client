@@ -76,7 +76,7 @@ export PATH="${GO_BIN}:${PATH}"
 # ── go-winres (только для Windows-таргета) ────────────────────────────────────
 if [[ "$USE_WINRES" == true ]]; then
     info "Installing go-winres..."
-    go install github.com/tc-hib/go-winres@v0.3.2 \
+    go install github.com/tc-hib/go-winres@v0.3.1 \
         || error "Failed to install go-winres"
 
     if ! command -v go-winres &>/dev/null; then
