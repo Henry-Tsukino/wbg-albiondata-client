@@ -147,6 +147,17 @@ build_target() {
             . \
         || error "Build failed"
 
+    # ── patchelf (только для Linux) ───────────────────────────────────────────
+    if [[ "$goos" == "linux" ]]; then
+        if command -v patchelf &>/dev/null; then
+            info "Patching libpcap dependency..."
+            patchelf --replace-needed libpcap.so.0.8 libpcap.so "${output}" \
+                || warn "patchelf failed, skipping patch"
+        else
+            warn "patchelf not found, skipping patch (install via: sudo pacman -S patchelf)"
+        fi
+    fi
+
     # ── Итог сборки ───────────────────────────────────────────────────────────
     echo ""
     success "=== Build Successful! ==="
