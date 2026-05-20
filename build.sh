@@ -3,10 +3,13 @@
 #  Supports: native Linux build  OR  cross-compile → Windows (.exe)  OR  both
 #
 #  Usage:
-#    ./build.sh           # auto-detects: linux by default
-#    ./build.sh --windows # cross-compile for Windows (.exe)
-#    ./build.sh --linux   # native Linux binary
-#    ./build.sh --all     # build both Linux and Windows
+#    ./build.sh                # linux по умолчанию
+#    ./build.sh --windows      # cross-compile для Windows (.exe)
+#    ./build.sh --linux        # native Linux binary
+#    ./build.sh --all          # собрать Linux и Windows
+#    ./build.sh --linux -u     # собрать + создать .gz для обновления
+#    ./build.sh --windows -u   # собрать + создать .gz для обновления
+#    ./build.sh --all -u       # собрать оба + создать .gz для обоих
 # =============================================================================
 
 set -euo pipefail
@@ -25,18 +28,21 @@ APP_VERSION="1.3.9"
 BASE_NAME="WBG-albion-data-client"
 
 # ── Разбор аргументов ─────────────────────────────────────────────────────────
-TARGET="linux"   # по умолчанию
+TARGET="linux"
+WITH_UPDATE=false
 
 for arg in "$@"; do
     case "$arg" in
         --windows) TARGET="windows" ;;
         --linux)   TARGET="linux"   ;;
         --all)     TARGET="all"     ;;
+        -u)        WITH_UPDATE=true ;;
         --help|-h)
-            echo "Usage: $0 [--windows|--linux|--all]"
+            echo "Usage: $0 [--windows|--linux|--all] [-u]"
             echo "  --windows  Cross-compile for Windows (.exe)"
             echo "  --linux    Build native Linux binary (default)"
             echo "  --all      Build both Linux and Windows"
+            echo "  -u         Also create .gz archive for update deployment"
             exit 0
             ;;
         *) error "Unknown argument: $arg" ;;
@@ -55,17 +61,49 @@ GOPATH_DIR="${GOPATH:-$HOME/go}"
 GO_BIN="${GOPATH_DIR}/bin"
 export PATH="${GO_BIN}:${PATH}"
 
+# ── Функция создания gz-архива для обновления ─────────────────────────────────
+make_update_gz() {
+    local binary="$1"
+    local output_gz="$2"
+
+    if ! command -v gzip &>/dev/null; then
+        error "gzip not found. Install via: sudo pacman -S gzip"
+    fi
+
+    if [[ ! -f "$binary" ]]; then
+        error "Binary not found for update packaging: ${binary}"
+    fi
+
+    info "Compressing ${binary} → ${output_gz}..."
+    rm -f "$output_gz"
+    gzip -9 -k -c "$binary" > "$output_gz" || error "Compression failed"
+
+    ORIG_BYTES=$(stat -c%s "$binary")
+    GZ_BYTES=$(stat -c%s "$output_gz")
+    ORIG_MB=$(awk  "BEGIN { printf \"%.2f\", $ORIG_BYTES / 1048576 }")
+    GZ_MB=$(awk    "BEGIN { printf \"%.2f\", $GZ_BYTES   / 1048576 }")
+    SAVED=$(awk    "BEGIN { printf \"%.1f\", (1 - $GZ_BYTES / $ORIG_BYTES) * 100 }")
+
+    success "Update archive ready: ${output_gz}"
+    warn "  Original:   ${ORIG_MB} MB"
+    warn "  Compressed: ${GZ_MB} MB  (saved ${SAVED}%)"
+    warn "  Location:   $(realpath "$output_gz")"
+    echo ""
+}
+
 # ── Функция сборки одного таргета ─────────────────────────────────────────────
 build_target() {
     local target="$1"
 
     if [[ "$target" == "windows" ]]; then
         local output="${BASE_NAME}.exe"
+        local output_gz="update-windows-amd64.exe.gz"
         local goos="windows"
         local goarch="amd64"
         local use_winres=true
     else
         local output="${BASE_NAME}"
+        local output_gz="update-linux-amd64.gz"
         local goos="linux"
         local goarch="amd64"
         local use_winres=false
@@ -109,7 +147,7 @@ build_target() {
             . \
         || error "Build failed"
 
-    # ── Итог ──────────────────────────────────────────────────────────────────
+    # ── Итог сборки ───────────────────────────────────────────────────────────
     echo ""
     success "=== Build Successful! ==="
 
@@ -121,6 +159,11 @@ build_target() {
         warn "Location: $(realpath "$output")"
     fi
     echo ""
+
+    # ── Создание gz-архива (если передан флаг -u) ─────────────────────────────
+    if [[ "$WITH_UPDATE" == true ]]; then
+        make_update_gz "${output}" "${output_gz}"
+    fi
 }
 
 # ── Запуск ────────────────────────────────────────────────────────────────────
