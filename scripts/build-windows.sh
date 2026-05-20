@@ -15,7 +15,7 @@ export PATH="$PATH:/root/go/bin"
 
 go-winres make
 
-env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X main.version=$GITHUB_REF_NAME" -o albiondata-client.exe -v -x albiondata-client.go
+env GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X main.version=$GITHUB_REF_NAME" -o albiondata-client.exe -v -x .
 
 go-winres patch albiondata-client.exe
 
