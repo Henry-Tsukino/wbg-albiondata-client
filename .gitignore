@@ -1,0 +1,29 @@
+.idea/
+_vendor-[0-9]*
+.vscode/
+*.exe
+*.gz
+*.zip
+*.pcap
+*.gob
+*.ppdb
+*.syso
+*.old
+scripts/albiondata-client
+albiondata-client-output.txt
+config.yaml
+.secrets
+.DS_Store
+act.sh
+albiondata-client*
+buildall.sh
+run.sh
+*.log
+*.log.*
+# Бинарники в bin/
+bin/
+# Документация
+README.md
+lib/README.md
+_config.yml
+LICENSE
