@@ -2,6 +2,7 @@
 _vendor-[0-9]*
 .vscode/
 *.exe
+*.sh
 *.gz
 *.zip
 *.pcap
@@ -9,7 +10,10 @@ _vendor-[0-9]*
 *.ppdb
 *.syso
 *.old
+*.ps1
 scripts/albiondata-client
+WBG-albion-data-client
+WBG-albion-data-client.exe.ppdb
 albiondata-client-output.txt
 config.yaml
 .secrets
