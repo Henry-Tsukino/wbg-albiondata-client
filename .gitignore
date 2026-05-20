@@ -21,6 +21,7 @@ act.sh
 build.sh
 build-update.sh
 albiondata-client*
+!albiondata-client.go
 !icon/albiondata-client.png
 buildall.sh
 
