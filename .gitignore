@@ -22,7 +22,7 @@ build.sh
 build-update.sh
 albiondata-client*
 buildall.sh
-LICENSE.txt
+
 run.sh
 *.log
 *.log.*
@@ -30,4 +30,4 @@ run.sh
 README.md
 lib/README.md
 _config.yml
-LICENSE
+LICENSE.txt
