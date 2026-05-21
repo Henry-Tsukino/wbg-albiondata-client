@@ -17,7 +17,7 @@ Albion Data Client мониторит локальный сетевой траф
 - Мониторинг сетевого трафика в реальном времени с помощью libpcap
 - Фильтрование UDP пакетов и их дальнейший анализ для поиска протоколов Albion Online
 - Интеграция с системой брокера сообщений NATS
-- ~~Поддержка кросс-платформы (Windows, macOS, Linux)~~ (в процессе реализации, пока сделано только у оригинала)
+- Поддержка кросс-платформы (Windows, ~~macOS~~, Linux) (macOS в процессе реализации, пока сделано только у оригинала)
 - Интеграция в системный трей Windows ~~and macOS~~
 - Минимальное потребление ресурсов системы:
   - Примерно 20мб ОЗУ и 20мб памяти накопителя
@@ -44,9 +44,10 @@ Albion Data Client мониторит локальный сетевой траф
 
 Скачайте последний релиз клиента из: https://github.com/Henry-Tsukino/wbg-albiondata-client/releases
  - инструкции
-    - [Windows](https://github.com/Henry-Tsukino/wbg-albiondata-client?tab=readme-ov-file#Windows)
-    - [Linux](https://github.com/Henry-Tsukino/wbg-albiondata-client?tab=readme-ov-file#Linux)
-
+    - [Windows](#windows)
+    - [Linux](#linux)
+   
+<a id="windows"></a>
 #### Windows
 
 1. Загрузите со [страницы с релизами](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) последний дистрибутив инсталятора клиента для Windows: **installer-WBG-tool.exe**
@@ -62,6 +63,7 @@ Albion Data Client мониторит локальный сетевой траф
    * Кликните ПКМ на ярлык клиента и после выберите "Запуск от имени администратора" в открывшемся меню
 4. Проведите дальнейшие настройки клиента через трей(информация как это сделать находится ниже)
 
+<a id="linux"></a>
 #### Linux
 1. скачайте и распакуйте архив **GNU-Linux.tar.gz** со [страницы с релизами](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases)
   2. запустить в консоли  `bash ./intall.sh`  (или запустите баш-скрипт так как вам удобно)
@@ -75,6 +77,7 @@ Albion Data Client мониторит локальный сетевой траф
 > [!TIP]   
 > если хотите, поставьте на автозапуск так как программа потребляет всего `~20мб ОЗУ`.
 <a id="step7"></a>
+
 > [!WARNING]
 > ##### 7. выход из безвыходных ситуаций
 > - Напишите мне в личные сообщения в DISCORD (pinok.tsukino).
@@ -114,7 +117,7 @@ Albion Data Client мониторит локальный сетевой траф
    * Кликните ПКМ на ярлык клиента и после выберите "Открыть расположение файла" в открывшемся меню
 2. Найдите в файлах клиента файл **albiondata-client.log**
 3. Скиньте данный файл одному из разработчиков, указанных ниже, связавшись с ним через Дискорд
-   * [pinok.entracte](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
+   * [pinok.tsukino](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
    * [henry.tsukino](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
 
 ### Удаление клиента
@@ -136,7 +139,7 @@ Albion Data Client мониторит локальный сетевой траф
 * Дискорд ГИ: [https://discord.gg/kgXREFJzsS](https://discord.gg/kgXREFJzsS "Discord World Bank Group guild")
 * Дискорд разработчиков форка:
   * [henry.tsukino](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
-  * [pinok.entracte](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
+  * [pinok.tsukino](https://discordapp.com/users/747787435198513153)
 
 ## Лицензия
 
