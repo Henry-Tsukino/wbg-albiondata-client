@@ -114,4 +114,4 @@ Albion Data Client мониторит локальный сетевой траф
 
 ## Лицензия
 
-Данный форк использует такую же лицензию "[MIT License](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/LICENSE "MIT License info")", как и оригинальный проект.
+Данный форк использует такую же лицензию "[MIT License](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/LICENSE.txt "MIT License info")", как и оригинальный проект.
