@@ -1,67 +1,41 @@
 # WBG Albion Online Data Client
+[![GitHub Release](https://img.shields.io/github/v/tag/Henry-Tsukino/wbg-albiondata-client?label=версия)](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) [![Downloads](https://img.shields.io/github/downloads/Henry-Tsukino/wbg-albiondata-client/total?label=установок)](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) [![Go](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white)](https://go.dev) ![Windows](https://img.shields.io/badge/Windows-0078D4?logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)
+
+
+
 
 Клиент мониторинга сетевого трафика, сделанный для [Albion Online Data Project](https://www.albion-online-data.com/).
 
 **Это форк [ao-data/albiondata-client](https://github.com/ao-data/albiondata-client). Для просмотра и использования официального проекта и его кода, пожалуйста, посетите оригинальный репозиторий.**
-> [!NOTE]
->**[Инструкция по установке](https://github.com/Henry-Tsukino/wbg-albiondata-client?tab=readme-ov-file#работа-с-клиентом) находится сразу под разделом описания проекта** 
 
-## Описание проекта
-
-### Суть работы
-
-Albion Data Client мониторит локальный сетевой трафик вашего устройства, идентифицирует UDP пакеты, содержащие данные игры Albion Online и после отправляет информацию на центральый сервер брокера сообщений NATS для дальнейшего распределения по другим сервисам. Таким образом получается сбор данных, осуществляемый силами сообщества, для аналитики рынка, слежения за событиями и мониторинга игровой статистики.
-
-### Функции
-
-- Мониторинг сетевого трафика в реальном времени с помощью libpcap
-- Фильтрование UDP пакетов и их дальнейший анализ для поиска протоколов Albion Online
-- Интеграция с системой брокера сообщений NATS
-- Поддержка кросс-платформы (Windows, ~~macOS~~, Linux) (macOS в процессе реализации, пока сделано только у оригинала)
-- Интеграция в системный трей Windows ~~and macOS~~
-- Минимальное потребление ресурсов системы:
-  - Примерно 20мб ОЗУ и 20мб памяти накопителя
-
-### Карается ли баном?
-
-Заявление от **SBI Games**(разработчика) касательно мониторинга сетевых пакетов:
-
-> Our position is quite simple. As long as you just look and analyze we are ok with it. The moment you modify or manipulate something or somehow interfere with our services we will react (e.g. perma-ban, take legal action, whatever).
-
-Перевод:
-
-> Наша позиция довольно проста. Пока вы просто наблюдаете и анализируете, нас это устраивает. Как только вы что-то измените или манипулируете, или каким-либо образом вмешаетесь в работу наших сервисов, мы отреагируем (например, перманентная блокировка, юридические действия и т. д.).
-
-— MadDave, Technical Lead for Albion Online
-
-Полный оригинал: https://forum.albiononline.com/index.php/Thread/51604-Is-it-allowed-to-scan-your-internet-trafic-and-pick-up-logs/?postID=512670#post512670
-
-Пользователи должны следовать [Договору об условиях предоставления услуг Albion Online](https://albiononline.com/terms_and_conditions), а также [Правилам игры AlbionOnline](https://albiononline.com/game-rules), при использовании этой программы.
+**[Детальное описание работы проекта](https://github.com/Henry-Tsukino/wbg-albiondata-client?tab=readme-ov-file#описание-проекта) находится сразу под разделом работы с клиентом(установка/настройка/удаление)**
 
 ## Работа с клиентом
 
 ### Инсталляция клиента
 
 Скачайте последний релиз клиента из: https://github.com/Henry-Tsukino/wbg-albiondata-client/releases
- - инструкции
-    - [Windows](#windows)
-    - [Linux](#linux)
-   
-<a id="windows"></a>
+
 #### Windows
 
 1. Загрузите со [страницы с релизами](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) последний дистрибутив инсталятора клиента для Windows: **installer-WBG-tool.exe**
 2. Запустите скачанный файл установщика
-   **Если вам вылезло предупреждение о безопасности:** не переживайте, у нас просто не нашлось лишних денег чтоб купить лицензию на подпись гарантии о безопасности.
-   1. Выберите язык инсталятора
-   2. Согласитесь с принятием лицензии
-   3. Выберите **путь** установки программы
-   4. Выберите хотите ли **создать ярлык на рабочем столе**
-   5. Нажмите кнопку **Установить**
-   6. Дождитесь конца установки, снимите галочку с "Запустить приложение" и нажмите кнопку окончания инсталяции
+   1. Выберите хотите ли устанавливать для всех пользователей устройства(верхний выбор) или только для себя(нижний выбор)
+   2. Выберите язык инсталятора
+   3. Согласитесь с принятием лицензии
+   4. Выберите **путь** установки программы
+   5. Выберите хотите ли **создать ярлык на рабочем столе**
+   6. Нажмите кнопку **Установить**
+   7. Дождитесь конца установки, снимите галочку с "Запустить приложение" и нажмите кнопку окончания инсталяции
+
+> [!Important]
+> **Если вам вылезло предупреждение о безопасности:** не переживайте, у нас просто не нашлось лишних 200$/год чтоб купить лицензию на подпись гарантии о безопасности.
+>
+> ![win-def-skip](image/README/1772166557510.png "Инструкция по обходу оповещения о безопасности")
+
 3. Сделайте запуск клиента от имени администратора
    * Кликните ПКМ на ярлык клиента и после выберите "Запуск от имени администратора" в открывшемся меню
-4. Проведите дальнейшие настройки клиента через трей(информация как это сделать находится ниже)
+4. Проведите дальнейшие настройки клиента через [трей](#tray)(информация как это сделать находится ниже)
 
 <a id="linux"></a>
 #### Linux
@@ -80,14 +54,13 @@ Albion Data Client мониторит локальный сетевой траф
 <a id="step7"></a>
 > [!WARNING]
 > ##### 7. Выход из безвыходных ситуаций
-> - Напишите мне в личные сообщения в Discord: [pinok.tsukino](https://discordapp.com/users/747787435198513153 "Discord Pinok").
+> - Напишите мне в личные сообщения в Discord: [![Discord](https://img.shields.io/badge/Discord-pinok.tsukino-f0c5cd?logo=discord&logoColor=white)](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
 > - Или свяжитесь со мной там, где вы нашли этот установщик.
 > - Также можно просто задавать вопросы - отвечу.
 
 Приятного пользования программой.
 
-</details>
-приятного пользования программой.
+
 <details>
 <summary>Комментарий от меня</summary>
 К сожалению, я не могу создать репозитории в Pacman\DNF\dpkg\APT или aur для всех на свете дестрибутивов линукса, так что сделал универсальный бинарник для всех, если вы хотите - можете предложить свою помощь в развитии проекта.
@@ -96,14 +69,22 @@ Albion Data Client мониторит локальный сетевой траф
 
 #### macOS 
 ###### пока что поддержку macOS не добавили, но она планируется!
+
 ### Настройка клиента
 
 Настройки, в частности закрытие консоли клиента, можно найти в системном трее Windows в правом нижнем углу экрана:
-
+<a id="tray"></a>
 ![win-tray](image/README/1772163387922.png "Скриншот системного трея в среде Windows 11")
 
 * **Hide Console** — Спрятать консоль
 * **Start on Windows** — Запуск приложения при старте Windows
+
+> [!NOTE]
+> **Рекомендуется включить**, чтоб клиент не приходилось включать при каждом запуске игры
+
+> [!CAUTION]
+> В случае, **если ваше устройсво крайне слабое** и работа в фоне, даже такого маленького, приложения вам критична для производительности, **стоит оставить данную настройку выключенной**
+
 * **Quit** — Выключить программу
 
 ### Поиск и исправление неисправностей
@@ -121,8 +102,8 @@ Albion Data Client мониторит локальный сетевой траф
    * Кликните ПКМ на ярлык клиента и после выберите "Открыть расположение файла" в открывшемся меню
 2. Найдите в файлах клиента файл **albiondata-client.log**
 3. Скиньте данный файл одному из разработчиков, указанных ниже, связавшись с ним через Дискорд
-   * [pinok.tsukino](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
-   * [henry.tsukino](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
+  * [![Discord](https://img.shields.io/badge/Discord-pinok.tsukino-f0c5cd?logo=discord&logoColor=white)](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
+  * [![Discord](https://img.shields.io/badge/Discord-henry.tsukino-5865F2?logo=discord&logoColor=white)](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
 
 ### Удаление клиента
 
@@ -135,6 +116,40 @@ Albion Data Client мониторит локальный сетевой траф
 3. В открывшемся окне нажмите на кнопку подтверждения удаления
 4. Дождитесь удаления клиента и после нажмите **ОК**
 
+## Описание проекта
+
+### Суть работы
+
+Albion Data Client мониторит локальный сетевой трафик вашего устройства, идентифицирует UDP пакеты, содержащие данные игры Albion Online и после отправляет информацию на центральый сервер брокера сообщений NATS для дальнейшего распределения по другим сервисам. Таким образом получается сбор данных, осуществляемый силами сообщества, для аналитики рынка, слежения за событиями и мониторинга игровой статистики.
+
+### Функции
+
+- Мониторинг сетевого трафика в реальном времени с помощью libpcap
+- Фильтрование UDP пакетов и их дальнейший анализ для поиска протоколов Albion Online
+- Интеграция с системой брокера сообщений NATS
+- Поддержка кросс-платформы (Windows, Linux, ~~macOS~~) (macOS в процессе реализации, пока сделано только у оригинала)
+- Интеграция в системный трей Windows ~~и macOS~~
+- Минимальное потребление ресурсов системы:
+  - Максимум потребляет около 20мб ОЗУ и 20мб памяти накопителя
+
+### Карается ли баном?
+
+Заявление от **SBI Games**(разработчика) касательно мониторинга сетевых пакетов:
+
+> Our position is quite simple. As long as you just look and analyze we are ok with it. The moment you modify or manipulate something or somehow interfere with our services we will react (e.g. perma-ban, take legal action, whatever).
+>
+> — MadDave, Technical Lead for Albion Online
+
+Перевод:
+
+> Наша позиция довольно проста. Пока вы просто наблюдаете и анализируете, нас это устраивает. Как только вы что-то измените или манипулируете, или каким-либо образом вмешаетесь в работу наших сервисов, мы отреагируем (например, перманентная блокировка, юридические действия и т. д.).
+>
+> — MadDave, Технический Руководитель Albion Online
+
+Полный оригинал: https://forum.albiononline.com/index.php/Thread/51604-Is-it-allowed-to-scan-your-internet-trafic-and-pick-up-logs/?postID=512670#post512670
+
+Пользователи должны следовать [Договору об условиях предоставления услуг Albion Online](https://albiononline.com/terms_and_conditions), а также [Правилам игры AlbionOnline](https://albiononline.com/game-rules), при использовании данной программы.
+
 ## Сообщество и поддержка
 
 Данный клиент был в первую очередь создан для нужд гильдии World Bank Group.
@@ -142,8 +157,8 @@ Albion Data Client мониторит локальный сетевой траф
 
 * Дискорд ГИ: [https://discord.gg/kgXREFJzsS](https://discord.gg/kgXREFJzsS "Discord World Bank Group guild")
 * Дискорд разработчиков форка:
-  * [henry.tsukino](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
-  * [pinok.tsukino](https://discordapp.com/users/747787435198513153 "Discord Pinok")
+  * [![Discord](https://img.shields.io/badge/Discord-pinok.tsukino-f0c5cd?logo=discord&logoColor=white)](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
+  * [![Discord](https://img.shields.io/badge/Discord-henry.tsukino-5865F2?logo=discord&logoColor=white)](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
 
 ## Лицензия
 
