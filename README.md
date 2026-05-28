@@ -57,7 +57,7 @@ Albion Data Client мониторит локальный сетевой траф
 - Поддержка кросс-платформы (Windows, Linux, ~~macOS~~) (macOS в процессе реализации, пока сделано только у оригинала)
 - Интеграция в системный трей Windows ~~и macOS~~
 - Минимальное потребление ресурсов системы:
-  - Максимум потребляет около [20мб ОЗУ](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/image/README/20mb_RAM.png)[^1] и 20мб памяти накопителя
+  - Максимум потребляет около [20мб ОЗУ](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/image/README/20mb_RAM.png)[^1] и 25мб памяти накопителя
 
 ### Карается ли баном?
 
