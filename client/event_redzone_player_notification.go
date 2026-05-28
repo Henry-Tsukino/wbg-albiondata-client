@@ -38,27 +38,22 @@ type redZonePayload struct {
 
 func (event eventRedZonePlayerNotification) Process(state *albionState) {
 	log.Debug("Got red zone player notification...")
-
 	log.Infof("Red Zone Player Notification detected: status:%d unknown1:%d unknown2:%d unknown3:%d",
 		event.EventStatus,
 		event.Unknown1,
 		event.Unknown2,
 		event.Unknown3)
 
-	// Only send the early warning notification (EventStatus == 0 means attack announced ~15 min ahead)
-	// EventStatus == 2 means the attack is already happening — skip it to avoid duplicates
 	if event.EventStatus != 0 {
 		log.Infof("Skipping red zone notification: EventStatus=%d (only forwarding status=0 warnings)", event.EventStatus)
 		return
 	}
 
 	identifier, _ := uuid.NewV4()
-
 	payload := redZonePayload{
-		EventStatus: event.EventStatus,
+		EventStatus: event.Unknown1, // значение первого unknown
 		Name:        state.CharacterName,
 	}
-
 	go sendRedZoneToHTTP(payload, identifier.String())
 }
 
@@ -94,3 +89,5 @@ func sendRedZoneToHTTP(payload redZonePayload, identifier string) {
 		log.Warnf("Red zone endpoint returned status: %d", resp.StatusCode)
 	}
 }
+
+
