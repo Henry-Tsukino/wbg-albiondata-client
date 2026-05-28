@@ -1,8 +1,6 @@
 # WBG Albion Online Data Client
-[![GitHub Release](https://img.shields.io/github/v/tag/Henry-Tsukino/wbg-albiondata-client?label=версия)](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) [![Downloads](https://img.shields.io/github/downloads/Henry-Tsukino/wbg-albiondata-client/total?label=установок)](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) [![Go](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white)](https://go.dev) ![Windows](https://img.shields.io/badge/Windows-0078D4?logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)
 
-
-
+[![GitHub Release](https://img.shields.io/github/v/tag/Henry-Tsukino/wbg-albiondata-client?label=версия)](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) [![Downloads](https://img.shields.io/github/downloads/Henry-Tsukino/wbg-albiondata-client/total?label=установок)](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) [![Go](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white)](https://go.dev) [![Windows](https://img.shields.io/badge/Windows-0078D4?logo=windows&logoColor=white)](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/Windows.md#установка-клиента-для-windows) [![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/Linux.md#установка-клиента-для-linux)
 
 Клиент мониторинга сетевого трафика, сделанный для [Albion Online Data Project](https://www.albion-online-data.com/).
 
@@ -14,78 +12,15 @@
 
 ### Инсталляция клиента
 
-Скачайте последний релиз клиента из: https://github.com/Henry-Tsukino/wbg-albiondata-client/releases
+Скачайте последний релиз клиента под вашу систему из: https://github.com/Henry-Tsukino/wbg-albiondata-client/releases
 
-#### Windows
+В зависимости от вашей системы, воспользуйтесь следующими инструкциями:
 
-1. Загрузите со [страницы с релизами](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases) последний дистрибутив инсталятора клиента для Windows: **installer-WBG-tool.exe**
-2. Запустите скачанный файл установщика
-   1. Выберите хотите ли устанавливать для всех пользователей устройства(верхний выбор) или только для себя(нижний выбор)
-   2. Выберите язык инсталятора
-   3. Согласитесь с принятием лицензии
-   4. Выберите **путь** установки программы
-   5. Выберите хотите ли **создать ярлык на рабочем столе**
-   6. Нажмите кнопку **Установить**
-   7. Дождитесь конца установки, снимите галочку с "Запустить приложение" и нажмите кнопку окончания инсталяции
-
-> [!Important]
-> **Если вам вылезло предупреждение о безопасности:** не переживайте, у нас просто не нашлось лишних 200$/год чтоб купить лицензию на подпись гарантии о безопасности.
->
-> ![win-def-skip](image/README/1772166557510.png "Инструкция по обходу оповещения о безопасности")
-
-3. Сделайте запуск клиента от имени администратора
-   * Кликните ПКМ на ярлык клиента и после выберите "Запуск от имени администратора" в открывшемся меню
-4. Проведите дальнейшие настройки клиента через [трей](#tray)(информация как это сделать находится ниже)
-
-<a id="linux"></a>
-#### Linux
-1. Скачайте и распакуйте архив **GNU-Linux.tar.gz** со [страницы с релизами](https://github.com/Henry-Tsukino/wbg-albiondata-client/releases).
-2. Запустите в консоли `bash ./install.sh` (или запустите bash-скрипт так, как вам удобно).
-3. У вас запросят `sudo`-пароль - не пугайтесь, это необходимо для просмотра сетевых пакетов, на этом основан принцип работы программы.
-4. При наличии проблем попробуйте повторить шаги 2-3 и/или выполнить инструкции, которые укажет установщик.
-    - Если установщик крашится или не выводит конкретных проблем — перейдите на [шаг 7](#step7).
-5. Если приложение не отображается на рабочем столе - найдите его через поиск приложений.
-   В Plasma KDE поиск открывается клавишей Meta (Super).
-6. Пользуйтесь с гордостью - вы делаете доброе дело :shipit:.
-
-> [!TIP]
-> Рекомендуем добавить программу в автозапуск, она потребляет всего `~20 МБ ОЗУ`.
-
-<a id="step7"></a>
-> [!WARNING]
-> ##### 7. Выход из безвыходных ситуаций
-> - Напишите мне в личные сообщения в Discord: [![Discord](https://img.shields.io/badge/Discord-pinok.tsukino-f0c5cd?logo=discord&logoColor=white)](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
-> - Или свяжитесь со мной там, где вы нашли этот установщик.
-> - Также можно просто задавать вопросы - отвечу.
-
-Приятного пользования программой.
-
-
-<details>
-<summary>Комментарий от меня</summary>
-К сожалению, я не могу создать репозитории в Pacman\DNF\dpkg\APT или aur для всех на свете дестрибутивов линукса, так что сделал универсальный бинарник для всех, если вы хотите - можете предложить свою помощь в развитии проекта.
-пока что настройки есть исключительно в виндовс. но там нет ничего такого чего вы бы не могли сделать сами при желании.
-</details>
-
-#### macOS 
-###### пока что поддержку macOS не добавили, но она планируется!
-
-### Настройка клиента
-
-Настройки, в частности закрытие консоли клиента, можно найти в системном трее Windows в правом нижнем углу экрана:
-<a id="tray"></a>
-![win-tray](image/README/1772163387922.png "Скриншот системного трея в среде Windows 11")
-
-* **Hide Console** — Спрятать консоль
-* **Start on Windows** — Запуск приложения при старте Windows
-
-> [!NOTE]
-> **Рекомендуется включить**, чтоб клиент не приходилось включать при каждом запуске игры
-
-> [!CAUTION]
-> В случае, **если ваше устройсво крайне слабое** и работа в фоне, даже такого маленького, приложения вам критична для производительности, **стоит оставить данную настройку выключенной**
-
-* **Quit** — Выключить программу
+- [Windows 10/11: инструкция по инсталляции клиента](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/Windows.md#установка-клиента-для-windows)
+  - [Инструкция по настройке](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/Windows.md#настройка-клиента)
+  - [Инструкция по деинсталляции](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/Windows.md#удаление-клиента)
+- [Linux: инструкция по инсталляции клиента](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/Linux.md#установка-клиента-для-linux)
+- [MacOS: **Временно не поддерживается**(в разработке)](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/MacOS.md)
 
 ### Поиск и исправление неисправностей
 
@@ -95,26 +30,18 @@
 * Не запускается
 * Выдает ошибки
 * Ведет себя как-то странно
+* Использует слишком много ресурсов вашего устройства
+* Не появилось пинга в дискорде
+* Программа по вашему мнению работает неисправно
 
 **Сделайте следующие действия:**
 
 1. Зайдите в папку в которую вы установили клиент
    * Кликните ПКМ на ярлык клиента и после выберите "Открыть расположение файла" в открывшемся меню
 2. Найдите в файлах клиента файл **albiondata-client.log**
-3. Скиньте данный файл одному из разработчиков, указанных ниже, связавшись с ним через Дискорд
-  * [![Discord](https://img.shields.io/badge/Discord-pinok.tsukino-f0c5cd?logo=discord&logoColor=white)](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
-  * [![Discord](https://img.shields.io/badge/Discord-henry.tsukino-5865F2?logo=discord&logoColor=white)](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
-
-### Удаление клиента
-
-1. Зайдите в папку в которую вы установили клиент
-
-   * Кликните ПКМ на ярлык клиента и после выберите "Открыть расположение файла" в открывшемся меню
-2. В открывшемся проводнике нажмите на файл **unins000.exe**
-
-   ![win-uninst](image/README/1772161477979.png "Скриншот файлов установленого клиента в среде Windows Explorer")
-3. В открывшемся окне нажмите на кнопку подтверждения удаления
-4. Дождитесь удаления клиента и после нажмите **ОК**
+3. Скиньте данный файл одному из разработчиков, указанных ниже, связавшись с ним через Дискорд:
+   * [![Discord](https://img.shields.io/badge/Discord-pinok.tsukino-f0c5cd?logo=discord&logoColor=white)](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
+   * [![Discord](https://img.shields.io/badge/Discord-henry.tsukino-ff8243?logo=discord&logoColor=white)](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
 
 ## Описание проекта
 
@@ -130,7 +57,7 @@ Albion Data Client мониторит локальный сетевой траф
 - Поддержка кросс-платформы (Windows, Linux, ~~macOS~~) (macOS в процессе реализации, пока сделано только у оригинала)
 - Интеграция в системный трей Windows ~~и macOS~~
 - Минимальное потребление ресурсов системы:
-  - Максимум потребляет около 20мб ОЗУ и 20мб памяти накопителя
+  - Максимум потребляет около [20мб ОЗУ](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/image/README/20mb_RAM.png)[^1] и 20мб памяти накопителя
 
 ### Карается ли баном?
 
@@ -155,11 +82,13 @@ Albion Data Client мониторит локальный сетевой траф
 Данный клиент был в первую очередь создан для нужд гильдии World Bank Group.
 По интерисующим вас вопросам можете связаться через следующие контакты:
 
-* Дискорд ГИ: [https://discord.gg/kgXREFJzsS](https://discord.gg/kgXREFJzsS "Discord World Bank Group guild")
+* Дискорд ГИ: [![Discord](https://img.shields.io/badge/Discord-WBG-e29f04?logo=discord&logoColor=white)](https://discord.gg/kgXREFJzsS "Discord World Bank Group guild")
 * Дискорд разработчиков форка:
   * [![Discord](https://img.shields.io/badge/Discord-pinok.tsukino-f0c5cd?logo=discord&logoColor=white)](https://discordapp.com/users/747787435198513153/ "Discord Pinok")
-  * [![Discord](https://img.shields.io/badge/Discord-henry.tsukino-5865F2?logo=discord&logoColor=white)](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
+  * [![Discord](https://img.shields.io/badge/Discord-henry.tsukino-ff8243?logo=discord&logoColor=white)](https://discordapp.com/users/603673234138988591/ "Discord Henry Tsukino")
 
 ## Лицензия
 
 Данный форк использует такую же лицензию "[MIT License](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/LICENSE "MIT License info")", как и оригинальный проект.
+
+[^1]: При выходе обновлений Альбиона, изменения в нем иногда, хотя и крайне редко, могут сломать программу и она начнет активно занимать оперативу на вашем ПК. Закройте программу и сообщите об этом разработчикам форка.
