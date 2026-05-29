@@ -58,7 +58,7 @@ func (event eventRedZonePlayerNotification) Process(state *albionState) {
 }
 
 func sendRedZoneToHTTP(payload redZonePayload, identifier string) {
-	customURL := "http://82.38.2.16:3002/redzoneventclusterstatus.ingest"
+	customURL := "http://95.111.247.74:3008/redzoneventclusterstatus.ingest"
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
