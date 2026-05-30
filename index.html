@@ -2,8 +2,14 @@
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>WBG Albion Data Client</title>
+        <link
+            rel="icon"
+            href="icon/albiondata-client.png"
+            type="image/x-icon"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
             href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500&display=swap"
@@ -28,8 +34,8 @@
                 --text: #e8e8ec;
                 --text2: #9898a8;
                 --text3: #5a5a6a;
-                --accent: gold;
-                --accent-bg: rgba(124, 106, 247, 0.08);
+                --accent: turquoise;
+                --accent-bg: rgba(64,224,208, 0.08);
                 --green: #3dd68c;
                 --green-bg: rgba(61, 214, 140, 0.08);
                 --amber: #f5a623;
@@ -249,7 +255,9 @@
                 color: #fff;
             }
             .btn-primary:hover {
-                opacity: 0.87;
+                background: Rgb(124, 106, 247);
+                transition: background-color 0.3s;
+
             }
             .btn-ghost {
                 background: transparent;
@@ -325,8 +333,8 @@
                 background: var(--bg4);
             }
             .os-card.primary {
-                border-color: rgba(124, 106, 247, 0.45);
-                background: rgba(124, 106, 247, 0.06);
+                border-color: rgba(64,224,208, 0.45);
+                background: rgba(64,224,208, 0.06);
             }
             .os-card.primary:hover {
                 border-color: rgba(124, 106, 247, 0.7);
@@ -380,6 +388,11 @@
                 border: 1px solid rgba(124, 106, 247, 0.25);
                 color: var(--accent);
                 white-space: nowrap;
+            }
+            .os-badge:hover {
+                color: rgb(124, 106, 247);
+                background: rgba(124, 106, 247, 0.15);
+                border-color: rgba(124, 106, 247, 0.45);
             }
             .os-badge.neutral {
                 background: var(--bg4);
@@ -746,6 +759,22 @@
             .badge:hover {
                 opacity: 0.78;
             }
+            .badge1 {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                font-family: "Geist Mono", monospace;
+                font-size: 19px;
+                font-weight: 500;
+                padding: 6px 14px;
+                border-radius: 6px;
+                text-decoration: none;
+                letter-spacing: 0.02em;
+                border: 1px solid transparent;
+                transition: opacity 0.12s;
+                white-space: nowrap;
+                line-height: 1;
+            }
             .badge svg {
                 flex-shrink: 0;
             }
@@ -816,7 +845,7 @@
         <nav>
             <a class="nav-logo" href="#">
                 <span class="dot"></span>
-                <span class="nav-logo-text">wbg-albiondata-client</span>
+                wbg-albiondata-client
             </a>
             <ul class="nav-links">
                 <li>
@@ -864,7 +893,7 @@
                     >-<span>albiondata</span>-client
                 </h1>
                 <p class="hero-desc" id="hero-desc"></p>
-                <div class="hero-cta" id="cta-btns"></div>
+                <div class="hero-cta"  id="cta-btns"></div>
                 <span class="hero-hint" id="cta-hint"></span>
                 <div class="badges-row">
                     <a
@@ -1716,6 +1745,26 @@
                     <h3>Функции</h3>
                     <ul>
                         <li>
+                            отправка оповещений об атаке бандитов через бота
+                            <tab
+                                class="badge1 badge-discord-henry"
+                                target="_blank"
+                                disabled: true,
+                                ><svg
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                    />
+                                </svg>
+                                Hermes</tab
+                            >(для добавления его к себе на сервер свяжитесь с
+                            разработчиком)
+                        </li>
+                        <li>
                             Мониторинг сетевого трафика в реальном времени с
                             помощью libpcap
                         </li>
@@ -1885,6 +1934,27 @@
                     </p>
                     <h3>Features</h3>
                     <ul>
+
+                        <li>
+                            sending bandit attack notifications via a bot
+                            <tab
+                                class="badge1 badge-discord-henry"
+                                target="_blank"
+                                disabled: true,
+                                ><svg
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                    />
+                                </svg>
+                                Hermes</tab
+                            >(to add it to your server, contact the developer)
+                        </li>
+
                         <li>
                             Real-time network traffic monitoring using libpcap
                         </li>
@@ -2520,7 +2590,7 @@
                 if (os && cfg[os]) {
                     const c = cfg[os];
                     btns.innerHTML = `
-      <a class="btn btn-primary" href="${c.url}">
+      <a class="btn btn-primary "style='color:black;' href="${c.url}">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         ${t(c.labelKey)}
       </a>
@@ -2657,58 +2727,6 @@
             /* Init */
             applyLang();
         </script>
-
-        <!-- nav scramble -->
-        <script>
-            (function () {
-                const CHARS =
-                    "abcdefghijklmnopqrstuvwxyz0123456789!?@#$%&+-=<>/|~";
-                const rand = () =>
-                    CHARS[Math.floor(Math.random() * CHARS.length)];
-
-                function scramble(el) {
-                    const original = el.textContent;
-                    if (!original.trim()) return;
-                    const len = original.length;
-                    let step = 0;
-                    clearInterval(el._si);
-                    el._si = setInterval(() => {
-                        el.textContent = [...original]
-                            .map((ch, i) => {
-                                if (i <= step - 5) return ch;
-                                if (/[\s\-·↗.]/.test(ch)) return ch;
-                                return rand();
-                            })
-                            .join("");
-                        step++;
-                        if (step > len + 5) {
-                            el.textContent = original;
-                            clearInterval(el._si);
-                        }
-                    }, 22);
-                }
-
-                /* nav links */
-                document
-                    .querySelectorAll(".nav-links a")
-                    .forEach((a) =>
-                        a.addEventListener("mouseenter", () => scramble(a)),
-                    );
-
-                /* logo */
-                const logoText = document.querySelector(".nav-logo-text");
-                if (logoText) {
-                    logoText
-                        .closest(".nav-logo")
-                        .addEventListener("mouseenter", () =>
-                            scramble(logoText),
-                        );
-                }
-            })();
-        </script>
-        <!-- /nav scramble -->
-
-        <!-- DEV: accent picker — remove before final deploy -->
         <script>
             (function () {
                 "use strict";
@@ -2859,29 +2877,29 @@
             `;
                 document.head.appendChild(css);
 
-                /* ── DOM ── */
-                const el = document.createElement("div");
-                el.id = "__ap";
-                el.innerHTML = `
-                <div class="__h">
-                    <span>● accent picker</span>
-                    <div style="display:flex;gap:5px">
-                        <button class="__btn" id="__ap-reset">reset</button>
-                        <button class="__btn" id="__ap-close">✕</button>
-                    </div>
-                </div>
-                <div class="__row">
-                    <input type="color" id="__ap-col" value="${DEFAULT}">
-                    <input type="text"  id="__ap-hex" value="${DEFAULT}" maxlength="7" spellcheck="false">
-                    <button class="__btn" id="__ap-copy">copy</button>
-                </div>
-                <div class="__presets">
-                    ${PRESETS.map((c) => `<button class="__sw" data-c="${c}" style="background:${c}"></button>`).join("")}
-                </div>
-                <div class="__preview">
-                    <button class="btn btn-primary" style="font-size:13px;padding:7px 16px;pointer-events:none">Download</button>
-                    <div class="__info" id="__ap-info"></div>
-                </div>
+                // /* ── DOM ── */
+                // const el = document.createElement("div");
+                // el.id = "__ap";
+                // el.innerHTML = `
+                // <div class="__h">
+                //     <span>● accent picker</span>
+                //     <div style="display:flex;gap:5px">
+                //         <button class="__btn" id="__ap-reset">reset</button>
+                //         <button class="__btn" id="__ap-close">✕</button>
+                //     </div>
+                // </div>
+                // <div class="__row">
+                //     <input type="color" id="__ap-col" value="${DEFAULT}">
+                //     <input type="text"  id="__ap-hex" value="${DEFAULT}" maxlength="7" spellcheck="false">
+                //     <button class="__btn" id="__ap-copy">copy</button>
+                // </div>
+                // <div class="__presets">
+                //     ${PRESETS.map((c) => `<button class="__sw" data-c="${c}" style="background:${c}"></button>`).join("")}
+                // </div>
+                // <div class="__preview">
+                //     <button class="btn btn-primary" style="font-size:13px;padding:7px 16px;pointer-events:none">Download</button>
+                //     <div class="__info" id="__ap-info"></div>
+                // </div>
             `;
                 document.body.appendChild(el);
 
@@ -2917,6 +2935,7 @@
                 }
 
                 /* ── events ── */
+
                 document
                     .getElementById("__ap-col")
                     .addEventListener("input", (e) =>
@@ -2975,6 +2994,51 @@
 
                 /* ── init ── */
                 update(DEFAULT, "init");
+            })();
+            (function () {
+                const el = document.querySelector('.nav-logo');
+                if (!el) return;
+
+                // Сохраняем оригинальный HTML (с .dot внутри)
+                const dotEl = el.querySelector('.dot');
+                const originalText = ' wbg-albiondata-client';
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+
+                // Создаём текстовый узел отдельно, чтобы не трогать .dot
+                let textNode = document.createTextNode('');
+                el.appendChild(textNode);
+                // Убираем текст из оригинального HTML (он был там как текстовый узел)
+                el.childNodes.forEach(n => {
+                    if (n.nodeType === Node.TEXT_NODE && n !== textNode) n.remove();
+                });
+
+                const duration = 900;   // мс — общее время анимации
+                const fps = 30;
+                const interval = 1000 / fps;
+                let start = null;
+
+                function step(ts) {
+                    if (!start) start = ts;
+                    const progress = Math.min((ts - start) / duration, 1);
+                    const revealedCount = Math.floor(progress * originalText.length);
+
+                    let result = '';
+                    for (let i = 0; i < originalText.length; i++) {
+                        if (i < revealedCount) {
+                            result += originalText[i];
+                        } else if (originalText[i] === ' ') {
+                            result += ' ';
+                        } else {
+                            result += chars[Math.floor(Math.random() * chars.length)];
+                        }
+                    }
+                    textNode.textContent = result;
+
+                    if (progress < 1) requestAnimationFrame(step);
+                    else textNode.textContent = originalText;
+                }
+
+                requestAnimationFrame(step);
             })();
         </script>
         <!-- /DEV -->
