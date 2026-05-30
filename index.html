@@ -490,6 +490,15 @@
             .md a:hover {
                 text-decoration: underline;
             }
+            .md a.badge-discord-guild {
+                color: #e2c045;
+            }
+            .md a.badge-discord-pinok {
+                color: #f0c3cc;
+            }
+            .md a.badge-discord-henry {
+                color: #ff9055;
+            }
             .md strong {
                 color: var(--text);
                 font-weight: 500;
@@ -735,14 +744,14 @@
                 border-color: #3a3068;
             }
             .badge-discord-pinok {
-                background: #2a1c1f;
+                background: #32181f;
                 color: #f0c3cc;
-                border-color: #4a2d33;
+                border-color: #5a2a35;
             }
             .badge-discord-henry {
-                background: #2a1a10;
+                background: #32200a;
                 color: #ff9055;
-                border-color: #4a2f1a;
+                border-color: #5a3010;
             }
             .badge-version {
                 background: #1a1a22;
@@ -1893,7 +1902,7 @@
                             : "";
                         return `<${tag} class="os-card${p ? " primary" : ""}" ${href}${disabledStyle}>
       <div class="os-card-left">
-        <div class="os-icon" style="font-size:0""""">${c.icon}</div>
+        <div class="os-icon" style="font-size:0;color:${c.iconColor || "inherit"}">${c.icon}</div>
         <div><div class="os-name">${c.name}</div><div class="os-meta">${c.meta}</div></div>
       </div>
       ${c.disabled ? `<span class="os-badge neutral" style="opacity:.5">––</span>` : `<span class="os-badge${p ? "" : " neutral"}">${p ? "↓ " + t(c.dlKey) : t(c.dlKey)}</span>`}
