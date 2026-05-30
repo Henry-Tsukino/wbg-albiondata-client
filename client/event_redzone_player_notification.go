@@ -51,7 +51,7 @@ func (event eventRedZonePlayerNotification) Process(state *albionState) {
 
 	identifier, _ := uuid.NewV4()
 	payload := redZonePayload{
-		EventStatus: event.Unknown1, // значение первого unknown
+		EventStatus: event.EventStatus, // значение первого unknown
 		Name:        state.CharacterName,
 	}
 	go sendRedZoneToHTTP(payload, identifier.String())

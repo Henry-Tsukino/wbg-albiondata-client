@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 # =============================================================================
 #  WBG Albion Data Client — Build Script
-#  Supports: native Linux build  OR  cross-compile → Windows (.exe)  OR  both
+#  Supports: native Linux build  OR  cross-compile → Windows (.exe) / macOS  OR  all
 #
 #  Usage:
 #    ./build.sh                        # linux по умолчанию
 #    ./build.sh --windows              # cross-compile для Windows (.exe)
 #    ./build.sh --linux                # native Linux binary
-#    ./build.sh --all                  # собрать Linux и Windows
+#    ./build.sh --macos                # cross-compile для macOS (через Docker + osxcross)
+#    ./build.sh --all                  # собрать Linux, Windows и macOS
 #    ./build.sh --linux -u             # собрать + создать .gz для обновления
 #    ./build.sh --windows -u           # собрать + создать .gz для обновления
-#    ./build.sh --all -u               # собрать оба + создать .gz для обоих
-#    ./build.sh --all -u -v1.3.11      # собрать оба + gz + обновить версию
+#    ./build.sh --macos -u             # собрать macOS + .gz
+#    ./build.sh --all -u               # собрать все три + создать .gz для каждого
+#    ./build.sh --all -u -v1.3.11      # все три + gz + обновить версию
 #    ./build.sh -v1.4.0 --linux -u     # версия + linux + gz
 # =============================================================================
 
@@ -47,14 +49,16 @@ for arg in "$@"; do
     case "$arg" in
         --windows)  TARGET="windows" ;;
         --linux)    TARGET="linux"   ;;
+        --macos)    TARGET="darwin"  ;;
         --all)      TARGET="all"     ;;
         -u)         WITH_UPDATE=true ;;
         -v*)        NEW_VERSION="${arg#-v}" ;;
         --help|-h)
-            echo "Usage: $0 [--windows|--linux|--all] [-u] [-v<version>]"
+            echo "Usage: $0 [--windows|--linux|--macos|--all] [-u] [-v<version>]"
             echo "  --windows      Cross-compile for Windows (.exe)"
             echo "  --linux        Build native Linux binary (default)"
-            echo "  --all          Build both Linux and Windows"
+            echo "  --macos        Cross-compile for macOS via Docker + osxcross"
+            echo "  --all          Build Linux, Windows and macOS"
             echo "  -u             Also create .gz archive for update deployment"
             echo "  -v<version>    Set version (e.g. -v1.3.11), saves to version.txt"
             exit 0
@@ -75,12 +79,14 @@ if [[ -n "$NEW_VERSION" ]]; then
     echo ""
 fi
 
-# ── Проверка Go ───────────────────────────────────────────────────────────────
-info "Checking Go installation..."
-if ! command -v go &>/dev/null; then
-    error "Go not found in PATH. Install via: sudo pacman -S go"
+# ── Проверка Go (не нужна для darwin-only сборки через Docker) ───────────────
+if [[ "$TARGET" != "darwin" ]]; then  # darwin — внутреннее имя таргета
+    info "Checking Go installation..."
+    if ! command -v go &>/dev/null; then
+        error "Go not found in PATH. Install via: sudo pacman -S go"
+    fi
+    go version
 fi
-go version
 
 # ── GOPATH / bin ──────────────────────────────────────────────────────────────
 GOPATH_DIR="${GOPATH:-$HOME/go}"
@@ -116,6 +122,55 @@ make_update_gz() {
     warn "  Compressed: ${gz_mb} MB  (saved ${saved}%)"
     warn "  Location:   $(realpath "$output_gz")"
     echo ""
+}
+
+# ── Функция сборки macOS через Docker + osxcross ─────────────────────────────
+build_darwin() {
+    echo ""
+    echo -e "${BOLD}${GREEN}=== WBG Albion Data Client Build ===${RESET}"
+    echo -e "${CYAN}Target:  ${YELLOW}darwin/amd64 (Docker + osxcross)${RESET}"
+    echo -e "${CYAN}Version: ${YELLOW}${APP_VERSION}${RESET}"
+    echo -e "${CYAN}Output:  ${YELLOW}update-darwin-amd64.gz + albiondata-client-amd64-mac.zip${RESET}"
+    echo ""
+
+    if ! command -v docker &>/dev/null; then
+        error "Docker not found. Install via: sudo pacman -S docker"
+    fi
+
+    info "Building Docker image (multiarch/crossbuild + osxcross)..."
+    docker build \
+        --build-arg GITHUB_REF_NAME="${APP_VERSION}" \
+        -f ./Dockerfile.build.darwin \
+        -t albiondataclient-darwin \
+        . \
+        || error "Docker build failed"
+
+    info "Running builder container..."
+    docker rm -f darwin-builder 2>/dev/null || true
+    docker run --name darwin-builder albiondataclient-darwin \
+        || error "Docker run failed"
+
+    info "Copying artifacts..."
+    docker cp darwin-builder:/usr/src/app/update-darwin-amd64.gz ./update-darwin-amd64.gz
+    docker cp darwin-builder:/usr/src/app/albiondata-client-amd64-mac.zip ./albiondata-client-amd64-mac.zip
+    docker rm darwin-builder
+
+    echo ""
+    success "=== Build Successful: darwin ==="
+    if [[ -f update-darwin-amd64.gz ]]; then
+        local gz_bytes gz_mb
+        gz_bytes=$(stat -c%s update-darwin-amd64.gz)
+        gz_mb=$(awk "BEGIN { printf \"%.2f\", $gz_bytes / 1048576 }")
+        warn "Output:   update-darwin-amd64.gz + albiondata-client-amd64-mac.zip"
+        warn "Size:     ${gz_mb} MB (gz)"
+        warn "Location: $(realpath update-darwin-amd64.gz)"
+    fi
+    echo ""
+
+    # gz-архив уже создаётся внутри Docker, флаг -u здесь не нужен
+    if [[ "$WITH_UPDATE" == true ]]; then
+        success "macOS .gz уже включён в сборку (update-darwin-amd64.gz)"
+    fi
 }
 
 # ── Функция сборки одного таргета ─────────────────────────────────────────────
@@ -212,6 +267,9 @@ build_target() {
 if [[ "$TARGET" == "all" ]]; then
     build_target "linux"
     build_target "windows"
+    build_darwin
+elif [[ "$TARGET" == "darwin" ]]; then
+    build_darwin
 else
     build_target "$TARGET"
 fi
