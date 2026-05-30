@@ -1697,7 +1697,7 @@
             <!-- ABOUT -->
             <section class="section" id="about">
                 <h2 data-i18n="about.title">О проекте</h2>
-                <div class="md">
+                <div class="md i18n-ru">
                     <h2>Описание проекта</h2>
                     <h3>Суть работы</h3>
                     <p>
@@ -1869,6 +1869,170 @@
                         </ol>
                     </div>
                 </div>
+                <div class="md i18n-en">
+                    <h2>About the project</h2>
+                    <h3>How it works</h3>
+                    <p>
+                        Albion Data Client monitors local network traffic on
+                        your device, identifies UDP packets containing Albion
+                        Online game data, and sends the information to a central
+                        NATS message broker for distribution to other services.
+                        This creates community-driven data collection for market
+                        analytics, event tracking, and gameplay statistics.
+                    </p>
+                    <h3>Features</h3>
+                    <ul>
+                        <li>
+                            Real-time network traffic monitoring using libpcap
+                        </li>
+                        <li>
+                            UDP packet filtering and analysis for Albion Online
+                            protocols
+                        </li>
+                        <li>Integration with the NATS message broker</li>
+                        <li>
+                            Cross-platform support (Windows, Linux,
+                            <del>macOS</del>) (macOS in progress)
+                        </li>
+                        <li>
+                            Windows system tray integration <del>and macOS</del>
+                        </li>
+                        <li>
+                            Minimal resource usage: max ~<a
+                                href="image/README/20mb_RAM.png"
+                                target="_blank"
+                                >20 MB RAM</a
+                            ><sup
+                                ><a href="#fn-1-en" id="fnref-1-en">[1]</a></sup
+                            >
+                            and 25 MB disk space
+                        </li>
+                    </ul>
+                    <h3>Is it bannable?</h3>
+                    <p>
+                        Statement from <strong>SBI Games</strong> (the
+                        developer) regarding network packet monitoring:
+                    </p>
+                    <blockquote>
+                        <p>
+                            <em
+                                >«Our position is quite simple. As long as you
+                                just look and analyze we are ok with it. The
+                                moment you modify or manipulate something or
+                                somehow interfere with our services we will
+                                react.»</em
+                            >
+                        </p>
+                        <p>— MadDave, Technical Lead for Albion Online</p>
+                    </blockquote>
+                    <p>
+                        <a
+                            href="https://forum.albiononline.com/index.php/Thread/51604-Is-it-allowed-to-scan-your-internet-trafic-and-pick-up-logs/?postID=512670#post512670"
+                            target="_blank"
+                            >Full original post ↗</a
+                        >
+                    </p>
+                    <p>
+                        Users must follow the
+                        <a
+                            href="https://albiononline.com/terms_and_conditions"
+                            target="_blank"
+                            >Albion Online Terms of Service</a
+                        >
+                        and
+                        <a
+                            href="https://albiononline.com/game-rules"
+                            target="_blank"
+                            >Game Rules</a
+                        >
+                        when using this program.
+                    </p>
+                    <h2>Community &amp; support</h2>
+                    <p>
+                        This client was created primarily for the needs of the
+                        <a
+                            class="badge badge-discord-guild"
+                            href="https://discord.gg/kgXREFJzsS"
+                            target="_blank"
+                            ><svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path
+                                    d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                />
+                            </svg>
+                            WBG Guild</a
+                        >. For questions:
+                    </p>
+                    <div style="margin-top: 14px">
+                        <div class="discord-label">Discord</div>
+                        <div class="discord-row">
+                            <a
+                                class="badge badge-discord-pinok"
+                                href="https://discordapp.com/users/747787435198513153/"
+                                target="_blank"
+                                ><svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                    />
+                                </svg>
+                                pinok.tsukino</a
+                            >
+                            <a
+                                class="badge badge-discord-henry"
+                                href="https://discordapp.com/users/603673234138988591/"
+                                target="_blank"
+                                ><svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                    />
+                                </svg>
+                                henry.tsukino</a
+                            >
+                        </div>
+                    </div>
+                    <h2>License</h2>
+                    <p>
+                        This fork uses the same
+                        <a
+                            href="https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/LICENSE"
+                            target="_blank"
+                            >MIT License</a
+                        >
+                        as the original project.
+                    </p>
+                    <div class="footnotes">
+                        <ol>
+                            <li id="fn-1-en">
+                                When Albion updates are released, changes can
+                                occasionally break the program, causing it to
+                                use excessive RAM. Close the program and notify
+                                the fork developers.
+                                <a
+                                    href="#fnref-1-en"
+                                    style="
+                                        color: var(--text3);
+                                        text-decoration: none;
+                                    "
+                                    >↩</a
+                                >
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </section>
 
             <!-- FAQ -->
@@ -1921,67 +2085,134 @@
                                 line-height: 1.7;
                             "
                         >
-                            <ol style="padding-left: 18px; line-height: 1.9">
-                                <li>
-                                    Зайдите в папку установки клиента<br /><small
-                                        style="color: var(--text3)"
-                                        >ПКМ на ярлык → «Открыть расположение
-                                        файла»</small
-                                    >
-                                </li>
-                                <li>
-                                    Найдите файл
-                                    <strong style="color: var(--text)"
-                                        >albiondata-client.log</strong
-                                    >
-                                </li>
-                                <li>
-                                    Отправьте его разработчикам в Discord:
-                                    <span
-                                        style="
-                                            display: flex;
-                                            gap: 8px;
-                                            flex-wrap: wrap;
-                                            margin-top: 8px;
-                                        "
-                                    >
-                                        <a
-                                            class="badge badge-discord-pinok"
-                                            href="https://discordapp.com/users/747787435198513153/"
-                                            target="_blank"
+                            <div class="i18n-ru">
+                                <ol
+                                    style="padding-left: 18px; line-height: 1.9"
+                                >
+                                    <li>
+                                        Зайдите в папку установки клиента<br /><small
+                                            style="color: var(--text3)"
+                                            >ПКМ на ярлык → «Открыть
+                                            расположение файла»</small
                                         >
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                viewBox="0 0 24 24"
-                                                fill="currentColor"
-                                            >
-                                                <path
-                                                    d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
-                                                />
-                                            </svg>
-                                            pinok.tsukino
-                                        </a>
-                                        <a
-                                            class="badge badge-discord-henry"
-                                            href="https://discordapp.com/users/603673234138988591/"
-                                            target="_blank"
+                                    </li>
+                                    <li>
+                                        Найдите файл
+                                        <strong style="color: var(--text)"
+                                            >albiondata-client.log</strong
                                         >
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                viewBox="0 0 24 24"
-                                                fill="currentColor"
+                                    </li>
+                                    <li>
+                                        Отправьте его разработчикам в Discord:
+                                        <span
+                                            style="
+                                                display: flex;
+                                                gap: 8px;
+                                                flex-wrap: wrap;
+                                                margin-top: 8px;
+                                            "
+                                        >
+                                            <a
+                                                class="badge badge-discord-pinok"
+                                                href="https://discordapp.com/users/747787435198513153/"
+                                                target="_blank"
                                             >
-                                                <path
-                                                    d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
-                                                />
-                                            </svg>
-                                            henry.tsukino
-                                        </a>
-                                    </span>
-                                </li>
-                            </ol>
+                                                <svg
+                                                    width="18"
+                                                    height="18"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                                    />
+                                                </svg>
+                                                pinok.tsukino
+                                            </a>
+                                            <a
+                                                class="badge badge-discord-henry"
+                                                href="https://discordapp.com/users/603673234138988591/"
+                                                target="_blank"
+                                            >
+                                                <svg
+                                                    width="18"
+                                                    height="18"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                                    />
+                                                </svg>
+                                                henry.tsukino
+                                            </a>
+                                        </span>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="i18n-en">
+                                <ol
+                                    style="padding-left: 18px; line-height: 1.9"
+                                >
+                                    <li>
+                                        Open the client installation folder<br /><small
+                                            style="color: var(--text3)"
+                                            >Right-click shortcut → "Open file
+                                            location"</small
+                                        >
+                                    </li>
+                                    <li>
+                                        Find the file
+                                        <strong style="color: var(--text)"
+                                            >albiondata-client.log</strong
+                                        >
+                                    </li>
+                                    <li>
+                                        Send it to the developers on Discord:
+                                        <span
+                                            style="
+                                                display: flex;
+                                                gap: 8px;
+                                                flex-wrap: wrap;
+                                                margin-top: 8px;
+                                            "
+                                        >
+                                            <a
+                                                class="badge badge-discord-pinok"
+                                                href="https://discordapp.com/users/747787435198513153/"
+                                                target="_blank"
+                                                ><svg
+                                                    width="18"
+                                                    height="18"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                                    />
+                                                </svg>
+                                                pinok.tsukino</a
+                                            >
+                                            <a
+                                                class="badge badge-discord-henry"
+                                                href="https://discordapp.com/users/603673234138988591/"
+                                                target="_blank"
+                                                ><svg
+                                                    width="18"
+                                                    height="18"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                                    />
+                                                </svg>
+                                                henry.tsukino</a
+                                            >
+                                        </span>
+                                    </li>
+                                </ol>
+                            </div>
                         </div>
                     </details>
 
@@ -2031,15 +2262,27 @@
                                 border-top: 1px solid var(--border);
                             "
                         >
-                            Не переживайте — у нас просто не нашлось лишних
-                            200$/год чтоб купить лицензию на подпись гарантии о
-                            безопасности. Нажмите «Подробнее» → «Выполнить в
-                            любом случае». Исходники открыты на
-                            <a
-                                href="https://github.com/Henry-Tsukino/wbg-albiondata-client"
-                                target="_blank"
-                                >GitHub</a
-                            >.
+                            <span class="i18n-ru">
+                                Не переживайте — у нас просто не нашлось лишних
+                                200$/год чтоб купить лицензию на подпись
+                                гарантии о безопасности. Нажмите «Подробнее» →
+                                «Выполнить в любом случае». Исходники открыты на
+                                <a
+                                    href="https://github.com/Henry-Tsukino/wbg-albiondata-client"
+                                    target="_blank"
+                                    >GitHub</a
+                                >.
+                            </span>
+                            <span class="i18n-en">
+                                No worries — we simply don't have $200/year for
+                                a code signing certificate. Click "More info" →
+                                "Run anyway". Source code is open on
+                                <a
+                                    href="https://github.com/Henry-Tsukino/wbg-albiondata-client"
+                                    target="_blank"
+                                    >GitHub</a
+                                >.
+                            </span>
                         </div>
                     </details>
 
@@ -2087,22 +2330,50 @@
                                 line-height: 1.7;
                             "
                         >
-                            Заявление от SBI Games:<br /><br />
-                            <em
-                                >«Our position is quite simple. As long as you
-                                just look and analyze we are ok with it. The
-                                moment you modify or manipulate something or
-                                somehow interfere with our services we will
-                                react.»</em
-                            ><br />
-                            <small style="color: var(--text3)"
-                                >— MadDave, Technical Lead for Albion
-                                Online</small
-                            ><br /><br />
-                            Перевод: «Пока вы просто наблюдаете и анализируете —
-                            нас это устраивает. Как только вы что-то измените
-                            или вмешаетесь в работу наших сервисов — мы
-                            отреагируем.»
+                            <span class="i18n-ru">
+                                Заявление от SBI Games:<br /><br />
+                                <em
+                                    >«Our position is quite simple. As long as
+                                    you just look and analyze we are ok with it.
+                                    The moment you modify or manipulate
+                                    something or somehow interfere with our
+                                    services we will react.»</em
+                                ><br />
+                                <small style="color: var(--text3)"
+                                    >— MadDave, Technical Lead for Albion
+                                    Online</small
+                                ><br /><br />
+                                Перевод: «Пока вы просто наблюдаете и
+                                анализируете — нас это устраивает. Как только вы
+                                что-то измените или вмешаетесь в работу наших
+                                сервисов — мы отреагируем.»
+                            </span>
+                            <span class="i18n-en">
+                                Statement from SBI Games:<br /><br />
+                                <em
+                                    >«Our position is quite simple. As long as
+                                    you just look and analyze we are ok with it.
+                                    The moment you modify or manipulate
+                                    something or somehow interfere with our
+                                    services we will react.»</em
+                                ><br />
+                                <small style="color: var(--text3)"
+                                    >— MadDave, Technical Lead for Albion
+                                    Online</small
+                                ><br /><br />
+                                Users must follow the
+                                <a
+                                    href="https://albiononline.com/terms_and_conditions"
+                                    target="_blank"
+                                    >Albion Online Terms of Service</a
+                                >
+                                and
+                                <a
+                                    href="https://albiononline.com/game-rules"
+                                    target="_blank"
+                                    >Game Rules</a
+                                >.
+                            </span>
                         </div>
                     </details>
                 </div>
