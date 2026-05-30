@@ -699,6 +699,89 @@
                     padding: 1.5rem 1rem;
                 }
             }
+
+            /* ── badges ── */
+            .badges-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 1.5rem;
+            }
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                font-family: "Geist Mono", monospace;
+                font-size: 19px;
+                font-weight: 500;
+                padding: 6px 14px;
+                border-radius: 6px;
+                text-decoration: none;
+                letter-spacing: 0.02em;
+                border: 1px solid transparent;
+                transition: opacity 0.12s;
+                white-space: nowrap;
+                line-height: 1;
+            }
+            .badge:hover {
+                opacity: 0.78;
+            }
+            .badge svg {
+                flex-shrink: 0;
+            }
+            .badge-discord-guild {
+                background: #1f1a4a;
+                color: #e2c045;
+                border-color: #3a3068;
+            }
+            .badge-discord-pinok {
+                background: #2a1c1f;
+                color: #f0b8c3;
+                border-color: #4a2d33;
+            }
+            .badge-discord-henry {
+                background: #2a1a10;
+                color: #ff9055;
+                border-color: #4a2f1a;
+            }
+            .badge-version {
+                background: #1a1a22;
+                color: #9898a8;
+                border-color: #2a2a32;
+            }
+            .badge-downloads {
+                background: #1a1a22;
+                color: #9898a8;
+                border-color: #2a2a32;
+            }
+            .badge-go {
+                background: #0d2530;
+                color: #00add8;
+                border-color: #0e3545;
+            }
+            .badge-win {
+                background: #0d1c30;
+                color: #4fa8f5;
+                border-color: #0e2a45;
+            }
+            .badge-linux {
+                background: #25220a;
+                color: #d4a800;
+                border-color: #3a3210;
+            }
+            .discord-label {
+                font-size: 19px;
+                color: var(--text3);
+                letter-spacing: 0.07em;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+                font-family: "Geist Mono", monospace;
+            }
+            .discord-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
         </style>
     </head>
     <body>
@@ -752,9 +835,101 @@
                 <p class="hero-desc" id="hero-desc"></p>
                 <div class="hero-cta" id="cta-btns"></div>
                 <span class="hero-hint" id="cta-hint"></span>
-                <div class="pills">
-                    <span class="pill">Windows</span>
-                    <span class="pill">Linux</span>
+                <div class="badges-row">
+                    <a
+                        class="badge badge-version"
+                        href="https://github.com/Henry-Tsukino/wbg-albiondata-client/releases"
+                        target="_blank"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path
+                                d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"
+                            />
+                            <line x1="7" y1="7" x2="7.01" y2="7" />
+                        </svg>
+                        версия
+                        <span id="ver-badge" style="color: #7c6af7">...</span>
+                    </a>
+                    <a
+                        class="badge badge-downloads"
+                        href="https://github.com/Henry-Tsukino/wbg-albiondata-client/releases"
+                        target="_blank"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path
+                                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                            />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        установок
+                        <span id="dl-badge" style="color: #3dd68c">...</span>
+                    </a>
+                    <a
+                        class="badge badge-go"
+                        href="https://go.dev"
+                        target="_blank"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path
+                                d="M1.811 10.231c-.047 0-.058-.023-.035-.059l.246-.315c.023-.035.081-.058.128-.058h4.172c.046 0 .058.035.035.07l-.199.303c-.023.036-.082.07-.117.07zM.047 11.306c-.047 0-.059-.023-.035-.058l.245-.316c.023-.035.082-.058.129-.058h5.328c.047 0 .07.035.059.07l-.093.28c-.012.047-.059.07-.105.07zm2.828 1.075c-.047 0-.059-.035-.035-.07l.163-.292c.023-.035.07-.07.117-.07h2.337c.047 0 .07.035.07.082l-.023.28c0 .047-.047.082-.082.082zm12.129-2.36c-.736.187-1.239.327-1.963.514-.176.046-.187.058-.34-.117-.174-.199-.303-.327-.548-.444-.737-.362-1.45-.257-2.115.175-.795.514-1.204 1.274-1.192 2.22.011.935.654 1.706 1.577 1.846.795.117 1.462-.175 1.986-.676.106-.105.198-.22.315-.362H10.28c-.245 0-.304-.152-.222-.35.152-.362.432-.97.596-1.274a.315.315 0 0 1 .292-.187h4.253c-.023.316-.023.631-.07.947a4.983 4.983 0 0 1-.958 2.29c-.841 1.11-1.94 1.8-3.33 1.986-1.145.152-2.209-.07-3.143-.77-.865-.655-1.356-1.52-1.484-2.595-.152-1.274.222-2.419.993-3.424.83-1.086 1.928-1.776 3.272-2.02 1.098-.2 2.15-.07 3.096.571.62.41 1.063.97 1.356 1.648.07.105.023.164-.117.2zm3.868 6.461c-1.064-.024-2.034-.328-2.852-1.029a3.665 3.665 0 0 1-1.262-2.255c-.21-1.32.152-2.489.947-3.529.853-1.122 1.881-1.706 3.272-1.95 1.192-.21 2.314-.095 3.33.595.923.63 1.496 1.484 1.648 2.605.198 1.578-.257 2.863-1.344 3.962-.771.783-1.718 1.273-2.805 1.495-.315.06-.631.07-.934.106zm2.78-4.72c-.011-.153-.011-.27-.034-.387-.21-1.157-1.274-1.81-2.384-1.554-1.087.245-1.788 1.122-1.788 2.22 0 1.075.736 1.917 1.812 2.07.98.14 2.02-.56 2.29-1.554.08-.301.069-.617.105-.796z"
+                            />
+                        </svg>
+                        Go
+                    </a>
+                    <a
+                        class="badge badge-win"
+                        href="https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/Windows.md"
+                        target="_blank"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path
+                                d="M3 12V6.75l6-1.32v6.57H3zm17 0V5.25L10 3.83V12h10zM3 13h6v6.57l-6-1.32V13zm7 0h10v6.75l-10-1.42V13z"
+                            />
+                        </svg>
+                        Windows
+                    </a>
+                    <a
+                        class="badge badge-linux"
+                        href="https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/Linux.md"
+                        target="_blank"
+                    >
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path
+                                d="M12.504 0c-.155 0-.315.008-.48.021C7.309.235 3.655 2.655 3.655 8.375c0 .993.061 1.845.17 2.58-.034 1.04-.07 2.079-.088 3.115-.031 1.84.04 3.661.235 5.456.245 2.221.73 4.295 1.683 5.865.648 1.078 1.505 1.947 2.595 2.427 1.008.447 2.191.64 3.537.64h.006c1.347 0 2.529-.193 3.537-.64 1.09-.48 1.947-1.349 2.595-2.427.953-1.57 1.438-3.644 1.683-5.865.195-1.795.266-3.616.235-5.456-.018-1.036-.054-2.075-.088-3.115.109-.735.17-1.587.17-2.58C20.345 2.655 16.691.235 12.48.021 12.316.008 12.155 0 12 0l.504 0z"
+                            />
+                        </svg>
+                        Linux
+                    </a>
                     <span class="pill">Open Source</span>
                     <span class="pill">MIT</span>
                 </div>
@@ -788,8 +963,8 @@
                                     target="_blank"
                                     >страницы с релизами</a
                                 >
-                                последний дистрибутив инсталятора клиента для
-                                Windows: <strong>installer-WBG-tool.exe</strong>
+                                последний установщик клиента для Windows:
+                                <strong>installer-WBG-tool.exe</strong>
                             </li>
                             <li>
                                 Запустите скачанный файл установщика
@@ -1025,13 +1200,24 @@
                                 ⚠️ Warning — Выход из безвыходных ситуаций
                             </div>
                             <ul>
-                                <li>
-                                    Напишите в личные сообщения в Discord:
+                                <li style="list-style: none">
                                     <a
+                                        class="badge badge-discord-pinok"
                                         href="https://discordapp.com/users/747787435198513153/"
                                         target="_blank"
-                                        >pinok.tsukino</a
                                     >
+                                        <svg
+                                            width="18"
+                                            height="18"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                            />
+                                        </svg>
+                                        pinok.tsukino
+                                    </a>
                                 </li>
                                 <li>
                                     Или свяжитесь там, где вы нашли этот
@@ -1158,29 +1344,62 @@
                         Клиент создан в первую очередь для нужд гильдии World
                         Bank Group. По вопросам:
                     </p>
-                    <ul>
-                        <li>
-                            Дискорд ГИ:
+                    <div style="margin-top: 14px">
+                        <div class="discord-label">Discord</div>
+                        <div class="discord-row">
                             <a
+                                class="badge badge-discord-guild"
                                 href="https://discord.gg/kgXREFJzsS"
                                 target="_blank"
-                                >Discord WBG ↗</a
                             >
-                        </li>
-                        <li>
-                            Разработчики форка:
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                    />
+                                </svg>
+                                WBG Guild
+                            </a>
                             <a
+                                class="badge badge-discord-pinok"
                                 href="https://discordapp.com/users/747787435198513153/"
                                 target="_blank"
-                                >pinok.tsukino</a
-                            >,
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                    />
+                                </svg>
+                                pinok.tsukino
+                            </a>
                             <a
+                                class="badge badge-discord-henry"
                                 href="https://discordapp.com/users/603673234138988591/"
                                 target="_blank"
-                                >henry.tsukino</a
                             >
-                        </li>
-                    </ul>
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                    />
+                                </svg>
+                                henry.tsukino
+                            </a>
+                        </div>
+                    </div>
                     <h2>Лицензия</h2>
                     <p>
                         Данный форк использует лицензию
@@ -1277,17 +1496,49 @@
                                 </li>
                                 <li>
                                     Отправьте его разработчикам в Discord:
-                                    <a
-                                        href="https://discordapp.com/users/747787435198513153/"
-                                        target="_blank"
-                                        >pinok.tsukino</a
+                                    <span
+                                        style="
+                                            display: flex;
+                                            gap: 8px;
+                                            flex-wrap: wrap;
+                                            margin-top: 8px;
+                                        "
                                     >
-                                    или
-                                    <a
-                                        href="https://discordapp.com/users/603673234138988591/"
-                                        target="_blank"
-                                        >henry.tsukino</a
-                                    >
+                                        <a
+                                            class="badge badge-discord-pinok"
+                                            href="https://discordapp.com/users/747787435198513153/"
+                                            target="_blank"
+                                        >
+                                            <svg
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                            >
+                                                <path
+                                                    d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                                />
+                                            </svg>
+                                            pinok.tsukino
+                                        </a>
+                                        <a
+                                            class="badge badge-discord-henry"
+                                            href="https://discordapp.com/users/603673234138988591/"
+                                            target="_blank"
+                                        >
+                                            <svg
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                            >
+                                                <path
+                                                    d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+                                                />
+                                            </svg>
+                                            henry.tsukino
+                                        </a>
+                                    </span>
                                 </li>
                             </ol>
                         </div>
@@ -1631,7 +1882,7 @@
                     b.addEventListener("click", () => selectTab(b.dataset.t)),
                 );
 
-            /* Version badge — single async fetch, non-blocking */
+            /* GitHub API — version + downloads, non-blocking */
             (async () => {
                 try {
                     const r = await fetch(
@@ -1639,9 +1890,28 @@
                     );
                     if (!r.ok) return;
                     const d = await r.json();
-                    if (d.tag_name)
+                    if (d.tag_name) {
                         document.getElementById("version-badge").textContent =
                             d.tag_name;
+                        const vb = document.getElementById("ver-badge");
+                        if (vb) vb.textContent = d.tag_name;
+                    }
+                } catch {}
+            })();
+
+            (async () => {
+                try {
+                    const r = await fetch(
+                        "https://api.github.com/repos/Henry-Tsukino/wbg-albiondata-client/releases",
+                    );
+                    if (!r.ok) return;
+                    const releases = await r.json();
+                    let total = 0;
+                    for (const rel of releases)
+                        for (const asset of rel.assets || [])
+                            total += asset.download_count;
+                    const dlb = document.getElementById("dl-badge");
+                    if (dlb) dlb.textContent = total.toLocaleString("ru");
                 } catch {}
             })();
 
