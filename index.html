@@ -1842,10 +1842,14 @@
 
             function buildOsGrid() {
                 const os = detectOS();
+                const SVG_WIN = `<svg width="100%" height="100%" viewBox="4 7279 20 20" fill="currentColor"><path d="M13.1458647,7289.43426 C13.1508772,7291.43316 13.1568922,7294.82929 13.1619048,7297.46884 C16.7759398,7297.95757 20.3899749,7298.4613 23.997995,7299 C23.997995,7295.84873 24.002005,7292.71146 23.997995,7289.71311 C20.3809524,7289.71311 16.7649123,7289.43426 13.1458647,7289.43426 M4,7289.43526 L4,7296.22153 C6.72581454,7296.58933 9.45162907,7296.94113 12.1724311,7297.34291 C12.1774436,7294.71736 12.1704261,7292.0908 12.1704261,7289.46524 C9.44661654,7289.47024 6.72380952,7289.42627 4,7289.43526 M4,7281.84344 L4,7288.61071 C6.72581454,7288.61771 9.45162907,7288.57673 12.1774436,7288.57973 C12.1754386,7285.96017 12.1754386,7283.34361 12.1724311,7280.72405 C9.44461153,7281.06486 6.71679198,7281.42567 4,7281.84344 M24,7288.47179 C20.3879699,7288.48578 16.7759398,7288.54075 13.1619048,7288.55175 C13.1598997,7285.88921 13.1598997,7283.22967 13.1619048,7280.56914 C16.7689223,7280.01844 20.3839599,7279.50072 23.997995,7279 C24,7282.15826 23.997995,7285.31353 24,7288.47179"/></svg>`;
+                const SVG_MAC = `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>`;
+                const SVG_LNX = `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>`;
+
                 const cards = [
                     {
                         os: "win",
-                        icon: "⊞",
+                        icon: SVG_WIN,
                         name: "Windows 10 / 11",
                         meta: "x64 · installer-WBG-tool.exe",
                         href:
@@ -1854,8 +1858,17 @@
                         dlKey: "dl.installer",
                     },
                     {
+                        os: "mac",
+                        icon: SVG_MAC,
+                        name: "macOS",
+                        meta: "в разработке",
+                        href: "https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/MacOS.md",
+                        dlKey: "dl.installer",
+                        disabled: true,
+                    },
+                    {
                         os: "lnx",
-                        icon: "🐧",
+                        icon: SVG_LNX,
                         name: "Linux",
                         meta: "x64 · GNU-Linux.tar.gz",
                         href:
@@ -1869,14 +1882,21 @@
 
                 document.getElementById("os-grid").innerHTML = sorted
                     .map((c) => {
-                        const p = c.os === os;
-                        return `<a class="os-card${p ? " primary" : ""}" href="${c.href}">
+                        const p = c.os === os && !c.disabled;
+                        const tag = c.disabled ? "span" : "a";
+                        const href = c.disabled
+                            ? ""
+                            : `href="${c.href}" target="_blank"`;
+                        const disabledStyle = c.disabled
+                            ? ' style="opacity:.45;cursor:default"'
+                            : "";
+                        return `<${tag} class="os-card${p ? " primary" : ""}" ${href}${disabledStyle}>
       <div class="os-card-left">
-        <div class="os-icon">${c.icon}</div>
+        <div class="os-icon" style="font-size:0">${c.icon}</div>
         <div><div class="os-name">${c.name}</div><div class="os-meta">${c.meta}</div></div>
       </div>
-      <span class="os-badge${p ? "" : " neutral"}">${p ? "↓ " + t(c.dlKey) : t(c.dlKey)}</span>
-    </a>`;
+      ${c.disabled ? `<span class="os-badge neutral" style="opacity:.5">––</span>` : `<span class="os-badge${p ? "" : " neutral"}">${p ? "↓ " + t(c.dlKey) : t(c.dlKey)}</span>`}
+    </${tag}>`;
                     })
                     .join("");
 
