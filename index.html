@@ -1850,6 +1850,7 @@
                     {
                         os: "win",
                         icon: SVG_WIN,
+                        iconColor: "#4fa8f5",
                         name: "Windows 10 / 11",
                         meta: "x64 · installer-WBG-tool.exe",
                         href:
@@ -1860,6 +1861,7 @@
                     {
                         os: "mac",
                         icon: SVG_MAC,
+                        iconColor: "#e8e8ec",
                         name: "macOS",
                         meta: "в разработке",
                         href: "https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/MacOS.md",
@@ -1892,7 +1894,7 @@
                             : "";
                         return `<${tag} class="os-card${p ? " primary" : ""}" ${href}${disabledStyle}>
       <div class="os-card-left">
-        <div class="os-icon" style="font-size:0">${c.icon}</div>
+        <div class="os-icon" style="font-size:0${c.iconColor ? ";color:" + c.iconColor : ""}">${c.icon}</div>
         <div><div class="os-name">${c.name}</div><div class="os-meta">${c.meta}</div></div>
       </div>
       ${c.disabled ? `<span class="os-badge neutral" style="opacity:.5">––</span>` : `<span class="os-badge${p ? "" : " neutral"}">${p ? "↓ " + t(c.dlKey) : t(c.dlKey)}</span>`}
