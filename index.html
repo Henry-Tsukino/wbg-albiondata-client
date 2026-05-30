@@ -1,998 +1,1652 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WBG Albion Data Client</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg:        #0d0d0f;
-    --bg2:       #111114;
-    --bg3:       #17171b;
-    --bg4:       #1e1e23;
-    --border:    #2a2a32;
-    --border2:   #34343e;
-    --text:      #e8e8ec;
-    --text2:     #9898a8;
-    --text3:     #5a5a6a;
-    --accent:    #7c6af7;
-    --accent2:   #5b4fcf;
-    --accent-bg: rgba(124,106,247,0.08);
-    --green:     #3dd68c;
-    --green-bg:  rgba(61,214,140,0.08);
-    --amber:     #f5a623;
-    --amber-bg:  rgba(245,166,35,0.08);
-    --red:       #f06c6c;
-    --red-bg:    rgba(239,68,68,0.06);
-    --blue:      #3b82f6;
-    --blue-bg:   rgba(59,130,246,0.06);
-    --radius:    6px;
-    --radius2:   10px;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Geist', system-ui, sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 48px 48px;
-    opacity: 0.18;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(13,13,15,0.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    text-decoration: none;
-  }
-
-  .nav-logo .dot {
-    width: 7px; height: 7px;
-    background: var(--accent);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-    list-style: none;
-    align-items: center;
-  }
-
-  .nav-links a {
-    font-size: 13px;
-    color: var(--text2);
-    text-decoration: none;
-    transition: color .15s;
-  }
-  .nav-links a:hover { color: var(--text); }
-
-  .nav-badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: var(--accent-bg);
-    border: 1px solid rgba(124,106,247,0.25);
-    color: var(--accent);
-    font-family: 'Geist Mono', monospace;
-  }
-
-  .lang-toggle {
-    display: flex;
-    gap: 2px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 2px;
-  }
-  .lang-btn {
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: none;
-    background: transparent;
-    color: var(--text3);
-    cursor: pointer;
-    transition: background .12s, color .12s;
-    letter-spacing: .04em;
-  }
-  .lang-btn.active {
-    background: var(--bg4);
-    color: var(--text);
-    border: 1px solid var(--border2);
-  }
-
-  main {
-    position: relative;
-    z-index: 1;
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 2rem 6rem;
-  }
-
-  /* ── hero ── */
-  .hero {
-    padding: 5rem 0 3.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .hero-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    color: var(--text3);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: 1.25rem;
-  }
-
-  .hero-eyebrow::before {
-    content: '';
-    display: block;
-    width: 20px; height: 1px;
-    background: var(--text3);
-  }
-
-  h1 {
-    font-family: 'Geist Mono', monospace;
-    font-size: clamp(1.9rem, 4vw, 2.6rem);
-    font-weight: 500;
-    letter-spacing: -.03em;
-    line-height: 1.15;
-    margin-bottom: 1rem;
-    color: var(--text);
-  }
-  h1 span { color: var(--accent); }
-
-  .hero-desc {
-    font-size: 16px;
-    color: var(--text2);
-    max-width: 520px;
-    margin-bottom: 2.5rem;
-    line-height: 1.7;
-  }
-  .hero-desc a { color: var(--accent); text-decoration: none; }
-  .hero-desc a:hover { text-decoration: underline; }
-
-  .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1rem; }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Geist', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 9px 18px;
-    border-radius: var(--radius);
-    text-decoration: none;
-    transition: opacity .12s, transform .1s;
-    border: none; cursor: pointer;
-  }
-  .btn:active { transform: scale(0.98); }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { opacity: .87; }
-  .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
-  .btn-ghost:hover { color: var(--text); border-color: var(--text3); }
-
-  .hero-hint {
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    color: var(--text3);
-  }
-  .hero-hint span { color: var(--accent); }
-
-  .pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 1.5rem;
-  }
-  .pill {
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--text2);
-  }
-
-  /* ── download section ── */
-  .download-section {
-    padding: 2.5rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-label {
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    color: var(--text3);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: 1.25rem;
-  }
-
-  .os-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .os-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius2);
-    text-decoration: none;
-    transition: border-color .15s, background .15s;
-    cursor: pointer;
-  }
-  .os-card:hover { border-color: var(--border2); background: var(--bg4); }
-  .os-card.primary { border-color: rgba(124,106,247,0.45); background: rgba(124,106,247,0.06); }
-  .os-card.primary:hover { border-color: rgba(124,106,247,0.7); background: rgba(124,106,247,0.10); }
-
-  .os-card-left { display: flex; align-items: center; gap: 14px; }
-
-  .os-icon {
-    width: 36px; height: 36px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--bg4);
-    border-radius: var(--radius);
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .os-card.primary .os-icon { background: var(--accent-bg); }
-
-  .os-name { font-weight: 500; font-size: 14px; color: var(--text); margin-bottom: 2px; }
-  .os-meta { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--text3); }
-  .os-card.primary .os-name { color: #c4bcff; }
-
-  .os-badge {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 12px; padding: 4px 10px;
-    border-radius: 999px;
-    background: var(--accent-bg);
-    border: 1px solid rgba(124,106,247,0.25);
-    color: var(--accent);
-    white-space: nowrap;
-  }
-  .os-badge.neutral { background: var(--bg4); border-color: var(--border2); color: var(--text2); }
-
-  .detected-note {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 12px; color: var(--text3);
-    margin-top: 10px;
-    font-family: 'Geist Mono', monospace;
-  }
-  .detected-note::before { content: '↑'; color: var(--accent); }
-
-  /* ── section ── */
-  .section {
-    padding: 2.5rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  h2 {
-    font-family: 'Geist Mono', monospace;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 1.25rem;
-  }
-
-  /* ── tabs ── */
-  .tab-bar {
-    display: flex; gap: 2px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 3px;
-    margin-bottom: 12px;
-    width: fit-content;
-  }
-  .tab-btn {
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    padding: 5px 14px;
-    border-radius: 4px;
-    border: none;
-    background: transparent;
-    color: var(--text3);
-    cursor: pointer;
-    transition: background .15s, color .15s;
-  }
-  .tab-btn.active { background: var(--bg4); color: var(--text); border: 1px solid var(--border2); }
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
-
-  /* ── md loader ── */
-  .md-loading {
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 12px; color: var(--text3);
-    padding: 20px 0;
-  }
-  .md-loading::before {
-    content: '';
-    width: 12px; height: 12px;
-    border: 1.5px solid var(--border2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── rendered markdown ── */
-  .md { font-size: 14px; color: var(--text2); line-height: 1.75; }
-
-  .md h1, .md h2, .md h3 {
-    font-family: 'Geist Mono', monospace;
-    font-weight: 500;
-    letter-spacing: -.02em;
-    color: var(--text);
-    margin: 24px 0 10px;
-  }
-  .md h1 { font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-  .md h2 { font-size: 14px; }
-  .md h3 { font-size: 13px; color: var(--text2); }
-
-  .md p { margin-bottom: 10px; }
-  .md a { color: var(--accent); text-decoration: none; }
-  .md a:hover { text-decoration: underline; }
-  .md strong { color: var(--text); font-weight: 500; }
-  .md em { color: var(--text2); font-style: italic; }
-  .md del { text-decoration: line-through; color: var(--text3); }
-
-  .md ul, .md ol { padding-left: 20px; margin-bottom: 10px; }
-  .md ul ul, .md ol ol, .md ul ol, .md ol ul { margin: 4px 0; }
-  .md li { margin-bottom: 5px; line-height: 1.65; }
-
-  .md code {
-    font-family: 'Geist Mono', monospace;
-    font-size: 12px;
-    background: var(--bg4);
-    border: 1px solid var(--border2);
-    padding: 1px 5px;
-    border-radius: 3px;
-    color: var(--text);
-  }
-  .md pre {
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    overflow-x: auto;
-    margin-bottom: 12px;
-  }
-  .md pre code { background: none; border: none; padding: 0; font-size: 12px; color: var(--text2); }
-
-  .md blockquote {
-    border-left: 2px solid var(--border2);
-    padding: 8px 14px;
-    margin: 10px 0;
-    color: var(--text2);
-  }
-  .md blockquote p { margin-bottom: 4px; }
-
-  .md hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-
-  .md img {
-    max-width: 100%;
-    border-radius: var(--radius);
-    border: 1px solid var(--border2);
-    margin: 8px 0;
-    display: block;
-  }
-  .md img.badge {
-    display: inline;
-    vertical-align: middle;
-    margin: 0 2px;
-    border: none;
-    border-radius: 0;
-  }
-
-  .md details {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    margin: 10px 0;
-  }
-  .md summary { cursor: pointer; font-size: 13px; color: var(--text2); user-select: none; }
-
-  /* GitHub callouts */
-  .md .callout {
-    border-left: 2px solid var(--border2);
-    padding: 10px 14px;
-    margin: 14px 0;
-    border-radius: 0 var(--radius) var(--radius) 0;
-    background: var(--bg3);
-  }
-  .md .callout.note    { border-color: var(--blue);  background: var(--blue-bg);  }
-  .md .callout.tip     { border-color: var(--green); background: var(--green-bg); }
-  .md .callout.important { border-color: var(--accent); background: var(--accent-bg); }
-  .md .callout.warning { border-color: var(--amber); background: var(--amber-bg); }
-  .md .callout.caution { border-color: var(--red);   background: var(--red-bg);   }
-
-  .md .callout-label {
-    font-family: 'Geist Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .md .callout.note .callout-label     { color: var(--blue);   }
-  .md .callout.tip .callout-label      { color: var(--green);  }
-  .md .callout.important .callout-label{ color: var(--accent); }
-  .md .callout.warning .callout-label  { color: var(--amber);  }
-  .md .callout.caution .callout-label  { color: var(--red);    }
-  .md .callout p { margin-bottom: 4px; }
-
-  /* Footnotes */
-  .md .footnotes {
-    margin-top: 22px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text3);
-  }
-  .md .footnotes ol { padding-left: 18px; }
-  .md .footnotes li { margin-bottom: 4px; }
-  .md sup a {
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  /* ── footer ── */
-  footer {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border);
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--text3);
-    font-family: 'Geist Mono', monospace;
-  }
-  footer a { color: var(--text3); text-decoration: none; }
-  footer a:hover { color: var(--text2); }
-  .footer-links { display: flex; gap: 1.5rem; }
-
-  @media (max-width: 600px) {
-    nav { padding: 0 1rem; }
-    main { padding: 0 1rem 4rem; }
-    .nav-links { display: none; }
-    footer { padding: 1.5rem 1rem; }
-  }
-</style>
-</head>
-<body>
-
-<nav>
-  <a class="nav-logo" href="#">
-    <span class="dot"></span>
-    wbg-albiondata-client
-  </a>
-  <ul class="nav-links">
-    <li><a href="#download" data-i18n="nav.download">Скачать</a></li>
-    <li><a href="#install" data-i18n="nav.install">Установка</a></li>
-    <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
-    <li><a href="https://github.com/Henry-Tsukino/wbg-albiondata-client" target="_blank">GitHub ↗</a></li>
-  </ul>
-  <div style="display:flex;align-items:center;gap:10px">
-    <div class="lang-toggle">
-      <button class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</button>
-      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
-    </div>
-    <span class="nav-badge" id="version-badge">...</span>
-  </div>
-</nav>
-
-<main>
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-eyebrow" data-i18n="hero.eyebrow">Open Source · Albion Online</div>
-    <h1>wbg-<span>albiondata</span>-client</h1>
-    <p class="hero-desc" id="hero-desc"></p>
-    <div class="hero-cta" id="cta-btns"></div>
-    <span class="hero-hint" id="cta-hint"></span>
-    <div class="pills">
-      <span class="pill">Windows</span>
-      <span class="pill">Linux</span>
-      <span class="pill">Open Source</span>
-      <span class="pill">MIT</span>
-    </div>
-  </section>
-
-  <!-- DOWNLOAD -->
-  <section class="download-section" id="download">
-    <div class="section-label" data-i18n="sec.download">Загрузка</div>
-    <div class="os-grid" id="os-grid"></div>
-    <p class="detected-note" id="detected-note"></p>
-  </section>
-
-  <!-- INSTALL -->
-  <section class="section" id="install">
-    <h2 data-i18n="install.title">Инструкция по установке</h2>
-    <div class="tab-bar">
-      <button class="tab-btn active" data-t="win">Windows</button>
-      <button class="tab-btn" data-t="lnx">Linux</button>
-    </div>
-    <div class="tab-pane active" id="pwin">
-      <div id="md-win" class="md-loading" data-i18n-loading="loading">Загрузка...</div>
-    </div>
-    <div class="tab-pane" id="plnx">
-      <div id="md-lnx" class="md-loading" data-i18n-loading="loading">Загрузка...</div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="section" id="about">
-    <h2 data-i18n="about.title">О проекте</h2>
-    <div id="md-readme" class="md-loading" data-i18n-loading="loading">Загрузка...</div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="section" id="faq">
-    <h2 data-i18n="faq.title">FAQ</h2>
-
-    <div style="display:flex;flex-direction:column;gap:1px">
-
-      <details style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:0;overflow:hidden">
-        <summary style="padding:13px 16px;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
-          <span data-i18n="faq.q1">Клиент не запускается, выдаёт ошибки или ведёт себя странно</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:.4"><path d="M6 9l6 6 6-6"/></svg>
-        </summary>
-        <div style="padding:12px 16px 14px;font-size:13px;color:var(--text2);border-top:1px solid var(--border);line-height:1.7" id="faq-a1"></div>
-      </details>
-
-      <details style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:0;overflow:hidden;margin-top:1px">
-        <summary style="padding:13px 16px;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
-          <span data-i18n="faq.q2">Предупреждение Windows Defender при установке</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:.4"><path d="M6 9l6 6 6-6"/></svg>
-        </summary>
-        <div style="padding:12px 16px 14px;font-size:13px;color:var(--text2);border-top:1px solid var(--border)" id="faq-a2"></div>
-      </details>
-
-      <details style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:0;overflow:hidden;margin-top:1px">
-        <summary style="padding:13px 16px;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
-          <span data-i18n="faq.q3">Карается ли баном?</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;opacity:.4"><path d="M6 9l6 6 6-6"/></svg>
-        </summary>
-        <div style="padding:12px 16px 14px;font-size:13px;color:var(--text2);border-top:1px solid var(--border)" id="faq-a3"></div>
-      </details>
-
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <span>wbg-albiondata-client · MIT · fork of <a href="https://github.com/ao-data/albiondata-client" target="_blank">ao-data/albiondata-client</a></span>
-  <div class="footer-links">
-    <a href="https://github.com/Henry-Tsukino/wbg-albiondata-client" target="_blank">GitHub</a>
-    <a href="https://github.com/Henry-Tsukino/wbg-albiondata-client/releases" target="_blank" data-i18n="footer.releases">Релизы</a>
-    <a href="https://discord.gg/kgXREFJzsS" target="_blank">Discord WBG</a>
-  </div>
-</footer>
-
-<script>
-'use strict';
-
-/* ══════════════════════════════════════════════
-   i18n
-══════════════════════════════════════════════ */
-const I18N = {
-  ru: {
-    'nav.download': 'Скачать',
-    'nav.install': 'Установка',
-    'nav.faq': 'FAQ',
-    'hero.eyebrow': 'Open Source · Albion Online',
-    'hero.desc': 'Клиент мониторинга сетевого трафика, сделанный на основе <a href="https://github.com/ao-data/albiondata-client" target="_blank">Albion Online Data Project</a>. Форк для гильдии World Bank Group.',
-    'sec.download': 'Загрузка',
-    'install.title': 'Инструкция по установке',
-    'about.title': 'О проекте',
-    'faq.title': 'FAQ',
-    'faq.q1': 'Клиент не запускается, выдаёт ошибки или ведёт себя странно',
-    'faq.a1': '<ol style="padding-left:18px;line-height:1.9"><li>Зайдите в папку установки клиента<br><small style="color:var(--text3)">ПКМ на ярлык → «Открыть расположение файла»</small></li><li>Найдите файл <strong style="color:var(--text)">albiondata-client.log</strong></li><li>Отправьте его разработчикам в Discord: <a href="https://discordapp.com/users/747787435198513153/" target="_blank">pinok.tsukino</a> или <a href="https://discordapp.com/users/603673234138988591/" target="_blank">henry.tsukino</a></li></ol>',
-    'faq.q2': 'Предупреждение Windows Defender при установке',
-    'faq.a2': 'Не переживайте — у нас просто не нашлось лишних 200$/год чтоб купить лицензию на подпись гарантии о безопасности. Нажмите «Подробнее» → «Выполнить в любом случае». Исходники открыты на <a href="https://github.com/Henry-Tsukino/wbg-albiondata-client" target="_blank">GitHub</a>.',
-    'faq.q3': 'Карается ли баном?',
-    'faq.a3': 'Заявление от SBI Games:<br><br><em>«Our position is quite simple. As long as you just look and analyze we are ok with it. The moment you modify or manipulate something or somehow interfere with our services we will react.»</em><br><small style="color:var(--text3)">— MadDave, Technical Lead for Albion Online</small><br><br>Перевод: «Пока вы просто наблюдаете и анализируете — нас это устраивает. Как только вы что-то измените или вмешаетесь в работу наших сервисов — мы отреагируем.»',
-    'footer.releases': 'Релизы',
-    'dl.win': 'Скачать для Windows',
-    'dl.lnx': 'Скачать для Linux',
-    'dl.all': 'Все платформы',
-    'dl.detected': 'Определена ОС:',
-    'dl.installer': 'Скачать установщик',
-    'dl.archive': 'Скачать архив',
-    'os.detected': 'Ваша ОС',
-    'loading': 'Загрузка...',
-  },
-  en: {
-    'nav.download': 'Download',
-    'nav.install': 'Install',
-    'nav.faq': 'FAQ',
-    'hero.eyebrow': 'Open Source · Albion Online',
-    'hero.desc': 'A network traffic monitoring client built on top of the <a href="https://github.com/ao-data/albiondata-client" target="_blank">Albion Online Data Project</a>. Fork for the World Bank Group guild.',
-    'sec.download': 'Download',
-    'install.title': 'Installation guide',
-    'about.title': 'About',
-    'faq.title': 'FAQ',
-    'faq.q1': 'Client doesn\'t start, throws errors or behaves unexpectedly',
-    'faq.a1': '<ol style="padding-left:18px;line-height:1.9"><li>Open the client installation folder<br><small style="color:var(--text3)">Right-click shortcut → "Open file location"</small></li><li>Find the file <strong style="color:var(--text)">albiondata-client.log</strong></li><li>Send it to developers on Discord: <a href="https://discordapp.com/users/747787435198513153/" target="_blank">pinok.tsukino</a> or <a href="https://discordapp.com/users/603673234138988591/" target="_blank">henry.tsukino</a></li></ol>',
-    'faq.q2': 'Windows Defender warning during installation',
-    'faq.a2': 'No worries — we simply don\'t have $200/year to spare on a code-signing certificate. Click "More info" → "Run anyway". Source code is open on <a href="https://github.com/Henry-Tsukino/wbg-albiondata-client" target="_blank">GitHub</a>.',
-    'faq.q3': 'Is it bannable?',
-    'faq.a3': 'Statement from SBI Games:<br><br><em>«Our position is quite simple. As long as you just look and analyze we are ok with it. The moment you modify or manipulate something or somehow interfere with our services we will react.»</em><br><small style="color:var(--text3)">— MadDave, Technical Lead for Albion Online</small>',
-    'footer.releases': 'Releases',
-    'dl.win': 'Download for Windows',
-    'dl.lnx': 'Download for Linux',
-    'dl.all': 'All platforms',
-    'dl.detected': 'Detected OS:',
-    'dl.installer': 'Download installer',
-    'dl.archive': 'Download archive',
-    'os.detected': 'Your OS',
-    'loading': 'Loading...',
-  }
-};
-
-let LANG = 'ru';
-const t = k => (I18N[LANG]?.[k]) ?? (I18N.ru[k]) ?? k;
-
-function applyLang() {
-  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-  document.getElementById('hero-desc').innerHTML = t('hero.desc');
-  document.getElementById('faq-a1').innerHTML = t('faq.a1');
-  document.getElementById('faq-a2').innerHTML = t('faq.a2');
-  document.getElementById('faq-a3').innerHTML = t('faq.a3');
-  document.getElementById('btn-ru').classList.toggle('active', LANG === 'ru');
-  document.getElementById('btn-en').classList.toggle('active', LANG === 'en');
-  buildCta();
-  buildOsGrid();
-  // Update loader text in unloaded md panels
-  document.querySelectorAll('[data-i18n-loading]').forEach(el => {
-    if (el.classList.contains('md-loading')) el.textContent = t('loading');
-  });
-}
-
-function setLang(l) { LANG = l; applyLang(); }
-
-/* ══════════════════════════════════════════════
-   Markdown parser — GitHub-flavoured
-══════════════════════════════════════════════ */
-const RAW = 'https://raw.githubusercontent.com/Henry-Tsukino/wbg-albiondata-client/main/';
-
-function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-let _fn = {};
-
-function parseMd(raw) {
-  _fn = {};
-  // strip anchor-only tags
-  raw = raw.replace(/`?<a[^>]*id="[^"]*"><\/a>`?/g, '');
-  // extract footnote definitions
-  raw = raw.replace(/^\[\^([^\]]+)\]:\s*(.+)$/gm, (_, id, txt) => { _fn[id] = txt.trim(); return ''; });
-  // pre-process GH callouts
-  raw = raw.replace(
-    /^> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\n((?:^>[ \t]?.+\n?)*)/gim,
-    (_, type, body) => {
-      const icons = {NOTE:'ℹ️',TIP:'💡',IMPORTANT:'⚠️',WARNING:'⚠️',CAUTION:'🚫'};
-      const label = type[0] + type.slice(1).toLowerCase();
-      const inner = body.replace(/^>[ \t]?/gm,'').trim();
-      return `@@CALLOUT:${type.toLowerCase()}@@${icons[type]} ${label}\n${inner}@@ENDCALLOUT@@\n`;
-    }
-  );
-  // details/summary
-  raw = raw.replace(
-    /<details>\s*\n<summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/gi,
-    (_,s,b) => `<details><summary>${s.trim()}</summary><div class="md">${parseInner(b.trim())}</div></details>`
-  );
-  return parseInner(raw);
-}
-
-function parseInner(raw) {
-  const lines = raw.split('\n');
-  let html = '', i = 0;
-
-  while (i < lines.length) {
-    const ln = lines[i];
-
-    // callout block
-    if (ln.startsWith('@@CALLOUT:')) {
-      const type = ln.match(/@@CALLOUT:([^@]+)@@/)[1];
-      const labelLine = ln.replace(/@@CALLOUT:[^@]+@@/, '');
-      let inner = '';
-      i++;
-      while (i < lines.length && !lines[i].startsWith('@@ENDCALLOUT@@')) { inner += lines[i]+'\n'; i++; }
-      i++;
-      html += `<div class="callout ${type}"><div class="callout-label">${labelLine}</div>${parseInner(inner.trim())}</div>\n`;
-      continue;
-    }
-
-    // heading
-    const hm = ln.match(/^(#{1,4})\s+(.*)/);
-    if (hm) { html += `<h${Math.min(hm[1].length,3)}>${inl(hm[2])}</h${Math.min(hm[1].length,3)}>\n`; i++; continue; }
-
-    // hr
-    if (/^[-*_]{3,}$/.test(ln.trim())) { html += '<hr>\n'; i++; continue; }
-
-    // fenced code
-    if (/^```/.test(ln)) {
-      let code = ''; i++;
-      while (i < lines.length && !/^```/.test(lines[i])) { code += esc(lines[i])+'\n'; i++; }
-      i++;
-      html += `<pre><code>${code}</code></pre>\n`;
-      continue;
-    }
-
-    // blockquote (plain)
-    if (ln.startsWith('>') && !ln.startsWith('> [!')) {
-      let bq = '';
-      while (i < lines.length && (lines[i].startsWith('>') || lines[i].trim()==='')) {
-        bq += (lines[i].startsWith('>') ? lines[i].replace(/^>[ \t]?/,'') : '') + '\n'; i++;
-      }
-      html += `<blockquote>${parseInner(bq.trim())}</blockquote>\n`;
-      continue;
-    }
-
-    // ordered list
-    if (/^\s*\d+\.\s/.test(ln)) { const r = buildList(lines,i,'ol'); html+=r.html; i=r.i; continue; }
-
-    // unordered list
-    if (/^\s*[-*+]\s/.test(ln)) { const r = buildList(lines,i,'ul'); html+=r.html; i=r.i; continue; }
-
-    // blank
-    if (ln.trim()==='') { i++; continue; }
-
-    // paragraph
-    let para = '';
-    while (i<lines.length && lines[i].trim()!=='' &&
-      !/^#+\s/.test(lines[i]) && !/^```/.test(lines[i]) &&
-      !/^\s*\d+\./.test(lines[i]) && !/^\s*[-*+]\s/.test(lines[i]) &&
-      !lines[i].startsWith('>') && !/^[-*_]{3,}$/.test(lines[i].trim()) &&
-      !lines[i].startsWith('@@CALLOUT') && !lines[i].startsWith('<details') && !lines[i].startsWith('</details')
-    ) { para += lines[i]+' '; i++; }
-    if (para.trim()) html += `<p>${inl(para.trim())}</p>\n`;
-  }
-
-  if (Object.keys(_fn).length) {
-    html += '<div class="footnotes"><ol>';
-    for (const [id,txt] of Object.entries(_fn)) {
-      html += `<li id="fn-${id}">${inl(txt)} <a href="#fnref-${id}" style="color:var(--text3);text-decoration:none">↩</a></li>`;
-    }
-    html += '</ol></div>';
-  }
-  return html;
-}
-
-function buildList(lines, start, type) {
-  let html = `<${type}>\n`, i = start;
-  const base = (lines[i].match(/^(\s*)/)[1]||'').length;
-  while (i < lines.length) {
-    const ln = lines[i];
-    if (ln.trim()==='') { i++; continue; }
-    const ind = (ln.match(/^(\s*)/)[1]||'').length;
-    if (ind < base) break;
-    const isOl = /^\s*\d+\.\s/.test(ln), isUl = /^\s*[-*+]\s/.test(ln);
-    if (!isOl && !isUl) break;
-    const content = ln.replace(/^\s*(\d+\.|-|\*|\+)\s+/,'');
-    let item = inl(content);
-    const j = i+1;
-    if (j<lines.length && lines[j].trim()!=='') {
-      const ni = (lines[j].match(/^(\s*)/)[1]||'').length;
-      if (ni>ind && (/^\s*\d+\./.test(lines[j])||/^\s*[-*+]\s/.test(lines[j]))) {
-        const nested = buildList(lines,j,/^\s*\d+\./.test(lines[j])?'ol':'ul');
-        item += nested.html; i = nested.i;
-      } else i++;
-    } else i++;
-    html += `<li>${item}</li>\n`;
-  }
-  return { html: html+`</${type}>\n`, i };
-}
-
-function inl(s) {
-  // footnote refs
-  s = s.replace(/\[\^([^\]]+)\]/g, (_,id) =>
-    `<sup><a href="#fn-${id}" id="fnref-${id}">[${id}]</a></sup>`);
-  // images — detect badges
-  s = s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_,alt,src) => {
-    const badge = /shields\.io|camo\.githubusercontent|badge/i.test(src+alt);
-    if (!/^https?:\/\//.test(src)) src = RAW+src;
-    return `<img src="${src}" alt="${esc(alt)}"${badge?' class="badge"':''} loading="lazy">`;
-  });
-  // links
-  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>');
-  // bold, strike, italic, code
-  s = s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
-  s = s.replace(/__([^_]+)__/g,'<strong>$1</strong>');
-  s = s.replace(/~~([^~]+)~~/g,'<del>$1</del>');
-  s = s.replace(/\*([^*\n]+)\*/g,'<em>$1</em>');
-  s = s.replace(/_([^_\n]+)_/g,'<em>$1</em>');
-  s = s.replace(/`([^`\n]+)`/g,(_,c)=>`<code>${esc(c)}</code>`);
-  return s;
-}
-
-/* ══════════════════════════════════════════════
-   Fetch MD
-══════════════════════════════════════════════ */
-async function loadMd(file, id, xform) {
-  const el = document.getElementById(id);
-  try {
-    const r = await fetch(RAW + file);
-    if (!r.ok) throw new Error(r.status);
-    let text = await r.text();
-    text = text.replace(/\[Возврат к изначальному файлу\][^\n]*/g,'');
-    if (xform) text = xform(text);
-    el.className = 'md';
-    el.innerHTML = parseMd(text);
-  } catch {
-    el.className = 'md';
-    el.innerHTML = `<p style="color:var(--text2)">Не удалось загрузить. <a href="https://github.com/Henry-Tsukino/wbg-albiondata-client" target="_blank">Открыть на GitHub</a></p>`;
-  }
-}
-
-function loadAll() {
-  loadMd('Windows.md','md-win');
-  loadMd('Linux.md','md-lnx');
-  loadMd('README.md','md-readme', txt => {
-    const idx = txt.indexOf('## Описание проекта');
-    return idx !== -1 ? txt.slice(idx) : txt;
-  });
-}
-
-/* ══════════════════════════════════════════════
-   OS / CTA / Cards
-══════════════════════════════════════════════ */
-const REPO = 'https://github.com/Henry-Tsukino/wbg-albiondata-client';
-
-function detectOS() {
-  const ua = navigator.userAgent;
-  if (/Windows/i.test(ua)) return 'win';
-  if (/Linux|Ubuntu|Debian/i.test(ua)) return 'lnx';
-  return null;
-}
-
-function buildCta() {
-  const os = detectOS();
-  const btns = document.getElementById('cta-btns');
-  const hint = document.getElementById('cta-hint');
-  const cfg = {
-    win: { url: REPO+'/releases/latest/download/installer-WBG-tool.exe', labelKey: 'dl.win', hintKey: 'dl.installer' },
-    lnx: { url: REPO+'/releases/latest/download/GNU-Linux.tar.gz',      labelKey: 'dl.lnx', hintKey: 'dl.archive' },
-  };
-  if (os && cfg[os]) {
-    const c = cfg[os];
-    btns.innerHTML = `
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WBG Albion Data Client</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                --bg: #0d0d0f;
+                --bg2: #111114;
+                --bg3: #17171b;
+                --bg4: #1e1e23;
+                --border: #2a2a32;
+                --border2: #34343e;
+                --text: #e8e8ec;
+                --text2: #9898a8;
+                --text3: #5a5a6a;
+                --accent: #7c6af7;
+                --accent-bg: rgba(124, 106, 247, 0.08);
+                --green: #3dd68c;
+                --green-bg: rgba(61, 214, 140, 0.08);
+                --amber: #f5a623;
+                --amber-bg: rgba(245, 166, 35, 0.08);
+                --red: #f06c6c;
+                --red-bg: rgba(239, 68, 68, 0.06);
+                --blue: #3b82f6;
+                --blue-bg: rgba(59, 130, 246, 0.06);
+                --radius: 6px;
+                --radius2: 10px;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: "Geist", system-ui, sans-serif;
+                font-size: 15px;
+                line-height: 1.6;
+                min-height: 100vh;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background-image:
+                    linear-gradient(var(--border) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+                background-size: 48px 48px;
+                opacity: 0.18;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            nav {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: rgba(13, 13, 15, 0.88);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border-bottom: 1px solid var(--border);
+                padding: 0 2rem;
+                height: 52px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .nav-logo {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: "Geist Mono", monospace;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text);
+                text-decoration: none;
+            }
+
+            .nav-logo .dot {
+                width: 7px;
+                height: 7px;
+                background: var(--accent);
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 1.5rem;
+                list-style: none;
+                align-items: center;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+                color: var(--text2);
+                text-decoration: none;
+                transition: color 0.15s;
+            }
+            .nav-links a:hover {
+                color: var(--text);
+            }
+
+            .nav-badge {
+                font-size: 11px;
+                padding: 2px 8px;
+                border-radius: 999px;
+                background: var(--accent-bg);
+                border: 1px solid rgba(124, 106, 247, 0.25);
+                color: var(--accent);
+                font-family: "Geist Mono", monospace;
+            }
+
+            .lang-toggle {
+                display: flex;
+                gap: 2px;
+                background: var(--bg2);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 2px;
+            }
+            .lang-btn {
+                font-family: "Geist Mono", monospace;
+                font-size: 10px;
+                padding: 3px 8px;
+                border-radius: 4px;
+                border: none;
+                background: transparent;
+                color: var(--text3);
+                cursor: pointer;
+                transition:
+                    background 0.12s,
+                    color 0.12s;
+                letter-spacing: 0.04em;
+            }
+            .lang-btn.active {
+                background: var(--bg4);
+                color: var(--text);
+                border: 1px solid var(--border2);
+            }
+
+            main {
+                position: relative;
+                z-index: 1;
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 0 2rem 6rem;
+            }
+
+            /* hero */
+            .hero {
+                padding: 5rem 0 3.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .hero-eyebrow {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-family: "Geist Mono", monospace;
+                font-size: 11px;
+                color: var(--text3);
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 1.25rem;
+            }
+            .hero-eyebrow::before {
+                content: "";
+                display: block;
+                width: 20px;
+                height: 1px;
+                background: var(--text3);
+            }
+
+            h1 {
+                font-family: "Geist Mono", monospace;
+                font-size: clamp(1.9rem, 4vw, 2.6rem);
+                font-weight: 500;
+                letter-spacing: -0.03em;
+                line-height: 1.15;
+                margin-bottom: 1rem;
+                color: var(--text);
+            }
+            h1 span {
+                color: var(--accent);
+            }
+
+            .hero-desc {
+                font-size: 16px;
+                color: var(--text2);
+                max-width: 520px;
+                margin-bottom: 2.5rem;
+                line-height: 1.7;
+            }
+            .hero-desc a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            .hero-desc a:hover {
+                text-decoration: underline;
+            }
+
+            .hero-cta {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-bottom: 1rem;
+            }
+
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-family: "Geist", sans-serif;
+                font-size: 13px;
+                font-weight: 500;
+                padding: 9px 18px;
+                border-radius: var(--radius);
+                text-decoration: none;
+                transition:
+                    opacity 0.12s,
+                    transform 0.1s;
+                border: none;
+                cursor: pointer;
+            }
+            .btn:active {
+                transform: scale(0.98);
+            }
+            .btn-primary {
+                background: var(--accent);
+                color: #fff;
+            }
+            .btn-primary:hover {
+                opacity: 0.87;
+            }
+            .btn-ghost {
+                background: transparent;
+                color: var(--text2);
+                border: 1px solid var(--border2);
+            }
+            .btn-ghost:hover {
+                color: var(--text);
+                border-color: var(--text3);
+            }
+
+            .hero-hint {
+                font-family: "Geist Mono", monospace;
+                font-size: 11px;
+                color: var(--text3);
+            }
+            .hero-hint span {
+                color: var(--accent);
+            }
+
+            .pills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-top: 1.5rem;
+            }
+            .pill {
+                font-family: "Geist Mono", monospace;
+                font-size: 11px;
+                padding: 4px 10px;
+                border-radius: 999px;
+                background: var(--bg3);
+                border: 1px solid var(--border);
+                color: var(--text2);
+            }
+
+            /* download */
+            .download-section {
+                padding: 2.5rem 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .section-label {
+                font-family: "Geist Mono", monospace;
+                font-size: 11px;
+                color: var(--text3);
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 1.25rem;
+            }
+
+            .os-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .os-card {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 18px;
+                background: var(--bg3);
+                border: 1px solid var(--border);
+                border-radius: var(--radius2);
+                text-decoration: none;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s;
+            }
+            .os-card:hover {
+                border-color: var(--border2);
+                background: var(--bg4);
+            }
+            .os-card.primary {
+                border-color: rgba(124, 106, 247, 0.45);
+                background: rgba(124, 106, 247, 0.06);
+            }
+            .os-card.primary:hover {
+                border-color: rgba(124, 106, 247, 0.7);
+                background: rgba(124, 106, 247, 0.1);
+            }
+
+            .os-card-left {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .os-icon {
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--bg4);
+                border-radius: var(--radius);
+                font-size: 18px;
+                flex-shrink: 0;
+            }
+            .os-card.primary .os-icon {
+                background: var(--accent-bg);
+            }
+
+            .os-name {
+                font-weight: 500;
+                font-size: 14px;
+                color: var(--text);
+                margin-bottom: 2px;
+            }
+            .os-meta {
+                font-family: "Geist Mono", monospace;
+                font-size: 11px;
+                color: var(--text3);
+            }
+            .os-card.primary .os-name {
+                color: #c4bcff;
+            }
+
+            .os-badge {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                padding: 4px 10px;
+                border-radius: 999px;
+                background: var(--accent-bg);
+                border: 1px solid rgba(124, 106, 247, 0.25);
+                color: var(--accent);
+                white-space: nowrap;
+            }
+            .os-badge.neutral {
+                background: var(--bg4);
+                border-color: var(--border2);
+                color: var(--text2);
+            }
+
+            .detected-note {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                color: var(--text3);
+                margin-top: 10px;
+                font-family: "Geist Mono", monospace;
+            }
+            .detected-note::before {
+                content: "↑";
+                color: var(--accent);
+            }
+
+            /* section */
+            .section {
+                padding: 2.5rem 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            h2 {
+                font-family: "Geist Mono", monospace;
+                font-size: 1rem;
+                font-weight: 500;
+                color: var(--text);
+                margin-bottom: 1.25rem;
+            }
+
+            /* tabs */
+            .tab-bar {
+                display: flex;
+                gap: 2px;
+                background: var(--bg2);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 3px;
+                margin-bottom: 12px;
+                width: fit-content;
+            }
+            .tab-btn {
+                font-family: "Geist Mono", monospace;
+                font-size: 11px;
+                padding: 5px 14px;
+                border-radius: 4px;
+                border: none;
+                background: transparent;
+                color: var(--text3);
+                cursor: pointer;
+                transition:
+                    background 0.15s,
+                    color 0.15s;
+            }
+            .tab-btn.active {
+                background: var(--bg4);
+                color: var(--text);
+                border: 1px solid var(--border2);
+            }
+            .tab-pane {
+                display: none;
+            }
+            .tab-pane.active {
+                display: block;
+            }
+
+            /* markdown content */
+            .md {
+                font-size: 14px;
+                color: var(--text2);
+                line-height: 1.75;
+            }
+
+            .md h1,
+            .md h2,
+            .md h3 {
+                font-family: "Geist Mono", monospace;
+                font-weight: 500;
+                letter-spacing: -0.02em;
+                color: var(--text);
+                margin: 24px 0 10px;
+            }
+            .md h1 {
+                font-size: 16px;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 8px;
+            }
+            .md h2 {
+                font-size: 14px;
+            }
+            .md h3 {
+                font-size: 13px;
+                color: var(--text2);
+            }
+
+            .md p {
+                margin-bottom: 10px;
+            }
+            .md a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            .md a:hover {
+                text-decoration: underline;
+            }
+            .md strong {
+                color: var(--text);
+                font-weight: 500;
+            }
+            .md em {
+                color: var(--text2);
+                font-style: italic;
+            }
+            .md del {
+                text-decoration: line-through;
+                color: var(--text3);
+            }
+
+            .md ul,
+            .md ol {
+                padding-left: 20px;
+                margin-bottom: 10px;
+            }
+            .md ul ul,
+            .md ol ol,
+            .md ul ol,
+            .md ol ul {
+                margin: 4px 0;
+            }
+            .md li {
+                margin-bottom: 5px;
+                line-height: 1.65;
+            }
+
+            .md code {
+                font-family: "Geist Mono", monospace;
+                font-size: 12px;
+                background: var(--bg4);
+                border: 1px solid var(--border2);
+                padding: 1px 5px;
+                border-radius: 3px;
+                color: var(--text);
+            }
+            .md pre {
+                background: var(--bg2);
+                border: 1px solid var(--border2);
+                border-radius: var(--radius);
+                padding: 12px 14px;
+                overflow-x: auto;
+                margin-bottom: 12px;
+            }
+            .md pre code {
+                background: none;
+                border: none;
+                padding: 0;
+                font-size: 12px;
+                color: var(--text2);
+            }
+
+            .md blockquote {
+                border-left: 2px solid var(--border2);
+                padding: 8px 14px;
+                margin: 10px 0;
+                color: var(--text2);
+            }
+            .md blockquote p {
+                margin-bottom: 4px;
+            }
+
+            .md hr {
+                border: none;
+                border-top: 1px solid var(--border);
+                margin: 20px 0;
+            }
+
+            .md img {
+                max-width: 100%;
+                border-radius: var(--radius);
+                border: 1px solid var(--border2);
+                margin: 8px 0;
+                display: block;
+            }
+
+            .md details {
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 10px 14px;
+                margin: 10px 0;
+            }
+            .md summary {
+                cursor: pointer;
+                font-size: 13px;
+                color: var(--text2);
+                user-select: none;
+            }
+
+            /* callouts */
+            .md .callout {
+                border-left: 2px solid var(--border2);
+                padding: 10px 14px;
+                margin: 14px 0;
+                border-radius: 0 var(--radius) var(--radius) 0;
+                background: var(--bg3);
+            }
+            .md .callout.note {
+                border-color: var(--blue);
+                background: var(--blue-bg);
+            }
+            .md .callout.tip {
+                border-color: var(--green);
+                background: var(--green-bg);
+            }
+            .md .callout.important {
+                border-color: var(--accent);
+                background: var(--accent-bg);
+            }
+            .md .callout.warning {
+                border-color: var(--amber);
+                background: var(--amber-bg);
+            }
+            .md .callout.caution {
+                border-color: var(--red);
+                background: var(--red-bg);
+            }
+
+            .md .callout-label {
+                font-family: "Geist Mono", monospace;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.07em;
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+            .md .callout.note .callout-label {
+                color: var(--blue);
+            }
+            .md .callout.tip .callout-label {
+                color: var(--green);
+            }
+            .md .callout.important .callout-label {
+                color: var(--accent);
+            }
+            .md .callout.warning .callout-label {
+                color: var(--amber);
+            }
+            .md .callout.caution .callout-label {
+                color: var(--red);
+            }
+            .md .callout p {
+                margin-bottom: 4px;
+            }
+
+            /* footnotes */
+            .md .footnotes {
+                margin-top: 22px;
+                padding-top: 12px;
+                border-top: 1px solid var(--border);
+                font-size: 12px;
+                color: var(--text3);
+            }
+            .md .footnotes ol {
+                padding-left: 18px;
+            }
+            .md .footnotes li {
+                margin-bottom: 4px;
+            }
+            .md sup a {
+                font-family: "Geist Mono", monospace;
+                font-size: 10px;
+                color: var(--accent);
+                text-decoration: none;
+            }
+
+            /* footer */
+            footer {
+                position: relative;
+                z-index: 1;
+                border-top: 1px solid var(--border);
+                padding: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 12px;
+                color: var(--text3);
+                font-family: "Geist Mono", monospace;
+            }
+            footer a {
+                color: var(--text3);
+                text-decoration: none;
+            }
+            footer a:hover {
+                color: var(--text2);
+            }
+            .footer-links {
+                display: flex;
+                gap: 1.5rem;
+            }
+
+            @media (max-width: 600px) {
+                nav {
+                    padding: 0 1rem;
+                }
+                main {
+                    padding: 0 1rem 4rem;
+                }
+                .nav-links {
+                    display: none;
+                }
+                footer {
+                    flex-direction: column;
+                    gap: 1rem;
+                    padding: 1.5rem 1rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <a class="nav-logo" href="#">
+                <span class="dot"></span>
+                wbg-albiondata-client
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <a href="#download" data-i18n="nav.download">Скачать</a>
+                </li>
+                <li>
+                    <a href="#install" data-i18n="nav.install">Установка</a>
+                </li>
+                <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
+                <li>
+                    <a
+                        href="https://github.com/Henry-Tsukino/wbg-albiondata-client"
+                        target="_blank"
+                        >GitHub ↗</a
+                    >
+                </li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 10px">
+                <div class="lang-toggle">
+                    <button
+                        class="lang-btn active"
+                        id="btn-ru"
+                        onclick="setLang('ru')"
+                    >
+                        RU
+                    </button>
+                    <button
+                        class="lang-btn"
+                        id="btn-en"
+                        onclick="setLang('en')"
+                    >
+                        EN
+                    </button>
+                </div>
+                <span class="nav-badge" id="version-badge">...</span>
+            </div>
+        </nav>
+
+        <main>
+            <!-- HERO -->
+            <section class="hero">
+                <div class="hero-eyebrow">Open Source · Albion Online</div>
+                <h1>wbg-<span>albiondata</span>-client</h1>
+                <p class="hero-desc" id="hero-desc"></p>
+                <div class="hero-cta" id="cta-btns"></div>
+                <span class="hero-hint" id="cta-hint"></span>
+                <div class="pills">
+                    <span class="pill">Windows</span>
+                    <span class="pill">Linux</span>
+                    <span class="pill">Open Source</span>
+                    <span class="pill">MIT</span>
+                </div>
+            </section>
+
+            <!-- DOWNLOAD -->
+            <section class="download-section" id="download">
+                <div class="section-label" data-i18n="sec.download">
+                    Загрузка
+                </div>
+                <div class="os-grid" id="os-grid"></div>
+                <p class="detected-note" id="detected-note"></p>
+            </section>
+
+            <!-- INSTALL -->
+            <section class="section" id="install">
+                <h2 data-i18n="install.title">Инструкция по установке</h2>
+                <div class="tab-bar">
+                    <button class="tab-btn active" data-t="win">Windows</button>
+                    <button class="tab-btn" data-t="lnx">Linux</button>
+                </div>
+
+                <div class="tab-pane active" id="pwin">
+                    <div class="md">
+                        <h1>Установка клиента для Windows</h1>
+                        <ol>
+                            <li>
+                                Загрузите со
+                                <a
+                                    href="https://github.com/Henry-Tsukino/wbg-albiondata-client/releases"
+                                    target="_blank"
+                                    >страницы с релизами</a
+                                >
+                                последний дистрибутив инсталятора клиента для
+                                Windows: <strong>installer-WBG-tool.exe</strong>
+                            </li>
+                            <li>
+                                Запустите скачанный файл установщика
+                                <ol>
+                                    <li>
+                                        Выберите хотите ли устанавливать для
+                                        всех пользователей устройства (верхний
+                                        выбор) или только для себя (нижний
+                                        выбор)
+                                    </li>
+                                    <li>Выберите язык инсталятора</li>
+                                    <li>Согласитесь с принятием лицензии</li>
+                                    <li>
+                                        Выберите <strong>путь</strong> установки
+                                        программы
+                                    </li>
+                                    <li>
+                                        Выберите хотите ли
+                                        <strong
+                                            >создать ярлык на рабочем столе и
+                                            включить автозапуск</strong
+                                        >
+                                    </li>
+                                    <li>
+                                        Нажмите кнопку
+                                        <strong>Установить</strong>
+                                    </li>
+                                    <li>
+                                        Если у вас не был установлен
+                                        <strong>npcap</strong>, у вас появится
+                                        окно его установки
+                                        <ol>
+                                            <li>
+                                                Согласитесь с принятием лицензии
+                                                npcap
+                                            </li>
+                                            <li>
+                                                <strong
+                                                    >Ничего не трогайте</strong
+                                                >
+                                                и просто нажмите установить
+                                            </li>
+                                            <li>
+                                                Установка займет некоторое время
+                                                и в это время может появляться
+                                                окно консоли — это нормально
+                                            </li>
+                                            <li>
+                                                По окончанию нажмите кнопку
+                                                продолжить и закончить установку
+                                            </li>
+                                            <li>
+                                                Вернитесь обратно на окно
+                                                установщика
+                                                WBG-albiondata-client
+                                            </li>
+                                        </ol>
+                                    </li>
+                                    <li>
+                                        Дождитесь конца установки и нажмите
+                                        кнопку окончания инсталяции
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                Если перед закрытием инсталятора вы не убирали
+                                галочку на запуск, то программа должна сама по
+                                себе запуститься по окончанию установки
+                            </li>
+                            <li>
+                                Проведите дальнейшие настройки клиента через
+                                <a href="#tray">трей</a> (информация как это
+                                сделать находится ниже)
+                            </li>
+                        </ol>
+                        <div class="callout important">
+                            <div class="callout-label">⚠️ Important</div>
+                            <p>
+                                <strong
+                                    >Если вам вылезло предупреждение о
+                                    безопасности:</strong
+                                >
+                                не переживайте, у нас просто не нашлось лишних
+                                200$/год чтоб купить лицензию на подпись
+                                гарантии о безопасности.
+                            </p>
+                            <img
+                                src="image/Windows/1772166557510.png"
+                                alt="Инструкция по обходу оповещения о безопасности"
+                                loading="lazy"
+                            />
+                        </div>
+
+                        <h1 id="tray">Настройка клиента</h1>
+                        <p>
+                            Настройки, в частности закрытие консоли клиента,
+                            можно найти в системном трее Windows в правом нижнем
+                            углу экрана:
+                        </p>
+                        <img
+                            src="image/Windows/1772163387922.png"
+                            alt="Скриншот системного трея в среде Windows 11"
+                            loading="lazy"
+                        />
+                        <ul>
+                            <li>
+                                <strong>Hide Console</strong> — Спрятать консоль
+                            </li>
+                            <li>
+                                <strong>Start on Windows</strong> — Запуск
+                                приложения при старте Windows (автозапуск)
+                            </li>
+                            <li><strong>Quit</strong> — Выключить программу</li>
+                        </ul>
+                        <div class="callout note">
+                            <div class="callout-label">ℹ️ Note</div>
+                            <p>
+                                <strong
+                                    >Рекомендуется включить автозапуск</strong
+                                >, чтоб клиент не приходилось включать при
+                                каждом запуске игры
+                            </p>
+                        </div>
+                        <div class="callout caution">
+                            <div class="callout-label">🚫 Caution</div>
+                            <p>
+                                В случае,
+                                <strong
+                                    >если ваше устройство крайне слабое</strong
+                                >
+                                и работа в фоне, даже такой маленькой программы,
+                                вам критична для производительности,
+                                <strong
+                                    >стоит оставить автозапуск
+                                    выключенным</strong
+                                >
+                            </p>
+                        </div>
+
+                        <h1>Удаление клиента</h1>
+                        <ol>
+                            <li>
+                                Зайдите в папку в которую вы установили клиент
+                                <ul>
+                                    <li>
+                                        Кликните ПКМ на ярлык клиента и после
+                                        выберите "Открыть расположение файла" в
+                                        открывшемся меню
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                В открывшемся проводнике нажмите на файл
+                                <strong>unins000.exe</strong>
+                                <img
+                                    src="image/Windows/1772161477979.png"
+                                    alt="Скриншот файлов установленного клиента в среде Windows Explorer"
+                                    loading="lazy"
+                                />
+                            </li>
+                            <li>
+                                В открывшемся окне нажмите на кнопку
+                                подтверждения удаления
+                            </li>
+                            <li>
+                                Дождитесь удаления клиента и после нажмите
+                                <strong>ОК</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="plnx">
+                    <div class="md">
+                        <h1>Установка клиента для Linux</h1>
+                        <ol>
+                            <li>
+                                Скачайте и распакуйте архив
+                                <strong>GNU-Linux.tar.gz</strong> со
+                                <a
+                                    href="https://github.com/Henry-Tsukino/wbg-albiondata-client/releases"
+                                    target="_blank"
+                                    >страницы с релизами</a
+                                >.
+                            </li>
+                            <li>
+                                Запустите в консоли
+                                <code>bash ./install.sh</code> (или запустите
+                                bash-скрипт так, как вам удобно).
+                            </li>
+                            <li>
+                                У вас запросят <code>sudo</code>-пароль — не
+                                пугайтесь, это необходимо для просмотра сетевых
+                                пакетов, на этом основан принцип работы
+                                программы.
+                            </li>
+                            <li>
+                                При наличии проблем попробуйте повторить шаги
+                                2–3 и/или выполнить инструкции, которые укажет
+                                установщик.
+                                <ul>
+                                    <li>
+                                        Если установщик крашится или не выводит
+                                        конкретных проблем — перейдите на
+                                        <a href="#step7">шаг 7</a>.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                Если приложение не отображается на рабочем столе
+                                — найдите его через поиск приложений.
+                                <ul>
+                                    <li>
+                                        В Plasma KDE поиск открывается клавишей
+                                        Meta (Super).
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                Пользуйтесь с гордостью — вы делаете доброе
+                                дело.
+                            </li>
+                        </ol>
+                        <div class="callout tip">
+                            <div class="callout-label">💡 Tip</div>
+                            <p>
+                                Рекомендуем добавить программу в автозапуск, она
+                                потребляет всего <code>~20 МБ ОЗУ</code>.
+                            </p>
+                        </div>
+                        <div class="callout warning" id="step7">
+                            <div class="callout-label">
+                                ⚠️ Warning — Выход из безвыходных ситуаций
+                            </div>
+                            <ul>
+                                <li>
+                                    Напишите в личные сообщения в Discord:
+                                    <a
+                                        href="https://discordapp.com/users/747787435198513153/"
+                                        target="_blank"
+                                        >pinok.tsukino</a
+                                    >
+                                </li>
+                                <li>
+                                    Или свяжитесь там, где вы нашли этот
+                                    установщик.
+                                </li>
+                                <li>
+                                    Также можно просто задавать вопросы —
+                                    отвечу.
+                                </li>
+                            </ul>
+                        </div>
+                        <p>Приятного пользования программой.</p>
+                        <details>
+                            <summary>Комментарий от меня</summary>
+                            <p
+                                style="
+                                    margin-top: 8px;
+                                    font-size: 13px;
+                                    color: var(--text2);
+                                    line-height: 1.7;
+                                "
+                            >
+                                К сожалению, я не могу создать репозитории в
+                                Pacman/DNF/dpkg/APT или AUR для всех на свете
+                                дистрибутивов Linux, так что сделал
+                                универсальный бинарник. Если хотите — можете
+                                предложить свою помощь в развитии проекта. Пока
+                                что настройки есть исключительно в Windows.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABOUT -->
+            <section class="section" id="about">
+                <h2 data-i18n="about.title">О проекте</h2>
+                <div class="md">
+                    <h2>Описание проекта</h2>
+                    <h3>Суть работы</h3>
+                    <p>
+                        Albion Data Client мониторит локальный сетевой трафик
+                        вашего устройства, идентифицирует UDP-пакеты, содержащие
+                        данные игры Albion Online, и после отправляет информацию
+                        на центральный сервер брокера сообщений NATS для
+                        дальнейшего распределения по другим сервисам. Таким
+                        образом получается сбор данных, осуществляемый силами
+                        сообщества, для аналитики рынка, слежения за событиями и
+                        мониторинга игровой статистики.
+                    </p>
+                    <h3>Функции</h3>
+                    <ul>
+                        <li>
+                            Мониторинг сетевого трафика в реальном времени с
+                            помощью libpcap
+                        </li>
+                        <li>
+                            Фильтрование UDP-пакетов и их дальнейший анализ для
+                            поиска протоколов Albion Online
+                        </li>
+                        <li>Интеграция с системой брокера сообщений NATS</li>
+                        <li>
+                            Поддержка кросс-платформы (Windows, Linux,
+                            <del>macOS</del>) (macOS в процессе реализации)
+                        </li>
+                        <li>
+                            Интеграция в системный трей Windows
+                            <del>и macOS</del>
+                        </li>
+                        <li>
+                            Минимальное потребление ресурсов: максимум ~<a
+                                href="image/README/20mb_RAM.png"
+                                target="_blank"
+                                >20 МБ ОЗУ</a
+                            ><sup><a href="#fn-1" id="fnref-1">[1]</a></sup> и
+                            25 МБ дискового пространства
+                        </li>
+                    </ul>
+                    <h3>Карается ли баном?</h3>
+                    <p>
+                        Заявление от <strong>SBI Games</strong> (разработчика)
+                        касательно мониторинга сетевых пакетов:
+                    </p>
+                    <blockquote>
+                        <p>
+                            <em
+                                >«Our position is quite simple. As long as you
+                                just look and analyze we are ok with it. The
+                                moment you modify or manipulate something or
+                                somehow interfere with our services we will
+                                react.»</em
+                            >
+                        </p>
+                        <p>— MadDave, Technical Lead for Albion Online</p>
+                    </blockquote>
+                    <p>
+                        Перевод: «Пока вы просто наблюдаете и анализируете — нас
+                        это устраивает. Как только вы что-то измените или
+                        вмешаетесь в работу наших сервисов — мы отреагируем.»
+                    </p>
+                    <p>
+                        <a
+                            href="https://forum.albiononline.com/index.php/Thread/51604-Is-it-allowed-to-scan-your-internet-trafic-and-pick-up-logs/?postID=512670#post512670"
+                            target="_blank"
+                            >Полный оригинал ↗</a
+                        >
+                    </p>
+                    <p>
+                        Пользователи должны следовать
+                        <a
+                            href="https://albiononline.com/terms_and_conditions"
+                            target="_blank"
+                            >Условиям использования Albion Online</a
+                        >
+                        и
+                        <a
+                            href="https://albiononline.com/game-rules"
+                            target="_blank"
+                            >Правилам игры</a
+                        >.
+                    </p>
+                    <h2>Сообщество и поддержка</h2>
+                    <p>
+                        Клиент создан в первую очередь для нужд гильдии World
+                        Bank Group. По вопросам:
+                    </p>
+                    <ul>
+                        <li>
+                            Дискорд ГИ:
+                            <a
+                                href="https://discord.gg/kgXREFJzsS"
+                                target="_blank"
+                                >Discord WBG ↗</a
+                            >
+                        </li>
+                        <li>
+                            Разработчики форка:
+                            <a
+                                href="https://discordapp.com/users/747787435198513153/"
+                                target="_blank"
+                                >pinok.tsukino</a
+                            >,
+                            <a
+                                href="https://discordapp.com/users/603673234138988591/"
+                                target="_blank"
+                                >henry.tsukino</a
+                            >
+                        </li>
+                    </ul>
+                    <h2>Лицензия</h2>
+                    <p>
+                        Данный форк использует лицензию
+                        <a
+                            href="https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/LICENSE"
+                            target="_blank"
+                            >MIT License</a
+                        >, как и оригинальный проект.
+                    </p>
+                    <div class="footnotes">
+                        <ol>
+                            <li id="fn-1">
+                                При выходе обновлений Альбиона, изменения иногда
+                                могут сломать программу и она начнёт активно
+                                занимать оперативную память. Закройте программу
+                                и сообщите об этом разработчикам форка.
+                                <a
+                                    href="#fnref-1"
+                                    style="
+                                        color: var(--text3);
+                                        text-decoration: none;
+                                    "
+                                    >↩</a
+                                >
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="section" id="faq">
+                <h2 data-i18n="faq.title">FAQ</h2>
+                <div style="display: flex; flex-direction: column; gap: 1px">
+                    <details
+                        style="
+                            background: var(--bg3);
+                            border: 1px solid var(--border);
+                            border-radius: var(--radius);
+                            overflow: hidden;
+                        "
+                    >
+                        <summary
+                            style="
+                                padding: 13px 16px;
+                                font-size: 14px;
+                                font-weight: 500;
+                                color: var(--text);
+                                cursor: pointer;
+                                list-style: none;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            "
+                        >
+                            <span data-i18n="faq.q1"
+                                >Клиент не запускается, выдаёт ошибки или ведёт
+                                себя странно</span
+                            >
+                            <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                style="flex-shrink: 0; opacity: 0.4"
+                            >
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </summary>
+                        <div
+                            style="
+                                padding: 12px 16px 14px;
+                                font-size: 13px;
+                                color: var(--text2);
+                                border-top: 1px solid var(--border);
+                                line-height: 1.7;
+                            "
+                        >
+                            <ol style="padding-left: 18px; line-height: 1.9">
+                                <li>
+                                    Зайдите в папку установки клиента<br /><small
+                                        style="color: var(--text3)"
+                                        >ПКМ на ярлык → «Открыть расположение
+                                        файла»</small
+                                    >
+                                </li>
+                                <li>
+                                    Найдите файл
+                                    <strong style="color: var(--text)"
+                                        >albiondata-client.log</strong
+                                    >
+                                </li>
+                                <li>
+                                    Отправьте его разработчикам в Discord:
+                                    <a
+                                        href="https://discordapp.com/users/747787435198513153/"
+                                        target="_blank"
+                                        >pinok.tsukino</a
+                                    >
+                                    или
+                                    <a
+                                        href="https://discordapp.com/users/603673234138988591/"
+                                        target="_blank"
+                                        >henry.tsukino</a
+                                    >
+                                </li>
+                            </ol>
+                        </div>
+                    </details>
+
+                    <details
+                        style="
+                            background: var(--bg3);
+                            border: 1px solid var(--border);
+                            border-radius: var(--radius);
+                            overflow: hidden;
+                            margin-top: 1px;
+                        "
+                    >
+                        <summary
+                            style="
+                                padding: 13px 16px;
+                                font-size: 14px;
+                                font-weight: 500;
+                                color: var(--text);
+                                cursor: pointer;
+                                list-style: none;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            "
+                        >
+                            <span data-i18n="faq.q2"
+                                >Предупреждение Windows Defender при
+                                установке</span
+                            >
+                            <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                style="flex-shrink: 0; opacity: 0.4"
+                            >
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </summary>
+                        <div
+                            style="
+                                padding: 12px 16px 14px;
+                                font-size: 13px;
+                                color: var(--text2);
+                                border-top: 1px solid var(--border);
+                            "
+                        >
+                            Не переживайте — у нас просто не нашлось лишних
+                            200$/год чтоб купить лицензию на подпись гарантии о
+                            безопасности. Нажмите «Подробнее» → «Выполнить в
+                            любом случае». Исходники открыты на
+                            <a
+                                href="https://github.com/Henry-Tsukino/wbg-albiondata-client"
+                                target="_blank"
+                                >GitHub</a
+                            >.
+                        </div>
+                    </details>
+
+                    <details
+                        style="
+                            background: var(--bg3);
+                            border: 1px solid var(--border);
+                            border-radius: var(--radius);
+                            overflow: hidden;
+                            margin-top: 1px;
+                        "
+                    >
+                        <summary
+                            style="
+                                padding: 13px 16px;
+                                font-size: 14px;
+                                font-weight: 500;
+                                color: var(--text);
+                                cursor: pointer;
+                                list-style: none;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            "
+                        >
+                            <span data-i18n="faq.q3">Карается ли баном?</span>
+                            <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                style="flex-shrink: 0; opacity: 0.4"
+                            >
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </summary>
+                        <div
+                            style="
+                                padding: 12px 16px 14px;
+                                font-size: 13px;
+                                color: var(--text2);
+                                border-top: 1px solid var(--border);
+                                line-height: 1.7;
+                            "
+                        >
+                            Заявление от SBI Games:<br /><br />
+                            <em
+                                >«Our position is quite simple. As long as you
+                                just look and analyze we are ok with it. The
+                                moment you modify or manipulate something or
+                                somehow interfere with our services we will
+                                react.»</em
+                            ><br />
+                            <small style="color: var(--text3)"
+                                >— MadDave, Technical Lead for Albion
+                                Online</small
+                            ><br /><br />
+                            Перевод: «Пока вы просто наблюдаете и анализируете —
+                            нас это устраивает. Как только вы что-то измените
+                            или вмешаетесь в работу наших сервисов — мы
+                            отреагируем.»
+                        </div>
+                    </details>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <span
+                >wbg-albiondata-client · MIT · fork of
+                <a
+                    href="https://github.com/ao-data/albiondata-client"
+                    target="_blank"
+                    >ao-data/albiondata-client</a
+                ></span
+            >
+            <div class="footer-links">
+                <a
+                    href="https://github.com/Henry-Tsukino/wbg-albiondata-client"
+                    target="_blank"
+                    >GitHub</a
+                >
+                <a
+                    href="https://github.com/Henry-Tsukino/wbg-albiondata-client/releases"
+                    target="_blank"
+                    data-i18n="footer.releases"
+                    >Релизы</a
+                >
+                <a href="https://discord.gg/kgXREFJzsS" target="_blank"
+                    >Discord WBG</a
+                >
+            </div>
+        </footer>
+
+        <script>
+            "use strict";
+
+            /* i18n */
+            const I18N = {
+                ru: {
+                    "nav.download": "Скачать",
+                    "nav.install": "Установка",
+                    "nav.faq": "FAQ",
+                    "sec.download": "Загрузка",
+                    "install.title": "Инструкция по установке",
+                    "about.title": "О проекте",
+                    "faq.title": "FAQ",
+                    "faq.q1":
+                        "Клиент не запускается, выдаёт ошибки или ведёт себя странно",
+                    "faq.q2": "Предупреждение Windows Defender при установке",
+                    "faq.q3": "Карается ли баном?",
+                    "footer.releases": "Релизы",
+                    "hero.desc":
+                        'Клиент мониторинга сетевого трафика, сделанный на основе <a href="https://github.com/ao-data/albiondata-client" target="_blank">Albion Online Data Project</a>. Форк для гильдии World Bank Group.',
+                    "dl.win": "Скачать для Windows",
+                    "dl.lnx": "Скачать для Linux",
+                    "dl.all": "Все платформы",
+                    "dl.detected": "Определена ОС:",
+                    "dl.installer": "Скачать установщик",
+                    "dl.archive": "Скачать архив",
+                },
+                en: {
+                    "nav.download": "Download",
+                    "nav.install": "Install",
+                    "nav.faq": "FAQ",
+                    "sec.download": "Download",
+                    "install.title": "Installation guide",
+                    "about.title": "About",
+                    "faq.title": "FAQ",
+                    "faq.q1":
+                        "Client doesn't start, throws errors or behaves unexpectedly",
+                    "faq.q2": "Windows Defender warning during installation",
+                    "faq.q3": "Is it bannable?",
+                    "footer.releases": "Releases",
+                    "hero.desc":
+                        'A network traffic monitoring client built on top of the <a href="https://github.com/ao-data/albiondata-client" target="_blank">Albion Online Data Project</a>. Fork for the World Bank Group guild.',
+                    "dl.win": "Download for Windows",
+                    "dl.lnx": "Download for Linux",
+                    "dl.all": "All platforms",
+                    "dl.detected": "Detected OS:",
+                    "dl.installer": "Download installer",
+                    "dl.archive": "Download archive",
+                },
+            };
+
+            let LANG = "ru";
+            const t = (k) => I18N[LANG]?.[k] ?? I18N.ru[k] ?? k;
+
+            function applyLang() {
+                document.querySelectorAll("[data-i18n]").forEach((el) => {
+                    el.textContent = t(el.dataset.i18n);
+                });
+                document.getElementById("hero-desc").innerHTML = t("hero.desc");
+                document
+                    .getElementById("btn-ru")
+                    .classList.toggle("active", LANG === "ru");
+                document
+                    .getElementById("btn-en")
+                    .classList.toggle("active", LANG === "en");
+                buildCta();
+                buildOsGrid();
+            }
+            function setLang(l) {
+                LANG = l;
+                applyLang();
+            }
+
+            /* OS detect */
+            const REPO =
+                "https://github.com/Henry-Tsukino/wbg-albiondata-client";
+
+            function detectOS() {
+                const ua = navigator.userAgent;
+                if (/Windows/i.test(ua)) return "win";
+                if (/Linux|Ubuntu|Debian/i.test(ua)) return "lnx";
+                return null;
+            }
+
+            function buildCta() {
+                const os = detectOS();
+                const btns = document.getElementById("cta-btns");
+                const hint = document.getElementById("cta-hint");
+                const cfg = {
+                    win: {
+                        url:
+                            REPO +
+                            "/releases/latest/download/installer-WBG-tool.exe",
+                        labelKey: "dl.win",
+                        hintKey: "dl.installer",
+                    },
+                    lnx: {
+                        url:
+                            REPO + "/releases/latest/download/GNU-Linux.tar.gz",
+                        labelKey: "dl.lnx",
+                        hintKey: "dl.archive",
+                    },
+                };
+                if (os && cfg[os]) {
+                    const c = cfg[os];
+                    btns.innerHTML = `
       <a class="btn btn-primary" href="${c.url}">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         ${t(c.labelKey)}
       </a>
-      <a class="btn btn-ghost" href="${REPO}/releases" target="_blank">${t('dl.all')}</a>`;
-    hint.innerHTML = `${t('dl.detected')} <span>${t(c.hintKey)}</span>`;
-  } else {
-    btns.innerHTML = `<a class="btn btn-primary" href="${REPO}/releases" target="_blank">${t('dl.all')}</a>`;
-    hint.textContent = '';
-  }
-}
+      <a class="btn btn-ghost" href="${REPO}/releases" target="_blank">${t("dl.all")}</a>`;
+                    hint.innerHTML = `${t("dl.detected")} <span>${t(c.hintKey)}</span>`;
+                } else {
+                    btns.innerHTML = `<a class="btn btn-primary" href="${REPO}/releases" target="_blank">${t("dl.all")}</a>`;
+                    hint.textContent = "";
+                }
+            }
 
-function buildOsGrid() {
-  const os = detectOS();
-  const note = document.getElementById('detected-note');
-  const cards = [
-    { id:'win', os:'win', icon:'⊞', name:'Windows 10 / 11', meta:'x64 · installer-WBG-tool.exe', href: REPO+'/releases/latest/download/installer-WBG-tool.exe', dlKey:'dl.installer' },
-    { id:'lnx', os:'lnx', icon:'🐧', name:'Linux',           meta:'x64 · GNU-Linux.tar.gz',        href: REPO+'/releases/latest/download/GNU-Linux.tar.gz',      dlKey:'dl.archive'   },
-  ];
-  // detected first
-  const sorted = os ? [...cards].sort((a,b) => (b.os===os)-(a.os===os)) : cards;
+            function buildOsGrid() {
+                const os = detectOS();
+                const cards = [
+                    {
+                        os: "win",
+                        icon: "⊞",
+                        name: "Windows 10 / 11",
+                        meta: "x64 · installer-WBG-tool.exe",
+                        href:
+                            REPO +
+                            "/releases/latest/download/installer-WBG-tool.exe",
+                        dlKey: "dl.installer",
+                    },
+                    {
+                        os: "lnx",
+                        icon: "🐧",
+                        name: "Linux",
+                        meta: "x64 · GNU-Linux.tar.gz",
+                        href:
+                            REPO + "/releases/latest/download/GNU-Linux.tar.gz",
+                        dlKey: "dl.archive",
+                    },
+                ];
+                const sorted = os
+                    ? [...cards].sort((a, b) => (b.os === os) - (a.os === os))
+                    : cards;
 
-  document.getElementById('os-grid').innerHTML = sorted.map(c => {
-    const primary = c.os === os;
-    return `
-    <a class="os-card${primary?' primary':''}" href="${c.href}">
+                document.getElementById("os-grid").innerHTML = sorted
+                    .map((c) => {
+                        const p = c.os === os;
+                        return `<a class="os-card${p ? " primary" : ""}" href="${c.href}">
       <div class="os-card-left">
         <div class="os-icon">${c.icon}</div>
-        <div>
-          <div class="os-name">${c.name}</div>
-          <div class="os-meta">${c.meta}</div>
-        </div>
+        <div><div class="os-name">${c.name}</div><div class="os-meta">${c.meta}</div></div>
       </div>
-      <span class="os-badge${primary?'':' neutral'}">${primary ? '↓ '+t(c.dlKey) : t(c.dlKey)}</span>
+      <span class="os-badge${p ? "" : " neutral"}">${p ? "↓ " + t(c.dlKey) : t(c.dlKey)}</span>
     </a>`;
-  }).join('');
+                    })
+                    .join("");
 
-  if (os) {
-    const name = os === 'win' ? 'Windows' : 'Linux';
-    note.textContent = `${name} detected — showing your platform first`;
-  }
+                const note = document.getElementById("detected-note");
+                if (os) {
+                    note.textContent =
+                        (os === "win" ? "Windows" : "Linux") +
+                        " detected — showing your platform first";
+                    selectTab(os);
+                }
+            }
 
-  // sync install tab
-  if (os) selectTab(os);
-}
+            /* Tabs */
+            function selectTab(key) {
+                document
+                    .querySelectorAll(".tab-btn")
+                    .forEach((b) =>
+                        b.classList.toggle("active", b.dataset.t === key),
+                    );
+                document
+                    .getElementById("pwin")
+                    .classList.toggle("active", key === "win");
+                document
+                    .getElementById("plnx")
+                    .classList.toggle("active", key === "lnx");
+            }
+            document
+                .querySelectorAll(".tab-btn")
+                .forEach((b) =>
+                    b.addEventListener("click", () => selectTab(b.dataset.t)),
+                );
 
-/* ══════════════════════════════════════════════
-   Tabs
-══════════════════════════════════════════════ */
-function selectTab(key) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.t === key));
-  document.getElementById('pwin').classList.toggle('active', key === 'win');
-  document.getElementById('plnx').classList.toggle('active', key === 'lnx');
-}
-document.querySelectorAll('.tab-btn').forEach(b =>
-  b.addEventListener('click', () => selectTab(b.dataset.t))
-);
+            /* Version badge — single async fetch, non-blocking */
+            (async () => {
+                try {
+                    const r = await fetch(
+                        "https://api.github.com/repos/Henry-Tsukino/wbg-albiondata-client/releases/latest",
+                    );
+                    if (!r.ok) return;
+                    const d = await r.json();
+                    if (d.tag_name)
+                        document.getElementById("version-badge").textContent =
+                            d.tag_name;
+                } catch {}
+            })();
 
-/* ══════════════════════════════════════════════
-   Version badge
-══════════════════════════════════════════════ */
-(async () => {
-  try {
-    const r = await fetch('https://api.github.com/repos/Henry-Tsukino/wbg-albiondata-client/releases/latest');
-    if (!r.ok) return;
-    const d = await r.json();
-    if (d.tag_name) document.getElementById('version-badge').textContent = d.tag_name;
-  } catch {}
-})();
-
-/* ══════════════════════════════════════════════
-   Init
-══════════════════════════════════════════════ */
-applyLang();
-loadAll();
-</script>
-</body>
+            /* Init */
+            applyLang();
+        </script>
+    </body>
 </html>
