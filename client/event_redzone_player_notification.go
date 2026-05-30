@@ -12,47 +12,47 @@ import (
 /*
 The event is received when player enters red zone.
 
-Known values for map[0] (EventStatus):
+Known values for map[0] (status0):
   0 = warning (attack announced ~15 min before)
   2 = attack is happening now
 
 EventDataType: [474]evRedZonePlayerNotification - map[0:2 1:0 3:0 252:474]
 
-map[0] - EventStatus: current phase/status of the red zone event
+map[0] - status0: current phase/status of the red zone event
 map[1] - Unknown1
 map[2] - Unknown2
 map[3] - Unknown3
 */
 
 type eventRedZonePlayerNotification struct {
-	EventStatus int `mapstructure:"0"`
-	Unknown1    int `mapstructure:"1"`
-	Unknown2    int `mapstructure:"2"`
-	Unknown3    int `mapstructure:"3"`
+	Status0  int `mapstructure:"0"`
+	Unknown1 int `mapstructure:"1"`
+	Unknown2 int `mapstructure:"2"`
+	Unknown3 int `mapstructure:"3"`
 }
 
 type redZonePayload struct {
-	EventStatus int    `json:"status0"`
-	Name        string `json:"name"`
+	Name    string `json:"name"`
+	Status0 int    `json:"status0"`
 }
 
 func (event eventRedZonePlayerNotification) Process(state *albionState) {
 	log.Debug("Got red zone player notification...")
 	log.Infof("Red Zone Player Notification detected: status:%d unknown1:%d unknown2:%d unknown3:%d",
-		event.EventStatus,
+			event.Status0,
 		event.Unknown1,
 		event.Unknown2,
 		event.Unknown3)
 
-	if event.EventStatus != 0 {
-		log.Infof("Skipping red zone notification: EventStatus=%d (only forwarding status=0 warnings)", event.EventStatus)
+	if event.Status0 != 0 {
+		log.Infof("Skipping red zone notification: status0=%d (only forwarding status=0 warnings)", event.Status0)
 		return
 	}
 
 	identifier, _ := uuid.NewV4()
 	payload := redZonePayload{
-		EventStatus: event.EventStatus, // значение первого unknown
-		Name:        state.CharacterName,
+		Name:    state.CharacterName,
+		Status0: event.Status0,
 	}
 	go sendRedZoneToHTTP(payload, identifier.String())
 }
