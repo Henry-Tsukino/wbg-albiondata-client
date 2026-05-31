@@ -839,6 +839,69 @@
                 flex-wrap: wrap;
                 gap: 8px;
             }
+
+            .ticker-wrap {
+              position: relative;
+              overflow: hidden;
+              border-top: 1px solid rgba(255,255,255,0.06);
+              border-bottom: 1px solid rgba(255,255,255,0.06);
+              background: #0d0d0f;
+              height: 36px;
+              display: flex;
+              align-items: center;
+              padding: 0;
+              user-select: none;
+            }
+            .ticker-wrap::before,
+            .ticker-wrap::after {
+              content: '';
+              position: absolute;
+              top: 0; bottom: 0;
+              width: 80px;
+              z-index: 2;
+              pointer-events: none;
+            }
+            .ticker-wrap::before { left: 0; background: linear-gradient(to right, #0d0d0f, transparent); }
+            .ticker-wrap::after  { right: 0; background: linear-gradient(to left,  #0d0d0f, transparent); }
+            .ticker-track {
+              display: flex;
+              gap: 0;
+              white-space: nowrap;
+              will-change: transform;
+            }
+            .ticker-item {
+              display: inline-flex;
+              align-items: center;
+              gap: 0;
+              font-family: 'Geist Mono', monospace;
+              font-size: 13px;
+              padding: 0 28px;
+              color: #5a5a6a;
+            }
+            .ticker-item .sep {
+              margin-left: 28px;
+              color: #2a2a32;
+              font-size: 11px;
+            }
+            .ticker-item.rare    { color: turquoise; }
+            .ticker-item.uncommon{ color: #7c6af7; }
+            .ticker-item.common  { color: #5a5a6a; }
+
+            .controls {
+              margin-top: 12px;
+              display: flex;
+              gap: 10px;
+              flex-wrap: wrap;
+              align-items: center;
+              font-family: monospace;
+              font-size: 12px;
+              color: var(--color-text-secondary);
+            }
+            .controls button {
+              font-size: 12px;
+              padding: 4px 10px;
+              cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -2452,7 +2515,9 @@
                 </div>
             </section>
         </main>
-
+        <div class="ticker-wrap" id="tickerWrap">
+          <div class="ticker-track" id="tickerTrack"></div>
+        </div>
         <footer>
             <span
                 >wbg-albiondata-client · MIT · fork of
@@ -2481,6 +2546,7 @@
         </footer>
 
         <script>
+
             "use strict";
 
             /* i18n */
@@ -2771,6 +2837,127 @@
 
                 requestAnimationFrame(step);
             })();
+
+            const PHRASES = [
+              { text: "∙ ~20 MB RAM",                            weight: 15, tier: "common"   },
+              { text: "∙ 25 MB disk space",                      weight: 14, tier: "common"   },
+              { text: "∙ UDP packets intercepted",               weight: 12, tier: "common"   },
+              { text: "∙ WBG guild market analytics",            weight: 10, tier: "common"   },
+              { text: "∙ open source · MIT",                     weight: 10, tier: "common"   },
+              { text: "∙ fork of ao-data/albiondata-client",     weight: 10, tier: "common"   },
+              { text: "∙ cross-platform: Windows · Linux",       weight: 10, tier: "common"   },
+              { text: "∙ следим за рынком Альбиона",             weight: 9,  tier: "common"   },
+              { text: "∙ npcap required on Windows",             weight: 8,  tier: "common"   },
+              { text: "∙ NATS message broker",                   weight: 8,  tier: "common"   },
+              { text: "∙ macOS в разработке...",                 weight: 7,  tier: "common"   },
+              { text: "∙ albiondata-client.log для дебага",      weight: 6,  tier: "common"   },
+              { text: "∙ contributing welcome",                  weight: 6,  tier: "common"   },
+              { text: "∙ данные собраны силами сообщества",      weight: 5,  tier: "uncommon" },
+              { text: "∙ написано на Go",                        weight: 4,  tier: "uncommon" },
+              { text: "∙ по всем вопросам: pinok.tsukino",       weight: 4,  tier: "uncommon" },
+              { text: "∙ bandit raid inbound   ",                weight: 3,  tier: "uncommon" },
+              { text: "∙ надевайте зимою шапку, это правда снижает риск инсульта",    weight: 3,  tier: "uncommon" },
+              { text: "∙ сделано с любовью и без бюджета   ",    weight: 3,  tier: "rare"     },
+              { text: "∙ КООСМООС!",                             weight: 2,  tier: "rare"     },
+              { text: "∙ NOT BANNABLE — SBI confirmed",          weight: 2,  tier: "rare"     },
+              { text: "∙ GPL is much better than MIT ",          weight: 2,  tier: "rare"     },
+              { text: "∙ Космос. Космос не может ждать",         weight: 1,  tier: "rare"     },
+              { text: "∙ Never trust anyone",                    weight: 1,  tier: "rare"     },
+              { text: "∙ you are not immune to propaganda",      weight: 1,  tier: "rare"     },
+              { text: "∙ промышленный шпионаж принято называть таргетной рекламой, или это сегодня уже не модно?",      weight: 1,  tier: "rare"     },
+              { text: "∙ CYBERSTAN will be free",                weight: 1,  tier: "rare"     },
+              { text: "∙ Если у них нет хлеба, пусть едят пирожные!",weight: 1,  tier: "rare" },
+              { text: "∙ И помните:G#$isAfg S@0 g8123gE!",       weight: 1,  tier: "rare" },
+              { text: '∙ 200$/год за подпись? смешно, вы когда-то задумывались как работают сертификаты и антивирусы? они ничего толком не проверяют, можете даже поискать в интернете, всем насрать на вашу безопасность, серьёзно, никакая корпорация не волнуется насчёт вашей безопасности, даже если вы ей много заплатите, любое сотовое устройство с работающим выходом в сеть небезопастно, почему если у кого-то нашлось $200 то он имеет доступа к МОЕМУ пк больше чем Я?',  weight: 0.1,  tier: "rare" },
+              { text: '∙ SBI: "мы не против" (пока не против)',  weight: 0.5,  tier: "rare" },
+              { text: '∙ нет, это не майнер(правда)',  weight: 0.5,  tier: "rare" },
+            ];
+
+            function weightedRandom(items) {
+              const total = items.reduce((s, i) => s + i.weight, 0);
+              let r = Math.random() * total;
+              for (const item of items) { r -= item.weight; if (r <= 0) return item; }
+              return items[items.length - 1];
+            }
+
+            function buildSequence(count) {
+              const out = [];
+              for (let i = 0; i < count; i++) out.push(weightedRandom(PHRASES));
+              return out;
+            }
+
+            const ITEM_WIDTH = 260;
+            const TRACK_ITEMS = 30;
+
+            const track = document.getElementById('tickerTrack');
+            let seq = buildSequence(TRACK_ITEMS);
+
+            function renderItems(items) {
+              track.innerHTML = '';
+              items.forEach(p => {
+                const el = document.createElement('span');
+                el.className = 'ticker-item ' + p.tier;
+                el.textContent = p.text;
+                const sep = document.createElement('span');
+                sep.className = 'sep';
+                sep.textContent = '·';
+                el.appendChild(sep);
+                track.appendChild(el);
+              });
+            }
+
+            renderItems(seq);
+            track.style.transform = 'translateX(0px)';
+
+            let pos = 0;
+            let speedMultiplier = 1;
+            const BASE_SPEED = 1.4;
+            let paused = false;
+            let rafId;
+            let lastTs = null;
+            let totalWidth = 0;
+
+            function getItemWidths() {
+              const spans = track.querySelectorAll('.ticker-item');
+              totalWidth = 0;
+              spans.forEach(s => totalWidth += s.offsetWidth);
+            }
+
+            function tick(ts) {
+              if (lastTs === null) lastTs = ts;
+              const dt = ts - lastTs;
+              lastTs = ts;
+              if (!paused) {
+                pos += BASE_SPEED * speedMultiplier * (dt / 16.67);
+                if (totalWidth && pos >= totalWidth / 2) {
+                  pos -= totalWidth / 2;
+                  seq = buildSequence(TRACK_ITEMS);
+                  renderItems([...seq, ...seq]);
+                  requestAnimationFrame(() => getItemWidths());
+                }
+                track.style.transform = `translateX(${-pos}px)`;
+              }
+              rafId = requestAnimationFrame(tick);
+            }
+
+            renderItems([...seq, ...seq]);
+            requestAnimationFrame(() => {
+              getItemWidths();
+              rafId = requestAnimationFrame(tick);
+            });
+
+
+            const speedLabel = document.getElementById('speedLabel');
+            document.getElementById('btnFaster').addEventListener('click', () => {
+              speedMultiplier = Math.min(4, parseFloat((speedMultiplier + 0.5).toFixed(1)));
+              speedLabel.textContent = 'Скорость: ' + speedMultiplier + '×';
+            });
+            document.getElementById('btnSlower').addEventListener('click', () => {
+              speedMultiplier = Math.max(0.2, parseFloat((speedMultiplier - 0.5).toFixed(1)));
+              speedLabel.textContent = 'Скорость: ' + speedMultiplier + '×';
+            });
+
+            window.addEventListener('unload', () => cancelAnimationFrame(rafId));
         </script>
         <!-- /DEV -->
     </body>
