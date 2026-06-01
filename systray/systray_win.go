@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/ao-data/albiondata-client/client"
+	"github.com/ao-data/albiondata-client/config"
 	"github.com/ao-data/albiondata-client/icon"
 	"github.com/ao-data/albiondata-client/log"
 	"github.com/getlantern/systray"
@@ -23,9 +24,7 @@ func hideConsole() {
 	if console != 0 {
 		_, consoleProcID := w32.GetWindowThreadProcessId(console)
 		if w32.GetCurrentProcessId() == consoleProcID {
-			// Hide the console window completely
 			w32.ShowWindowAsync(console, w32.SW_HIDE)
-			// Remove from taskbar
 			wnd := w32.GetConsoleWindow()
 			if wnd != 0 {
 				currentStyle := w32.GetWindowLong(wnd, w32.GWL_EXSTYLE)
@@ -33,7 +32,6 @@ func hideConsole() {
 			}
 		}
 	}
-
 	consoleHidden = true
 }
 
@@ -42,31 +40,25 @@ func showConsole() {
 	if console != 0 {
 		_, consoleProcID := w32.GetWindowThreadProcessId(console)
 		if w32.GetCurrentProcessId() == consoleProcID {
-			// Show the console window
 			w32.ShowWindowAsync(console, w32.SW_SHOW)
 		}
 	}
-
 	consoleHidden = false
 }
 
 func GetActionTitle() string {
 	if consoleHidden {
 		return "Show Console"
-	} else {
-		return "Hide Console"
 	}
+	return "Hide Console"
 }
 
 func Run() {
 	systray.Run(onReady, onExit)
 }
 
-func onExit() {
+func onExit() {}
 
-}
-
-// compute the application display name. falls back to basename of the executable
 func appName() string {
 	if client.ConfigGlobal.AppName != "" {
 		return client.ConfigGlobal.AppName
@@ -74,7 +66,6 @@ func appName() string {
 	return filepath.Base(os.Args[0])
 }
 
-// pick icon bytes, external file takes precedence
 func trayIconData() []byte {
 	if client.ConfigGlobal.TrayIconPath != "" {
 		if data, err := os.ReadFile(client.ConfigGlobal.TrayIconPath); err == nil {
@@ -87,14 +78,15 @@ func trayIconData() []byte {
 }
 
 func onReady() {
-	// Don't hide the console automatically
-	// Unless started from the scheduled task or with the parameter
-	// People think it is crashing
-	if client.ConfigGlobal.Minimize {
+	if err := config.Load(); err != nil {
+		log.Errorf("Failed to load config: %v", err)
+	}
+
+	// -minimize флаг имеет приоритет, иначе восстанавливаем из конфига
+	if client.ConfigGlobal.Minimize || config.Global.ConsoleHidden {
 		hideConsole()
 	}
 
-	// Enable auto-start if configured to do so
 	if client.ConfigGlobal.StartOnBoot {
 		if !isStartOnBootSafe() {
 			if err := setStartOnBoot(true); err != nil {
@@ -110,7 +102,6 @@ func onReady() {
 	systray.SetTooltip(appName())
 	mConHideShow := systray.AddMenuItem(GetActionTitle(), "Show/Hide Console")
 
-	// Start on Windows checkbox - with safe initialization
 	startChecked := false
 	if isStartOnBootSafe() {
 		startChecked = true
@@ -132,21 +123,24 @@ func onReady() {
 				os.Exit(0)
 
 			case <-mConHideShow.ClickedCh:
-				if consoleHidden == true {
+				if consoleHidden {
 					showConsole()
-					mConHideShow.SetTitle(GetActionTitle())
 				} else {
 					hideConsole()
-					mConHideShow.SetTitle(GetActionTitle())
 				}
+				config.Global.ConsoleHidden = consoleHidden
+				if err := config.Save(); err != nil {
+					log.Errorf("Failed to save config: %v", err)
+				}
+				mConHideShow.SetTitle(GetActionTitle())
+
 			case <-mStartOnBoot.ClickedCh:
 				currentState := mStartOnBoot.Checked()
 				newState := !currentState
 
 				if newState {
 					mStartOnBoot.Check()
-					err := setStartOnBoot(true)
-					if err != nil {
+					if err := setStartOnBoot(true); err != nil {
 						log.Errorf("Failed to enable auto-start: %v", err)
 						mStartOnBoot.Uncheck()
 					} else {
@@ -155,8 +149,7 @@ func onReady() {
 					}
 				} else {
 					mStartOnBoot.Uncheck()
-					err := setStartOnBoot(false)
-					if err != nil {
+					if err := setStartOnBoot(false); err != nil {
 						log.Errorf("Failed to disable auto-start: %v", err)
 						mStartOnBoot.Check()
 					} else {
@@ -170,7 +163,6 @@ func onReady() {
 }
 
 func isStartOnBootSafe() bool {
-	// Safe wrapper that never panics
 	defer func() {
 		if r := recover(); r != nil {
 			log.Errorf("Panic in isStartOnBootSafe: %v", r)
@@ -186,8 +178,6 @@ func isStartOnBoot() bool {
 		return false
 	}
 
-	// Use PowerShell to check registry
-	// Must match the registry key name used in installer.iss
 	key := "WBGAlbionClient"
 	cmd := exec.Command("powershell", "-NoProfile", "-Command",
 		fmt.Sprintf(`(Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name '%s' -ErrorAction SilentlyContinue).%s`, key, key))
@@ -203,7 +193,6 @@ func isStartOnBoot() bool {
 		return false
 	}
 
-	// Check if the stored value contains our exe path
 	return strings.Contains(value, exe)
 }
 
@@ -214,28 +203,18 @@ func setStartOnBoot(enable bool) error {
 		return err
 	}
 
-	if enable {
-		// Store the path to the executable with -minimize flag
-		// Must match the registry key name used in installer.iss
-		key := "WBGAlbionClient"
-		cmdStr := fmt.Sprintf(`Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name '%s' -Value '"%s" -minimize' -Force`, key, exe)
-		cmd := exec.Command("powershell", "-NoProfile", "-Command", cmdStr)
+	key := "WBGAlbionClient"
 
-		err := cmd.Run()
-		if err != nil {
+	if enable {
+		cmdStr := fmt.Sprintf(`Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name '%s' -Value '"%s" -minimize' -Force`, key, exe)
+		if err := exec.Command("powershell", "-NoProfile", "-Command", cmdStr).Run(); err != nil {
 			log.Errorf("Error enabling auto-start: %v", err)
 			return err
 		}
-		log.Infof("Auto-start enabled")
+		log.Info("Auto-start enabled")
 	} else {
-		// Delete the registry value
-		// Must match the registry key name used in installer.iss
-		key := "WBGAlbionClient"
 		cmdStr := fmt.Sprintf(`Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name '%s' -ErrorAction SilentlyContinue`, key)
-		cmd := exec.Command("powershell", "-NoProfile", "-Command", cmdStr)
-
-		err := cmd.Run()
-		if err != nil {
+		if err := exec.Command("powershell", "-NoProfile", "-Command", cmdStr).Run(); err != nil {
 			log.Debugf("Error disabling auto-start (may already be disabled): %v", err)
 		}
 		log.Info("Auto-start disabled")
