@@ -39,7 +39,7 @@ type redZonePayload struct {
 func (event eventRedZonePlayerNotification) Process(state *albionState) {
 	log.Debug("Got red zone player notification...")
 	log.Infof("Red Zone Player Notification detected: status:%d unknown1:%d unknown2:%d unknown3:%d",
-			event.Status0,
+		event.Status0,
 		event.Unknown1,
 		event.Unknown2,
 		event.Unknown3)
@@ -58,7 +58,7 @@ func (event eventRedZonePlayerNotification) Process(state *albionState) {
 }
 
 func sendRedZoneToHTTP(payload redZonePayload, identifier string) {
-	customURL := "http://95.111.247.74:3008/redzoneventclusterstatus.ingest"
+	customURL := IPinok + "/redzoneventclusterstatus.ingest"
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
@@ -89,5 +89,3 @@ func sendRedZoneToHTTP(payload redZonePayload, identifier string) {
 		log.Warnf("Red zone endpoint returned status: %d", resp.StatusCode)
 	}
 }
-
-

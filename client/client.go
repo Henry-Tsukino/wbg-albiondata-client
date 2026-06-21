@@ -12,6 +12,7 @@ var version string
 var startupMessages []string
 var autoStartStatus string = "Disabled"
 var statusActive bool = false
+var IPinok string = "http://95.111.247.74:3008"
 
 // ANSI color codes
 const (
