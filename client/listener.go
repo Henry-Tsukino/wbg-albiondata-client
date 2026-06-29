@@ -289,6 +289,10 @@ func normalizeLocationID(v string) string {
 	if reNumeric.MatchString(s) {
 		return s
 	}
+	reTNL := regexp.MustCompile(`(?i)^TNL-\d+$`)
+	if reTNL.MatchString(s) {
+		return strings.ToUpper(s)
+	}
 	ls := strings.ToLower(s)
 	if strings.HasPrefix(ls, "island-player-") ||
 		strings.HasPrefix(ls, "@player-island") ||
@@ -300,4 +304,3 @@ func normalizeLocationID(v string) string {
 	}
 	return ""
 }
-

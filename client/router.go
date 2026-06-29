@@ -18,7 +18,8 @@ type Router struct {
 
 func newRouter() *Router {
 	return &Router{
-		albionstate:     &albionState{LocationId: ""},
+		albionstate: &albionState{LocationId: "",
+			LocationHistory: NewLocationBuffer()},
 		newOperation:    make(chan operation, 1000),
 		recordRawPacket: make(chan photon.RawPacket, 1000),
 		quit:            make(chan bool, 1),

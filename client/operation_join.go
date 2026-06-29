@@ -25,8 +25,10 @@ func (op operationJoinResponse) Process(state *albionState) {
 
 	location := normalizeLocationID(op.Location)
 	if location != "" {
+
 		log.Infof("Updating player location to %v.", location)
 		state.LocationId = location
+		state.LocationHistory.Add(location)
 	} else {
 		log.Debugf("Ignoring implausible join location value: %q", op.Location)
 	}
