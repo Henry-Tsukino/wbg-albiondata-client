@@ -36,8 +36,8 @@ func (lb *LocationBuffer) Add(location string) {
 	for i, loc := range lb.locations {
 		if loc == location {
 			lb.locations = lb.locations[:i+1]
-			log.Infof("[LocationBuffer] Add: найдена %q, обрезано до %d", location, len(lb.locations))
-			lb.checkAndIngest()
+			log.Debugf("[LocationBuffer] Add: найдена %q, обрезано до %d", location, len(lb.locations))
+			lb.checkAndingest()
 			return
 		}
 	}
@@ -46,13 +46,13 @@ func (lb *LocationBuffer) Add(location string) {
 	if len(lb.locations) > 10 {
 		lb.locations = lb.locations[len(lb.locations)-10:]
 	}
-	log.Infof("[LocationBuffer] Add: записана %q, count=%d", location, len(lb.locations))
-	log.Infof("[LocationBuffer] порядок локаций: %v", lb.locations)
-	lb.checkAndIngest()
+	log.Debugf("[LocationBuffer] Add: записана %q, count=%d", location, len(lb.locations))
+	log.Debugf("[LocationBuffer] порядок локаций: %v", lb.locations)
+	lb.checkAndingest()
 }
 
-// checkAndIngest вызывается только внутри Add, мьютекс уже захвачен
-func (lb *LocationBuffer) checkAndIngest() {
+// checkAndingest вызывается только внутри Add, мьютекс уже захвачен
+func (lb *LocationBuffer) checkAndingest() {
 	var re = regexp.MustCompile(`^\d{4}$`)
 
 	for {
@@ -83,13 +83,13 @@ func (lb *LocationBuffer) checkAndIngest() {
 		}
 
 		go func(b []byte) {
-			resp, err := http.Post(IPinok+"/avaRout.Ingest", "application/json", bytes.NewReader(b))
+			resp, err := http.Post(IPinok+"/avaRout.ingest", "application/json", bytes.NewReader(b))
 			if err != nil {
-				log.Errorf("[LocationBuffer] Ingest error: %v", err)
+				log.Errorf("[LocationBuffer] ingest error: %v", err)
 				return
 			}
 			defer resp.Body.Close()
-			log.Infof("[LocationBuffer] Ingest отправлен, статус: %d", resp.StatusCode)
+			log.Debugf("[LocationBuffer] ingest отправлен, статус: %d", resp.StatusCode)
 		}(body)
 
 		lb.locations = append(lb.locations[:fourDigitIdx], lb.locations[fourDigitIdx+1:]...)
@@ -105,7 +105,7 @@ func (lb *LocationBuffer) GetLast() string {
 		return ""
 	}
 	result := lb.locations[len(lb.locations)-1]
-	log.Infof("[LocationBuffer] GetLast: %q", result)
+	log.Debugf("[LocationBuffer] GetLast: %q", result)
 	return result
 }
 
@@ -115,6 +115,6 @@ func (lb *LocationBuffer) GetAll() []string {
 
 	result := make([]string, len(lb.locations))
 	copy(result, lb.locations)
-	log.Infof("[LocationBuffer] GetAll: %d локаций: %v", len(result), result)
+	log.Debugf("[LocationBuffer] GetAll: %d локаций: %v", len(result), result)
 	return result
 }
