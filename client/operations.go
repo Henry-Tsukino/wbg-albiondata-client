@@ -557,4 +557,8 @@ const (
 	opRequestLoreSnippetStates
 	opRetrieveCarriableObjectStart
 	opRetrieveCarriableObjectCancel
+	opForfeitCustomMatch
+	opGetPartyMemberCluster
+	opSetPartyNavigation
+	opEndPartyNavigation
 )

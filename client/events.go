@@ -254,6 +254,8 @@ const (
 	evPartyInviteOrJoinPlayerEquipmentInfo
 	evPartyReadyCheckUpdate
 	evPartyFactionWarfareReinforcementSettingChangedPlayer
+	evSetPartyNavigation
+	evEndPartyNavigation
 	evSpellCooldownUpdate
 	evNewHellgateExitPortal
 	evNewExpeditionExit
@@ -689,4 +691,5 @@ const (
 	evRetrieveCarriableObjectFinished
 	evLosingCarriableObjectStart
 	evLosingCarriableObjectFinished
+	evNotifyPlatformAccountConfirmed
 )
