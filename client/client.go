@@ -12,7 +12,7 @@ var version string
 var startupMessages []string
 var autoStartStatus string = "Disabled"
 var statusActive bool = false
-var IPinok string = "http://95.111.247.74:3008"
+var IPinok string = "http://discord-bot-production-221c.up.railway.app"
 
 // ANSI color codes
 const (
