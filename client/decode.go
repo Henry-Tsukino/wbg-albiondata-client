@@ -49,19 +49,12 @@ func decodeRequest(params map[uint8]interface{}) (operation operation, err error
 	switch OperationType(code) {
 	case opGetGameServerByCluster:
 		operation = &operationGetGameServerByCluster{}
-	case opAuctionGetOffers:
-		operation = &operationAuctionGetOffers{}
-	case opAuctionGetItemAverageStats:
-		operation = &operationAuctionGetItemAverageStats{}
 	case opGetClusterMapInfo:
 		operation = &operationGetClusterMapInfo{}
 	// case opGoldMarketGetAverageInfo:
 	case opGoldMarketGetAverageInfo:
 		operation = &operationGoldMarketGetAverageInfo{}
-	case opRealEstateGetAuctionData:
-		operation = &operationRealEstateGetAuctionData{}
-	case opRealEstateBidOnAuction:
-		operation = &operationRealEstateBidOnAuction{}
+
 	default:
 		return nil, nil
 	}
@@ -84,14 +77,6 @@ func decodeResponse(params map[uint8]interface{}) (operation operation, err erro
 		operation = &operationJoinResponse{}
 	case opGetGameServerByCluster:
 		operation = &operationGetGameServerByCluster{}
-	case opAuctionGetOffers:
-		operation = &operationAuctionGetOffersResponse{}
-	case opAuctionGetRequests:
-		operation = &operationAuctionGetRequestsResponse{}
-	case opAuctionBuyOffer:
-		operation = &operationAuctionGetRequestsResponse{}
-	case opAuctionGetItemAverageStats:
-		operation = &operationAuctionGetItemAverageStatsResponse{}
 	case opGetMailInfos:
 		operation = &operationGetMailInfosResponse{}
 	case opReadMail:
@@ -100,11 +85,7 @@ func decodeResponse(params map[uint8]interface{}) (operation operation, err erro
 		operation = &operationGetClusterMapInfoResponse{}
 	// case opGoldMarketGetAverageInfo:
 	case opGoldMarketGetAverageInfo:
-		operation = &operationGoldMarketGetAverageInfoResponse{}
-	case opRealEstateGetAuctionData:
-		operation = &operationRealEstateGetAuctionDataResponse{}
-	case opRealEstateBidOnAuction:
-		operation = &operationRealEstateBidOnAuctionResponse{}
+
 	default:
 		if looksLikeJoinResponse(params) {
 			if _, ok := params[8].(string); !ok {
@@ -139,7 +120,7 @@ func decodeEvent(params map[uint8]interface{}) (event operation, err error) {
 	// 	event = &eventSkillData{}
 	case evRedZonePlayerNotification:
 		event = &eventRedZonePlayerNotification{}
-	case evFestivitiesUpdate:
+	case evNewBannerObject:
 		event = &eventFestivitiesNotification{}
 	case evNewMistsImmediateReturnExit:
 		event = &eventFestivitiesNotification{}
