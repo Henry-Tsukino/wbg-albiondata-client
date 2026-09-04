@@ -42,16 +42,17 @@ func (u *httpUploader) sendToIngest(body []byte, topic string, state *albionStat
 		log.Errorf("Error while sending ingest with data: %v", err)
 		return
 	}
+	// Закрывать и дренировать тело нужно ВСЕГДА, включая non-200 - иначе при
+	// ошибочном статусе функция вернётся раньше, чем defer будет
+	// зарегистрирован (или тело не будет дочитано), и net/http не сможет
+	// вернуть соединение в пул для keep-alive.
+	defer resp.Body.Close()
+	io.Copy(ioutil.Discard, resp.Body)
 
 	if resp.StatusCode != 200 {
 		log.Errorf("Got bad response code: %v", resp.StatusCode)
 		return
 	}
 
-	// See: https://stackoverflow.com/questions/17948827/reusing-http-connections-in-golang
-	io.Copy(ioutil.Discard, resp.Body)
-
 	log.Infof("Successfully sent ingest request to %v", u.baseURL)
-
-	defer resp.Body.Close()
 }

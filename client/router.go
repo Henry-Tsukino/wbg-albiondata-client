@@ -14,16 +14,28 @@ type Router struct {
 	newOperation    chan operation
 	recordRawPacket chan photon.RawPacket
 	quit            chan bool
+	buildingAgg     *buildingAggregator
 }
 
 func newRouter() *Router {
-	return &Router{
+	r := &Router{
 		albionstate: &albionState{LocationId: "",
 			LocationHistory: NewLocationBuffer()},
 		newOperation:    make(chan operation, 1000),
 		recordRawPacket: make(chan photon.RawPacket, 1000),
 		quit:            make(chan bool, 1),
 	}
+
+	// Собираем evNewBuilding/evCraftBuildingInfo/evAccessStatus в единую
+	// сущность и, как только она готова, отправляем её боту через общий
+	// ingest-путь (тот же uploader interface, что и остальной клиент).
+	var agg *buildingAggregator
+	agg = newBuildingAggregator(func(b *BuildingEntity) {
+		agg.sendBuildingUpdate(r.albionstate, b)
+	}, newHTTPUploader(IPinok))
+	r.buildingAgg = agg
+
+	return r
 }
 
 func (r *Router) run() {
@@ -42,6 +54,7 @@ func (r *Router) run() {
 		select {
 		case <-r.quit:
 			log.Debug("Closing router...")
+			r.buildingAgg.stop()
 			if file != nil {
 				err := file.Close()
 				if err != nil {

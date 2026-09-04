@@ -249,6 +249,8 @@ func (l *listener) onEvent(code byte, params map[byte]interface{}) {
 		params[252] = uint16(code)
 	}
 
+	l.dispatchBuildingEvent(code, params)
+
 	operation, err := decodeEvent(params)
 	if params[252] != nil {
 		if number, ok := toUint16(params[252]); ok {
@@ -264,6 +266,45 @@ func (l *listener) onEvent(code byte, params map[byte]interface{}) {
 	}
 
 	l.dispatchOperation(operation, err, params)
+}
+
+// dispatchBuildingEvent разбирает evNewBuilding/evCraftBuildingInfo/evAccessStatus
+// и сливает их в buildingAggregator, не мешая обычному потоку decodeEvent/dispatchOperation.
+//
+// ВАЖНО: аргумент code здесь - это НЕ настоящий код события. Это служебный
+// признак уровня Photon (наблюдается 3 для evMove и фолбэк-значение 1 почти
+// для всех остальных событий, включая 45/49/210). Настоящий код события к
+// этому моменту уже записан в params[252] (см. onEvent выше), поэтому
+// переключаться нужно по нему, а не по code.
+func (l *listener) dispatchBuildingEvent(code byte, params map[byte]interface{}) {
+	var (
+		id  int32
+		upd *BuildingEntity
+		err error
+	)
+
+	realCode, ok := toUint16(params[252])
+	if !ok {
+		return
+	}
+
+	switch byte(realCode) {
+	case evtNewBuilding:
+		id, upd, err = parseNewBuilding(params)
+	case evtCraftBuildingInfo:
+		id, upd, err = parseCraftBuildingInfo(params)
+	case evtAccessStatus:
+		id, upd, err = parseAccessStatus(params)
+	default:
+		return
+	}
+
+	if err != nil {
+		log.Debugf("BuildingAggregator: ошибка парсинга event=%v: %v", realCode, err)
+		return
+	}
+
+	l.router.buildingAgg.merge(id, upd)
 }
 
 func (l *listener) dispatchOperation(op operation, err error, params map[byte]interface{}) {
