@@ -3,8 +3,8 @@ package client
 import (
 	"strconv"
 
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	uuid "github.com/nu7hatch/gouuid"
 )
 

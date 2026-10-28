@@ -1,7 +1,7 @@
 <script>
   import { onDestroy, tick } from 'svelte';
   import { Browser, Events } from '@wailsio/runtime';
-  import { DashboardService } from '../../bindings/github.com/ao-data/albiondata-client/internal/dashboard/index.js';
+  import { DashboardService } from '../../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/index.js';
 
   // Only a UUID immediately after "Identifier: " is a real data
   // identifier (see the various "...to ingest (Identifier: %s)" log
@@ -164,27 +164,32 @@
   .log-tail {
     flex: 1;
     overflow-y: auto;
-    padding: 0.9rem 1.25rem;
+    padding: 3px 4px;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
-    line-height: 1.7;
-    background: var(--bg-sunken);
+    font-size: 11px;
+    line-height: 1.45;
+    background: var(--log-bg);
+    border: 1px solid var(--log-border);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px var(--log-inset);
+    -webkit-user-select: text;
+    user-select: text;
   }
   .line {
     display: flex;
-    gap: 0.6rem;
+    gap: 8px;
     white-space: pre-wrap;
     word-break: break-word;
   }
   .time {
     flex-shrink: 0;
-    color: var(--text-faint);
+    color: var(--text-muted);
   }
   .level {
     flex-shrink: 0;
     width: 4.5em;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: bold;
     color: var(--text-muted);
   }
   .message {
@@ -192,46 +197,40 @@
   }
   .identifier-link,
   .log-link {
-    color: var(--blue-bright);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(95, 180, 255, 0.35);
+    color: var(--link);
   }
   .identifier-link:hover,
   .log-link:hover {
-    border-bottom-color: var(--blue-bright);
+    color: var(--link-hover);
   }
   .copy-btn {
-    margin-left: 0.35rem;
-    padding: 0 0.35rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: transparent;
-    color: var(--text-faint);
-    font-family: inherit;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    line-height: 1.4;
+    margin-left: 4px;
+    padding: 0 6px;
+    border: 1px solid var(--btn-border);
+    border-radius: 3px;
+    background: linear-gradient(to bottom, var(--btn-bg-from), var(--btn-bg-to));
+    color: var(--btn-text);
+    font-family: var(--font);
+    font-size: 10px;
+    line-height: 1.3;
     cursor: pointer;
   }
   .copy-btn:hover {
-    color: var(--blue);
-    border-color: var(--border-strong);
+    border-color: var(--btn-hover-ring);
+  }
+  .copy-btn:active {
+    filter: brightness(0.9);
   }
   .level-error .level,
   .level-fatal .level,
-  .level-panic .level {
-    color: var(--ember);
-  }
+  .level-panic .level,
   .level-error .message,
   .level-fatal .message,
   .level-panic .message {
-    color: var(--ember);
+    color: var(--bad);
   }
-  .level-warning .level {
-    color: var(--blue);
-  }
+  .level-warning .level,
   .level-warning .message {
-    color: var(--blue);
+    color: var(--log-warn-text);
   }
 </style>

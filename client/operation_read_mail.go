@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	uuid "github.com/nu7hatch/gouuid"
 )
 
@@ -16,6 +16,11 @@ type operationReadMail struct {
 
 func (op operationReadMail) Process(state *albionState) {
 	log.Debug("Got ReadMail operation...")
+
+	if ConfigGlobal.DisableMarket {
+		return
+	}
+
 	var notification lib.MarketNotification
 
 	// split the mail body

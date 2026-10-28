@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	uuid "github.com/nu7hatch/gouuid"
 )
 
@@ -37,7 +37,7 @@ func (event eventFestivitiesUpdate) Process(state *albionState) {
 
 	identifier, _ := uuid.NewV4()
 	log.Infof("Sending %d festivities to ingest (Identifier: %s)", len(upload.Events), identifier)
-	sendMsgToPublicUploaders(upload, lib.NatsFestivitiesIngest, state, identifier.String(), len(upload.Events))
+	sendMsgToWBGUploaders(upload, lib.NatsFestivitiesIngest, state, identifier.String(), len(upload.Events))
 }
 
 func (event eventFestivitiesUpdate) upload() (lib.FestivitiesUpload, error) {

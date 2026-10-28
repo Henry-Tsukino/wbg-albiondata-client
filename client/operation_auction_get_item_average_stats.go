@@ -4,8 +4,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	uuid "github.com/nu7hatch/gouuid"
 )
 
@@ -18,6 +18,10 @@ type operationAuctionGetItemAverageStats struct {
 }
 
 func (op operationAuctionGetItemAverageStats) Process(state *albionState) {
+	if ConfigGlobal.DisableMarket {
+		return
+	}
+
 	var index = op.MessageID % CacheSize
 
 	// It seems all items with id 129-256 come through as a negative integer. Example, goose eggs
@@ -49,6 +53,10 @@ type operationAuctionGetItemAverageStatsResponse struct {
 }
 
 func (op operationAuctionGetItemAverageStatsResponse) Process(state *albionState) {
+	if ConfigGlobal.DisableMarket {
+		return
+	}
+
 	var index = op.MessageID % CacheSize
 
 	// Wait for the correlating Request if it has not yet been processed

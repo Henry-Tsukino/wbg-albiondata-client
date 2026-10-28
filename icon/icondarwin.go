@@ -1,6 +1,6 @@
 //go:build darwin
 
-// File generated from icon/albiondata-client.png
+// File generated from icon/wbg.png
 
 package icon
 
@@ -8,5 +8,5 @@ import (
 	_ "embed"
 )
 
-//go:embed albiondata-client.png
+//go:embed wbg.png
 var Data []byte

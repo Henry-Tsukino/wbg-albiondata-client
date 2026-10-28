@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	uuid "github.com/nu7hatch/gouuid"
 )
 
@@ -24,6 +24,9 @@ type operationAuctionGetOffers struct {
 
 func (op operationAuctionGetOffers) Process(state *albionState) {
 	log.Debug("Got AuctionGetOffers operation...")
+	if ConfigGlobal.DisableMarket {
+		return
+	}
 	state.RecordMarketDataRequest(time.Now())
 }
 
@@ -33,6 +36,10 @@ type operationAuctionGetOffersResponse struct {
 
 func (op operationAuctionGetOffersResponse) Process(state *albionState) {
 	log.Debug("Got response to AuctionGetOffers operation...")
+
+	if ConfigGlobal.DisableMarket {
+		return
+	}
 
 	if !state.IsValidLocation() {
 		return

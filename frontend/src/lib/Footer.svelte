@@ -1,7 +1,10 @@
 <script>
   import { onDestroy } from 'svelte';
   import { Browser, Events } from '@wailsio/runtime';
-  import { DashboardService } from '../../bindings/github.com/ao-data/albiondata-client/internal/dashboard/index.js';
+  import { DashboardService } from '../../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/index.js';
+  import { THEMES, theme, setTheme } from './theme.svelte.js';
+
+  const REPO_URL = 'https://github.com/Henry-Tsukino/wbg-albiondata-client';
 
   let version = $state('');
 
@@ -19,44 +22,86 @@
   }
 </script>
 
-<footer class="footer">
-  <nav class="links">
-    <a href="https://www.albion-online-data.com" onclick={(e) => openLink(e, 'https://www.albion-online-data.com')}>
-      albion-online-data.com
-    </a>
-    <a href="https://discord.gg/yv5SgytAjX" onclick={(e) => openLink(e, 'https://discord.gg/yv5SgytAjX')}>
-      Discord
-    </a>
-  </nav>
-  <span class="version">v{version || 'dev'}</span>
+<footer class="statusbar">
+  <span class="pane grow">
+    <a href={REPO_URL} onclick={(e) => openLink(e, REPO_URL)}>github.com/Henry-Tsukino/wbg-albiondata-client</a>
+  </span>
+
+  <span class="pane themes" role="radiogroup" aria-label="Theme">
+    {#each THEMES as t}
+      <button
+        type="button"
+        class="theme-btn"
+        class:active={theme.current === t.id}
+        role="radio"
+        aria-checked={theme.current === t.id}
+        onclick={() => setTheme(t.id)}
+      >{t.label}</button>
+    {/each}
+  </span>
+
+  <span class="pane">Version {version || 'dev'}</span>
 </footer>
 
 <style>
-  .footer {
+  .statusbar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.5rem 1.25rem;
-    background: var(--bg-raised);
-    border-top: 1px solid var(--border);
+    gap: 4px;
+    padding: 3px 4px;
+    background: var(--status-bg);
+    border-top: 1px solid var(--status-border);
     flex-shrink: 0;
   }
-  .links {
+  .pane {
     display: flex;
-    gap: 1.25rem;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1px solid var(--pane-border);
+    border-radius: 2px;
+    white-space: nowrap;
+    color: var(--text);
   }
-  .links a {
-    font-size: 0.75rem;
-    color: var(--text-muted);
+  .grow {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pane a {
+    color: var(--text);
     text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .links a:hover {
-    color: var(--blue);
+  .pane a:hover {
+    text-decoration: underline;
+    color: var(--link-hover);
   }
-  .version {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--text-faint);
+
+  .themes {
+    gap: 3px;
+    padding: 1px 3px;
+  }
+  .theme-btn {
+    padding: 1px 8px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background: none;
+    color: var(--text-muted);
+    font: inherit;
+    cursor: pointer;
+  }
+  .theme-btn:hover {
+    color: var(--text);
+    border-color: var(--btn-border);
+  }
+  .theme-btn.active {
+    color: var(--btn-text);
+    border-color: var(--btn-border);
+    background: linear-gradient(to bottom, var(--btn-bg-from), var(--btn-bg-to));
+    font-weight: bold;
+  }
+  .theme-btn:focus-visible {
+    outline: 1px solid var(--btn-hover-ring);
   }
 </style>

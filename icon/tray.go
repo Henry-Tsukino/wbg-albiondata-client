@@ -9,5 +9,5 @@ import _ "embed"
 // which remain in their original .ico/.png forms for other uses (e.g.
 // the Windows executable icon via go-winres).
 //
-//go:embed albiondata-client.png
+//go:embed wbg.png
 var TrayPNG []byte

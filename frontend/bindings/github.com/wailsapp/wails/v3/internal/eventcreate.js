@@ -8,7 +8,7 @@ import { Create as $Create } from "@wailsio/runtime";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
-import * as dashboard$0 from "../../../../ao-data/albiondata-client/internal/dashboard/models.js";
+import * as dashboard$0 from "../../../../Henry-Tsukino/wbg-albiondata-client/internal/dashboard/models.js";
 
 function configure() {
     Object.freeze(Object.assign($Create.Events, {

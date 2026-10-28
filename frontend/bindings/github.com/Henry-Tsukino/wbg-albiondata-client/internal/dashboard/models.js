@@ -126,10 +126,24 @@ export class Status {
         }
         if (!("EncryptionStatus" in $$source)) {
             /**
+             * EncryptionStatus is "" (unknown - nothing observed yet this
+             * session), "encrypted" (a market data response came back
+             * encrypted), or "clear" (a market data response came back and
+             * decoded normally). See client/albion_state.go's
+             * ShouldNotifyMarketDataEncrypted for how "encrypted" is decided.
              * @member
              * @type {string}
              */
             this["EncryptionStatus"] = "";
+        }
+        if (!("MarketDisabled" in $$source)) {
+            /**
+             * MarketDisabled reports whether market data parsing/uploading is
+             * currently disabled (via -no-market or config.yaml DisableMarket).
+             * @member
+             * @type {boolean}
+             */
+            this["MarketDisabled"] = false;
         }
 
         Object.assign(this, $$source);

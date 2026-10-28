@@ -3,7 +3,7 @@ package client
 import (
 	"time"
 
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 )
 
 // rescanInterval is how often the watcher re-enumerates physical network

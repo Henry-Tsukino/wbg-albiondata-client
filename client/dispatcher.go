@@ -1,15 +1,19 @@
 package client
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"sync"
+	"time"
 
 	"strings"
 
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 )
 
 type dispatcher struct{}
@@ -79,12 +83,16 @@ func createUploaders(targets []string) []uploader {
 	return uploaders
 }
 
+// sendMsgToPublicUploaders sends MARKET data (orders, histories) and GOLD
+// prices to the public Albion Data Project servers. Nothing else may use
+// it: every other kind of upload goes to the WBG server through
+// sendMsgToWBGUploaders / sendMsgToPrivateUploaders.
 func sendMsgToPublicUploaders(upload interface{}, topic string, state *albionState, identifier string, recordCount int) {
 	dashboard.IncrementCounterBy(topic, int64(recordCount))
 
 	data, err := json.Marshal(upload)
 	if err != nil {
-		log.Errorf("Error while marshalling payload for %v: %v", err, topic)
+		log.Errorf("Error while marshalling payload for %v: %v", topic, err)
 		return
 	}
 
@@ -96,10 +104,29 @@ func sendMsgToPublicUploaders(upload interface{}, topic string, state *albionSta
 	}
 
 	var publicUploaders = createUploaders(strings.Split(PublicIngestBaseUrls, ","))
-	var privateUploaders = createUploaders(strings.Split(ConfigGlobal.PrivateIngestBaseUrls, ","))
 
 	sendMsgToUploaders(data, topic, publicUploaders, state, identifier)
-	sendMsgToUploaders(data, topic, privateUploaders, state, identifier)
+
+	// If websockets are enabled, send the data there too
+	if ConfigGlobal.EnableWebsockets {
+		sendMsgToWebSockets(data, topic)
+	}
+}
+
+// sendMsgToWBGUploaders sends non-market, non-gold data (map data, bandit
+// events, festivities, ...) to the WBG server (ConfigGlobal.PrivateIngestBaseUrls,
+// default DefaultWBGIngestURL). It never touches the public servers.
+func sendMsgToWBGUploaders(upload interface{}, topic string, state *albionState, identifier string, recordCount int) {
+	dashboard.IncrementCounterBy(topic, int64(recordCount))
+
+	data, err := json.Marshal(upload)
+	if err != nil {
+		log.Errorf("Error while marshalling payload for %v: %v", topic, err)
+		return
+	}
+
+	var wbgUploaders = createUploaders(strings.Split(ConfigGlobal.PrivateIngestBaseUrls, ","))
+	sendMsgToUploaders(data, topic, wbgUploaders, state, identifier)
 
 	// If websockets are enabled, send the data there too
 	if ConfigGlobal.EnableWebsockets {
@@ -125,7 +152,7 @@ func sendMsgToPrivateUploaders(upload lib.PersonalizedUpload, topic string, stat
 
 	data, err := json.Marshal(upload)
 	if err != nil {
-		log.Errorf("Error while marshalling payload for %v: %v", err, topic)
+		log.Errorf("Error while marshalling payload for %v: %v", topic, err)
 		return
 	}
 
@@ -169,4 +196,23 @@ func sendMsgToWebSockets(msg []byte, topic string) {
 	var result string
 	result = "{\"topic\": \"" + topic + "\", \"data\": " + string(msg) + "}"
 	wsHub.broadcast <- []byte(result)
+}
+
+// postBanditEvent POSTs a bandit event as JSON to an arbitrary URL.
+func postBanditEvent(upload interface{}, url string) error {
+	data, err := json.Marshal(upload)
+	if err != nil {
+		return err
+	}
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Post(url, "application/json", bytes.NewReader(data))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	_, _ = io.Copy(io.Discard, resp.Body)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("webhook returned status %d", resp.StatusCode)
+	}
+	return nil
 }

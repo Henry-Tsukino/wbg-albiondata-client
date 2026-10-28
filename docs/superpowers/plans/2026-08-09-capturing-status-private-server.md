@@ -335,7 +335,7 @@ func (l *listener) dispatchOperation(op operation, err error, params map[byte]in
 
 The `err == nil` check (rather than just relying on the early return above) matters because `ConfigGlobal.DebugIgnoreDecodingErrors` can let execution continue past the error check even when `err != nil` — activity should only be recorded for messages that actually decoded successfully, not ones that errored but were tolerated by that debug flag.
 
-`client/listener.go` already imports `"github.com/ao-data/albiondata-client/internal/dashboard"` (used by the existing `dashboard.SetServer` call in `processPacket`), so no new import is needed.
+`client/listener.go` already imports `"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"` (used by the existing `dashboard.SetServer` call in `processPacket`), so no new import is needed.
 
 - [ ] **Step 2: Remove the old watcher-alive signal**
 
@@ -393,8 +393,8 @@ Since `dashboard.SetCaptureRunning` is no longer called anywhere in this file, r
 import (
 	"time"
 
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 )
 ```
 
@@ -404,7 +404,7 @@ becomes:
 import (
 	"time"
 
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 )
 ```
 
@@ -458,7 +458,7 @@ func startUpdater() {
 	if version != "" && !strings.Contains(version, "dev") {
 ```
 
-`albiondata-client.go` already imports both `"github.com/ao-data/albiondata-client/client"` and `"github.com/ao-data/albiondata-client/internal/dashboard"`, so no new imports are needed. The literal string must match `client/config.go`'s `-i` flag default exactly (`https+pow://albion-online-data.com`) — this is intentionally not extracted into a shared constant in this plan, since `client/config.go`'s flag default is itself a literal in a `flag.StringVar` call, not an exported constant, and introducing one is out of scope for this plan (YAGNI: one call site each).
+`albiondata-client.go` already imports both `"github.com/Henry-Tsukino/wbg-albiondata-client/client"` and `"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"`, so no new imports are needed. The literal string must match `client/config.go`'s `-i` flag default exactly (`https+pow://albion-online-data.com`) — this is intentionally not extracted into a shared constant in this plan, since `client/config.go`'s flag default is itself a literal in a `flag.StringVar` call, not an exported constant, and introducing one is out of scope for this plan (YAGNI: one call site each).
 
 - [ ] **Step 2: Verify it builds**
 
@@ -493,7 +493,7 @@ Since Task 2 added a field to the Go `Status` struct, regenerate the JS model so
 wails3 generate bindings ./...
 ```
 
-Confirm `frontend/bindings/github.com/ao-data/albiondata-client/internal/dashboard/models.js` now includes `PrivateIngest` in the `Status` class (check with `grep -n "PrivateIngest" frontend/bindings/github.com/ao-data/albiondata-client/internal/dashboard/models.js` — expect at least one match). This is a generated file; if the diff also touches unrelated generated content (e.g. a regenerated timestamp comment), that's expected and fine to include in the commit.
+Confirm `frontend/bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/models.js` now includes `PrivateIngest` in the `Status` class (check with `grep -n "PrivateIngest" frontend/bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/models.js` — expect at least one match). This is a generated file; if the diff also touches unrelated generated content (e.g. a regenerated timestamp comment), that's expected and fine to include in the commit.
 
 - [ ] **Step 2: Update `StatusHeader.svelte`**
 
@@ -503,7 +503,7 @@ Current:
 <script>
   import { onDestroy } from 'svelte';
   import { Events } from '@wailsio/runtime';
-  import { DashboardService } from '../../bindings/github.com/ao-data/albiondata-client/internal/dashboard/index.js';
+  import { DashboardService } from '../../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/index.js';
 
   let status = $state({
     Version: '',
@@ -563,7 +563,7 @@ Replace with:
 <script>
   import { onDestroy } from 'svelte';
   import { Events } from '@wailsio/runtime';
-  import { DashboardService } from '../../bindings/github.com/ao-data/albiondata-client/internal/dashboard/index.js';
+  import { DashboardService } from '../../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/index.js';
 
   let status = $state({
     Version: '',

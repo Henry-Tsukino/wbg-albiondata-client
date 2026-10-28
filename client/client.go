@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 )
 
 var version string
@@ -21,7 +21,7 @@ func NewClient(_version string) *Client {
 
 // Run starts client settings and run
 func (client *Client) Run() error {
-	log.Infof("Starting Albion Data Client, version: %s", version)
+	log.Infof("Starting WBG Client, version: %s", version)
 	log.Info("This is a third-party application and is in no way affiliated with Sandbox Interactive or Albion Online.")
 	log.Info("Additional parameters can listed by calling this file with the -h parameter.")
 

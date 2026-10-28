@@ -6,7 +6,7 @@ Every build script (`scripts/build-{windows,linux,darwin}.sh`,
 `scripts/run.sh`) and `buildall_main.sh` builds with:
 
 ```
-go build ... albiondata-client.go
+go build ... wbg-client.go
 ```
 
 Naming the single file, not `.` or the package. Go only compiles that
@@ -26,7 +26,7 @@ make run              # go run the client directly (scripts/run.sh)
 make frontend         # npm ci && npm run build in frontend/
 make fmt              # goimports -w across the repo (vendor/-safe, see below)
 make validate-fmt     # goimports -l, non-zero exit if anything's unformatted
-make build-windows    # cross-compiles from any OS; needs nsis, go-winres
+make build-windows    # cross-compiles from any OS; needs Inno Setup (ISCC), go-winres; VERSION=x.y.z is required
 make build-linux      # native on Linux; needs libpcap-dev, patchelf, gtk4/webkitgtk-6.0 dev headers
 make build-darwin     # native on macOS; forces amd64 (see below), needs libpcap headers (Xcode CLT)
 
@@ -37,7 +37,7 @@ go test ./client/... -run TestName -v   # single test
 ```
 
 `go build`/`go vet`/`go test` on the root package need `frontend/dist`
-to exist first (`make frontend`) - `albiondata-client.go` has
+to exist first (`make frontend`) - `wbg-client.go` has
 `//go:embed all:frontend/dist`, and embed directives are validated at
 compile time even if nothing in the current build actually touches the
 embedded FS (e.g. `go vet` on a package with no test files still fails
@@ -47,7 +47,7 @@ on a missing embed target).
 './vendor/*'` rather than filtering `go list`'s directory output - the
 latter looks correct but isn't: `go list -f '{{.Dir}}' ./...` includes
 the repo-root package dir (`.`, since it contains
-`albiondata-client.go`), and `goimports`/`gofmt` recurse into
+`wbg-client.go`), and `goimports`/`gofmt` recurse into
 subdirectories when given a bare directory argument, so a `grep -v
 /vendor/` on the directory list doesn't stop the walk once it's inside
 a non-vendor directory that contains `vendor/` as a child. Don't

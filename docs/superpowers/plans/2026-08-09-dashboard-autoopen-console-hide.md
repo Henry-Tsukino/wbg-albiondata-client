@@ -225,14 +225,14 @@ git commit -m "feat: open and focus the dashboard automatically at launch"
 
 - [ ] **Step 1: Add the import**
 
-In `albiondata-client.go`'s import block, add `"github.com/ao-data/albiondata-client/internal/console"` alongside the other `github.com/ao-data/albiondata-client/...` imports, keeping the block ordered alphabetically by import path (matching the existing style):
+In `albiondata-client.go`'s import block, add `"github.com/Henry-Tsukino/wbg-albiondata-client/internal/console"` alongside the other `github.com/Henry-Tsukino/wbg-albiondata-client/...` imports, keeping the block ordered alphabetically by import path (matching the existing style):
 
 ```go
-	"github.com/ao-data/albiondata-client/client"
-	"github.com/ao-data/albiondata-client/icon"
-	"github.com/ao-data/albiondata-client/internal/console"
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/client"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/icon"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/console"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 ```
 
 - [ ] **Step 2: Hide the console at the very start of `main()`**

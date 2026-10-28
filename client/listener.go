@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ao-data/albiondata-client/client/photon"
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/client/photon"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"

@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
 set -eo pipefail
+cd "$(dirname "$0")/.."
+source scripts/version.sh "$@"
 
-rm -f albiondata-client
-rm -f albiondata-client.gz
-rm -f update-darwin-amd64.gz
-rm -f albiondata-client-amd64-mac.zip
+rm -rf dist; mkdir -p dist
 
 (cd frontend && npm ci && npm run build)
 
@@ -16,18 +15,15 @@ export CGO_ENABLED=1
 export GOARCH=amd64
 export CC="clang -arch x86_64"
 export CGO_LDFLAGS="-arch x86_64"
-go build -ldflags "-s -w -X main.version=$GITHUB_REF_NAME" -o albiondata-client albiondata-client.go
+go build -ldflags "$LDFLAGS" -o "dist/${APP_BIN}" wbg-client.go
 
-gzip -k9 albiondata-client
-mv albiondata-client.gz update-darwin-amd64.gz
+gzip -9 -c "dist/${APP_BIN}" > dist/update-darwin-amd64.gz
 
 # Zipped folder with a run.command file that runs the client under sudo
-TEMP="albiondata-client"
-ZIPNAME="albiondata-client-amd64-mac.zip"
-rm -rfv ./scripts/$TEMP
-rm -rfv ./$ZIPNAME
-mkdir -v ./scripts/$TEMP
-cp -v albiondata-client ./scripts/$TEMP/albiondata-client-executable
-cp -v ./scripts/run.command ./scripts/$TEMP/run.command
-chmod -v 777 ./scripts/$TEMP/*
-(cd scripts && zip -v ../$ZIPNAME -r ./"$TEMP")
+TEMP="WBG-albion-data-client"
+rm -rf "./scripts/$TEMP"
+mkdir "./scripts/$TEMP"
+cp "dist/${APP_BIN}" "./scripts/$TEMP/WBG-albion-data-client-executable"
+cp ./scripts/run.command "./scripts/$TEMP/run.command"
+chmod 777 ./scripts/$TEMP/*
+(cd scripts && zip -r ../dist/WBG-albion-data-client-amd64-mac.zip ./"$TEMP")

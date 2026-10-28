@@ -1,4 +1,4 @@
-module github.com/ao-data/albiondata-client
+module github.com/Henry-Tsukino/wbg-albiondata-client
 
 go 1.25.0
 

@@ -1,12 +1,15 @@
-# .github/workflows/build.yml
-#
-# Reusable build workflow, shared by test-build.yml (push/PR) and
-# release.yml (release published). Single source of truth for how each
-# OS is built so the three build paths can't drift out of sync with
-# each other the way the darwin job previously did.
+# Reusable build workflow shared by test-build.yml (push/PR) and release.yml.
+# The version comes from the git tag (GITHUB_REF_NAME), which must look like
+# 1.5.0 (no leading "v") - see scripts/version.sh. On push/PR there is no tag,
+# so a fixed test version is used.
 
 on:
   workflow_call:
+    inputs:
+      version:
+        type: string
+        required: false
+        default: "0.0.1"
 
 jobs:
   build:
@@ -19,20 +22,25 @@ jobs:
           - os: linux
             runner: ubuntu-latest
             artifacts: |
-              albiondata-client
-              update-linux-amd64.gz
+              dist/WBG-albion-data-client
+              dist/update-linux-amd64.gz
           - os: windows
-            runner: ubuntu-latest
+            runner: windows-latest
             artifacts: |
-              albiondata-client.exe
-              update-windows-amd64.exe.gz
-              albiondata-client-amd64-installer.exe
+              dist/WBG-albion-data-client.exe
+              dist/update-windows-amd64.exe.gz
+              dist/installer-WBG-tool.exe
           - os: darwin
             runner: macos-latest
             artifacts: |
-              albiondata-client
-              update-darwin-amd64.gz
-              albiondata-client-amd64-mac.zip
+              dist/WBG-albion-data-client
+              dist/update-darwin-amd64.gz
+              dist/WBG-albion-data-client-amd64-mac.zip
+    defaults:
+      run:
+        shell: bash
+    env:
+      VERSION: ${{ inputs.version }}
     steps:
       - uses: actions/checkout@v6
 
@@ -49,13 +57,13 @@ jobs:
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
+      - name: Install Inno Setup
+        if: matrix.os == 'windows'
+        run: choco install innosetup --no-progress -y
+
       - name: Build
         run: make build-${{ matrix.os }}
 
-      # Runs only on the linux leg, which already has libpcap-dev and the
-      # frontend build (both required by the root package's cgo imports
-      # and //go:embed directive) from the build step above - no need to
-      # duplicate that setup in a separate job.
       - name: Vet
         if: matrix.os == 'linux'
         run: go vet ./...

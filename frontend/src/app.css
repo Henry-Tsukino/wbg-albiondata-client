@@ -1,0 +1,284 @@
+/* ------------------------------------------------------------------
+   Themes. The active theme is set via <html data-theme="...">.
+   Default (no attribute / unknown value) = dark.
+   ------------------------------------------------------------------ */
+
+/* ---- Dark (default) ---- */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #16181d;
+  --sidebar-top: #1d212a;
+  --sidebar-bottom: #14161b;
+  --sidebar-edge: #2a303c;
+  --brand-text: #e6e9ef;
+  --brand-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+
+  --panel-bg: #20242d;
+  --panel-head-from: #2d3444;
+  --panel-head-to: #242a37;
+  --panel-head-text: #8ab4ff;
+  --panel-border: #333b4b;
+  --panel-text: #c9d1dc;
+  --panel-radius: 6px;
+
+  --text: #d7dce4;
+  --text-muted: #8d96a5;
+  --legend: #8ab4ff;
+  --border: #2e3440;
+
+  --accent: #4c8dff;
+  --accent-text: #7fb0ff;
+  --link: #6aa5ff;
+  --link-hover: #ffa94d;
+
+  --ok: #3fb950;
+  --bad: #f85149;
+  --warn: #d29922;
+
+  --led-off-hi: #6b7280;
+  --led-off-lo: #3a3f4a;
+  --led-border: #0b0c0f;
+  --led-ok-hi: #9bf5a9;
+  --led-bad-hi: #ffb4ae;
+  --led-warn-hi: #ffe08a;
+
+  --log-bg: #101216;
+  --log-border: #2a303c;
+  --log-inset: transparent;
+  --log-warn-text: #e3b341;
+
+  --btn-bg-from: #343c4e;
+  --btn-bg-to: #272d3b;
+  --btn-border: #475066;
+  --btn-text: #d7dce4;
+  --btn-hover-ring: #4c8dff;
+
+  --check-bg: #12151a;
+  --check-border: #566179;
+  --check-hover: #4c8dff;
+  --check-mark: #3fb950;
+
+  --balloon-bg: #2b303b;
+  --balloon-border: #4b5468;
+  --balloon-text: #e6e9ef;
+
+  --status-bg: #1a1d24;
+  --status-border: #2a303c;
+  --pane-border: #343b4a;
+
+  --scroll-track: #14161b;
+  --scroll-thumb: #353d4e;
+  --scroll-thumb-hover: #46506a;
+  --scroll-thumb-border: #4a5468;
+
+  --resize-hover: rgba(255, 255, 255, 0.12);
+
+  --font: 'Segoe UI', 'Inter', Tahoma, Verdana, sans-serif;
+  --font-head: var(--font);
+  --font-mono: 'JetBrains Mono', 'Cascadia Mono', 'Lucida Console', 'Courier New', monospace;
+  --head-transform: none;
+  --head-spacing: 0;
+}
+
+/* ---- Light ---- */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f3f4f7;
+  --sidebar-top: #e6ebf6;
+  --sidebar-bottom: #d5deef;
+  --sidebar-edge: #c3cde2;
+  --brand-text: #17306b;
+  --brand-shadow: none;
+
+  --panel-bg: #ffffff;
+  --panel-head-from: #f2f5fc;
+  --panel-head-to: #dde6f8;
+  --panel-head-text: #1f4fb5;
+  --panel-border: #c5cddd;
+  --panel-text: #1f2a44;
+  --panel-radius: 6px;
+
+  --text: #1b2030;
+  --text-muted: #5b6475;
+  --legend: #1f4fb5;
+  --border: #c9d0de;
+
+  --accent: #1f5fd6;
+  --accent-text: #1f5fd6;
+  --link: #1a56c8;
+  --link-hover: #d9531e;
+
+  --ok: #1f9d3a;
+  --bad: #c62828;
+  --warn: #b26a00;
+
+  --led-off-hi: #e4e6ea;
+  --led-off-lo: #a3a8b3;
+  --led-border: #6b7280;
+  --led-ok-hi: #b6ffa0;
+  --led-bad-hi: #ffb0a0;
+  --led-warn-hi: #ffe9a0;
+
+  --log-bg: #ffffff;
+  --log-border: #c5cddd;
+  --log-inset: transparent;
+  --log-warn-text: #9a6700;
+
+  --btn-bg-from: #ffffff;
+  --btn-bg-to: #e6e9f0;
+  --btn-border: #9aa5bd;
+  --btn-text: #1b2030;
+  --btn-hover-ring: #1f5fd6;
+
+  --check-bg: #ffffff;
+  --check-border: #7a87a3;
+  --check-hover: #1f5fd6;
+  --check-mark: #1f9d3a;
+
+  --balloon-bg: #fff8d6;
+  --balloon-border: #c9b458;
+  --balloon-text: #2b2610;
+
+  --status-bg: #eceef3;
+  --status-border: #c9d0de;
+  --pane-border: #c3cadb;
+
+  --scroll-track: #eceef3;
+  --scroll-thumb: #c4cde3;
+  --scroll-thumb-hover: #aab7d6;
+  --scroll-thumb-border: #98a6c9;
+
+  --resize-hover: rgba(31, 95, 214, 0.18);
+
+  --font: 'Segoe UI', 'Inter', Tahoma, Verdana, sans-serif;
+  --font-head: var(--font);
+  --font-mono: 'JetBrains Mono', 'Cascadia Mono', 'Lucida Console', 'Courier New', monospace;
+  --head-transform: none;
+  --head-spacing: 0;
+}
+
+/* ---- Albion Online (dark leather, bronze frames, gold accents) ---- */
+:root[data-theme='albion'] {
+  color-scheme: dark;
+
+  --bg: #1a1510;
+  --sidebar-top: #2b2218;
+  --sidebar-bottom: #16110c;
+  --sidebar-edge: #6b5330;
+  --brand-text: #f0d48a;
+  --brand-shadow: 0 1px 0 #000, 0 0 8px rgba(212, 167, 60, 0.35);
+
+  --panel-bg: #261e15;
+  --panel-head-from: #54401f;
+  --panel-head-to: #33270f;
+  --panel-head-text: #f0cf7a;
+  --panel-border: #7a5f33;
+  --panel-text: #e6d9bd;
+  --panel-radius: 2px;
+
+  --text: #e6d9bd;
+  --text-muted: #a89877;
+  --legend: #e0b955;
+  --border: #6b5330;
+
+  --accent: #d4a73c;
+  --accent-text: #f0cf7a;
+  --link: #e8c675;
+  --link-hover: #fff1c4;
+
+  --ok: #86c653;
+  --bad: #e0574f;
+  --warn: #e0a030;
+
+  --led-off-hi: #7a6a4f;
+  --led-off-lo: #3b3223;
+  --led-border: #000000;
+  --led-ok-hi: #c9f59b;
+  --led-bad-hi: #ffb4a8;
+  --led-warn-hi: #ffe39a;
+
+  --log-bg: #110d09;
+  --log-border: #7a5f33;
+  --log-inset: rgba(212, 167, 60, 0.28);
+  --log-warn-text: #e8b64a;
+
+  --btn-bg-from: #5d4824;
+  --btn-bg-to: #38290f;
+  --btn-border: #a98741;
+  --btn-text: #f3e2b4;
+  --btn-hover-ring: #f0cf7a;
+
+  --check-bg: #120e09;
+  --check-border: #a98741;
+  --check-hover: #f0cf7a;
+  --check-mark: #f0cf7a;
+
+  --balloon-bg: #33281a;
+  --balloon-border: #a98741;
+  --balloon-text: #f1e4c4;
+
+  --status-bg: #1d1710;
+  --status-border: #6b5330;
+  --pane-border: #5a4627;
+
+  --scroll-track: #17120d;
+  --scroll-thumb: #5a4627;
+  --scroll-thumb-hover: #7a5f33;
+  --scroll-thumb-border: #a98741;
+
+  --resize-hover: rgba(240, 207, 122, 0.2);
+
+  --font: 'Segoe UI', Tahoma, Verdana, sans-serif;
+  --font-head: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Mono', 'Lucida Console', 'Courier New', monospace;
+  --head-transform: uppercase;
+  --head-spacing: 0.06em;
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 12px;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.selectable {
+  -webkit-user-select: text;
+  user-select: text;
+}
+a {
+  color: var(--link);
+}
+a:hover {
+  color: var(--link-hover);
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border: 1px solid var(--scroll-thumb-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+}
+::-webkit-scrollbar-corner {
+  background: var(--scroll-track);
+}

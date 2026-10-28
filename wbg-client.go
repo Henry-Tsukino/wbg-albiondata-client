@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"io/fs"
 	"os"
 	"os/exec"
 	"runtime"
@@ -10,20 +11,23 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ao-data/albiondata-client/client"
-	"github.com/ao-data/albiondata-client/icon"
-	"github.com/ao-data/albiondata-client/internal/console"
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/internal/dockicon"
-	"github.com/ao-data/albiondata-client/internal/pcapdriver"
-	"github.com/ao-data/albiondata-client/internal/winstate"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/client"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/icon"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/console"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dockicon"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/pcapdriver"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/winstate"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 
 	"github.com/ao-data/go-githubupdate/updater"
 	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/wailsapp/wails/v3/pkg/events"
 )
 
+// version is injected at build time (-ldflags "-X main.version=1.5.0") by
+// scripts/build-*.sh, which refuse to build without one. A build without a
+// version is a "dev" build and never self-updates.
 var version string
 
 // dashboardWindowMu guards dashboardWindowRef, which is set once
@@ -59,6 +63,8 @@ func showDashboardWindow() {
 var assets embed.FS
 
 func init() {
+	// The updater's strict semver parsing rejects a leading "v".
+	version = strings.TrimPrefix(version, "v")
 	client.ConfigGlobal.SetupFlags()
 	application.RegisterEvent[dashboard.Status]("status:changed")
 	application.RegisterEvent[map[string]int64]("counters:snapshot")
@@ -76,7 +82,7 @@ func main() {
 	}
 
 	if client.ConfigGlobal.PrintVersion {
-		log.Infof("Albion Data Client, version: %s", version)
+		log.Infof("WBG Client, version: %s", version)
 		return
 	}
 
@@ -140,14 +146,21 @@ func runClient() {
 }
 
 func runDashboardApp() {
+	// The embed root contains the "frontend/dist" prefix, but Wails'
+	// asset handler expects index.html at the FS root - re-root it.
+	assetsFS, err := fs.Sub(assets, "frontend/dist")
+	if err != nil {
+		log.Error(err)
+	}
+
 	app := application.New(application.Options{
-		Name:        "Albion Data Client",
-		Description: "Live status dashboard for the Albion Data Client",
+		Name:        "WBG Client",
+		Description: "Live status dashboard for the WBG Client",
 		Services: []application.Service{
 			application.NewService(&dashboard.DashboardService{}),
 		},
 		Assets: application.AssetOptions{
-			Handler: application.AssetFileServerFS(assets),
+			Handler: application.AssetFileServerFS(assetsFS),
 		},
 		Mac: application.MacOptions{
 			ActivationPolicy: application.ActivationPolicyAccessory,
@@ -155,7 +168,7 @@ func runDashboardApp() {
 	})
 
 	winOpts := application.WebviewWindowOptions{
-		Title:  "Albion Data Client",
+		Title:  "WBG Client",
 		Name:   "dashboard",
 		Width:  900,
 		Height: 600,
@@ -273,7 +286,7 @@ func runDashboardApp() {
 
 func setupTray(app *application.App, dashboardWindow *application.WebviewWindow) {
 	tray := app.SystemTray.New()
-	tray.SetTooltip("Albion Data Client")
+	tray.SetTooltip("WBG Client")
 
 	// icon.TrayPNG is a full-color logo with an opaque background, not a
 	// monochrome silhouette, so it must be set as a regular icon rather
@@ -382,8 +395,17 @@ func openLogFile() {
 func startUpdater() {
 	dashboard.SetVersionInfo(version, "")
 	dashboard.SetCustomPublicIngest(client.ConfigGlobal.PublicIngestBaseUrls != "https+pow://albion-online-data.com")
+	dashboard.SetMarketDisabled(client.ConfigGlobal.DisableMarket)
 
-	if version != "" && !strings.Contains(version, "dev") {
+	// Keep ConfigGlobal in sync when the dashboard toggle flips it.
+	dashboard.OnMarketChange(func(disabled bool) {
+		client.ConfigGlobal.DisableMarket = disabled
+		client.PersistDisableMarket(disabled)
+	})
+
+	if version == "" || strings.Contains(version, "dev") {
+		log.Warn("No version compiled in (dev build): automatic updates are disabled. Build with VERSION=x.y.z to enable them.")
+	} else {
 		u := updater.NewUpdater(
 			version,
 			client.ConfigGlobal.UpdateGithubOwner,

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ao-data/albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
 )
 
 const (
@@ -133,8 +133,9 @@ func TestFestivitiesUpdateSendsToPublicIngest(t *testing.T) {
 	})
 
 	ConfigGlobal.DisableUpload = false
-	ConfigGlobal.PublicIngestBaseUrls = server.URL
-	ConfigGlobal.PrivateIngestBaseUrls = ""
+	// Festivities are not market/gold data, so they go to the WBG server.
+	ConfigGlobal.PublicIngestBaseUrls = ""
+	ConfigGlobal.PrivateIngestBaseUrls = server.URL
 	ConfigGlobal.EnableWebsockets = false
 
 	state := &albionState{AODataServerID: 3}

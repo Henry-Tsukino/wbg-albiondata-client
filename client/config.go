@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 
 	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	logFileName = "albiondata-client.log"
+	logFileName = "wbg-client.log"
 	maxLogFiles = 10
 )
 
@@ -56,6 +56,8 @@ type config struct {
 	DebugOperationsBlacklistString string
 	DebugIgnoreDecodingErrors      bool
 	DisableUpload                  bool
+	DisableMarket                  bool
+	BanditWebhookURL               string
 	EnableWebsockets               bool
 	ListenDevices                  string
 	LogLevel                       string
@@ -71,11 +73,21 @@ type config struct {
 	UpdateGithubRepo               string
 }
 
+const (
+	// DefaultWBGIngestURL receives every upload except market and gold
+	// data (those still go to the public Albion Data Project servers).
+	DefaultWBGIngestURL = "https://hermes-production-817b.up.railway.app"
+
+	// Self-update source: the latest GitHub release of this repository.
+	DefaultUpdateGithubOwner = "Henry-Tsukino"
+	DefaultUpdateGithubRepo  = "wbg-albiondata-client"
+)
+
 // config global config data
 var ConfigGlobal = &config{
 	LogLevel:          "INFO",
-	UpdateGithubOwner: "ao-data",
-	UpdateGithubRepo:  "albiondata-client"}
+	UpdateGithubOwner: DefaultUpdateGithubOwner,
+	UpdateGithubRepo:  DefaultUpdateGithubRepo}
 
 func (config *config) SetupFlags() {
 	config.setupWebsocketFlags()
@@ -83,6 +95,13 @@ func (config *config) SetupFlags() {
 	config.setupCommonFlags()
 
 	flag.Parse()
+
+	// Merge in the config-file value AFTER flag.Parse, since flag.Parse
+	// resets a registered bool to its default (false) when the flag is
+	// absent - combining earlier would be overwritten.
+	if viper.GetBool("DisableMarket") {
+		config.DisableMarket = true
+	}
 
 	if config.OfflinePath != "" {
 		config.Offline = true
@@ -176,6 +195,12 @@ func (config *config) setupDebugFlags() {
 		"",
 		"Blacklist of operation IDs to hide messages when debugging. Comma separated.",
 	)
+	flag.StringVar(
+		&config.PrivateIngestBaseUrls,
+		"p",
+		DefaultWBGIngestURL,
+		"Base URL of the WBG server that receives everything except market and gold data. Comma separated.",
+	)
 
 	flag.BoolVar(
 		&config.DebugIgnoreDecodingErrors,
@@ -199,6 +224,20 @@ func (config *config) setupCommonFlags() {
 		"d",
 		false,
 		"If specified no attempts will be made to upload data to remote server.",
+	)
+
+	flag.BoolVar(
+		&config.DisableMarket,
+		"no-market",
+		false,
+		"Skip decoding and uploading market data (orders/history/notifications) to reduce CPU usage on weak machines.",
+	)
+
+	flag.StringVar(
+		&config.BanditWebhookURL,
+		"bandit-webhook",
+		DefaultWBGIngestURL,
+		"Full URL to POST bandit event JSON to.",
 	)
 
 	flag.StringVar(
@@ -227,13 +266,6 @@ func (config *config) setupCommonFlags() {
 		"i",
 		"https+pow://albion-online-data.com",
 		"Base URL to send PUBLIC data to, can be 'nats://', 'http://', 'https://' or 'noop' and can have multiple uploaders. Comma separated.",
-	)
-
-	flag.StringVar(
-		&config.PrivateIngestBaseUrls,
-		"p",
-		"",
-		"Base URL to send PRIVATE data to, can be 'nats://', 'http://', 'https://' or 'noop' and can have multiple uploaders. Comma separated.",
 	)
 
 	flag.StringVar(
@@ -367,4 +399,42 @@ func (config *config) setupDebugOperations() {
 		log.Debugf("[%v] operation: [%v]%v", verb, number, OperationType(number))
 	}
 
+}
+
+// PersistDisableMarket writes the DisableMarket setting to config.yaml so
+// the dashboard's market toggle survives a restart. Creates the file if
+// it does not exist yet.
+func PersistDisableMarket(disabled bool) {
+	viper.Set("DisableMarket", disabled)
+
+	path := "config.yaml"
+	line := fmt.Sprintf("DisableMarket: %v", disabled)
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if err := os.WriteFile(path, []byte(line+"\n"), 0o644); err != nil {
+			log.Errorf("Could not persist DisableMarket: %v", err)
+			return
+		}
+		log.Infof("Saved DisableMarket=%v to %s", disabled, path)
+		return
+	}
+
+	lines := strings.Split(string(data), "\n")
+	found := false
+	for i, l := range lines {
+		if strings.HasPrefix(strings.TrimSpace(l), "DisableMarket:") {
+			lines[i] = line
+			found = true
+			break
+		}
+	}
+	if !found {
+		lines = append(lines, line)
+	}
+	if err := os.WriteFile(path, []byte(strings.Join(lines, "\n")), 0o644); err != nil {
+		log.Errorf("Could not persist DisableMarket: %v", err)
+		return
+	}
+	log.Infof("Saved DisableMarket=%v to %s", disabled, path)
 }

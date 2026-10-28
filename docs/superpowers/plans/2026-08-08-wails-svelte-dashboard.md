@@ -687,8 +687,8 @@ package client
 import (
 	"testing"
 
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
 )
 
 func TestSendMsgToPublicUploaders_IncrementsCounter(t *testing.T) {
@@ -725,9 +725,9 @@ import (
 
 	"strings"
 
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 )
 ```
 
@@ -748,7 +748,7 @@ In `client/listener.go`, after line 157 (`log.Tracef("Using AODataIngestBaseURL:
 and add the import:
 
 ```go
-	"github.com/ao-data/albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
 ```
 
 In `client/albion_watcher.go`, add the import and two calls:
@@ -757,8 +757,8 @@ In `client/albion_watcher.go`, add the import and two calls:
 import (
 	"time"
 
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 )
 ```
 
@@ -878,10 +878,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ao-data/albiondata-client/client"
-	"github.com/ao-data/albiondata-client/icon"
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/client"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/icon"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 
 	"github.com/ao-data/go-githubupdate/updater"
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -1235,13 +1235,13 @@ git commit -m "feat: scaffold Vite + Svelte frontend"
 wails3 generate bindings ./internal/dashboard/...
 ```
 
-Expected output directory: `frontend/bindings/github.com/ao-data/albiondata-client/internal/dashboard/`. List it and confirm the exact generated filename/export for `DashboardService`:
+Expected output directory: `frontend/bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/`. List it and confirm the exact generated filename/export for `DashboardService`:
 
 ```bash
 find frontend/bindings -iname "*dashboardservice*"
 ```
 
-Use the path this prints in the import statements below — if it differs from `../bindings/github.com/ao-data/albiondata-client/internal/dashboard/dashboardservice` (e.g. different casing), adjust Step 4's import accordingly.
+Use the path this prints in the import statements below — if it differs from `../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/dashboardservice` (e.g. different casing), adjust Step 4's import accordingly.
 
 - [ ] **Step 2: `frontend/src/main.js`**
 
@@ -1264,7 +1264,7 @@ export default app;
 <script>
   import { onDestroy } from 'svelte';
   import { Events } from '@wailsio/runtime';
-  import { DashboardService } from '../../bindings/github.com/ao-data/albiondata-client/internal/dashboard/dashboardservice';
+  import { DashboardService } from '../../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/dashboardservice';
 
   let status = {
     Version: '',
@@ -1324,7 +1324,7 @@ export default app;
 <script>
   import { onDestroy } from 'svelte';
   import { Events } from '@wailsio/runtime';
-  import { DashboardService } from '../../bindings/github.com/ao-data/albiondata-client/internal/dashboard/dashboardservice';
+  import { DashboardService } from '../../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/dashboardservice';
 
   const labels = {
     'marketorders.ingest': 'Market Orders',
@@ -1387,7 +1387,7 @@ export default app;
 <script>
   import { onDestroy, tick } from 'svelte';
   import { Events } from '@wailsio/runtime';
-  import { DashboardService } from '../../bindings/github.com/ao-data/albiondata-client/internal/dashboard/dashboardservice';
+  import { DashboardService } from '../../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/dashboardservice';
 
   let lines = [];
   let container;

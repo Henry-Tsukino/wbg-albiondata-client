@@ -24,4 +24,6 @@ run.sh
 *.log.*
 *.syso
 *.tmp
-.worktrees/
+.worktrees/dist/
+frontend/node_modules/
+dist/

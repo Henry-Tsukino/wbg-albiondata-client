@@ -1,10 +1,10 @@
 package client
 
 import (
-	"github.com/ao-data/albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
 	"strconv"
 
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	uuid "github.com/nu7hatch/gouuid"
 )
 
@@ -54,5 +54,5 @@ func (op operationGetClusterMapInfoResponse) Process(state *albionState) {
 
 	identifier, _ := uuid.NewV4()
 	log.Infof("Sending map data to ingest (Identifier: %s)", identifier)
-	sendMsgToPublicUploaders(upload, lib.NatsMapDataIngest, state, identifier.String(), 1)
+	sendMsgToWBGUploaders(upload, lib.NatsMapDataIngest, state, identifier.String(), 1)
 }

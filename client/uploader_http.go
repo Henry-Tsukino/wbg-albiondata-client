@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 )
 
 // httpUploadTimeout bounds every ingest HTTP request. Without it, a

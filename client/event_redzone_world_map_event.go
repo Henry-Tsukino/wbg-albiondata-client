@@ -3,8 +3,8 @@ package client
 import (
 	"time"
 
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	uuid "github.com/nu7hatch/gouuid"
 )
 
@@ -21,8 +21,14 @@ map[2] - References the provinces in the 3rd phase
 */
 
 type eventRedZoneWorldMapEvent struct {
-	EventTime     int64 `mapstructure:"0"`
-	Phase         int   `mapstructure:"1"`
+	EventTime int64 `mapstructure:"0"`
+	Phase     int   `mapstructure:"1"`
+}
+
+// banditWebhookPayload is the JSON body POSTed to -bandit-webhook:
+// just the phase, keyed as "Status0".
+type banditWebhookPayload struct {
+	Status0 int `json:"Status0"`
 }
 
 func (event eventRedZoneWorldMapEvent) Process(state *albionState) {
@@ -35,10 +41,19 @@ func (event eventRedZoneWorldMapEvent) Process(state *albionState) {
 
 		identifier, _ := uuid.NewV4()
 		upload := lib.BanditEvent{
-			EventTime:     event.EventTime,
-			Phase:         event.Phase,
+			EventTime: event.EventTime,
+			Phase:     event.Phase,
 		}
 		log.Infof("Sending bandit event to ingest (Identifier: %s)", identifier)
-		sendMsgToPublicUploaders(upload, lib.NatsBanditEvent, state, identifier.String(), 1)
+		sendMsgToWBGUploaders(upload, lib.NatsBanditEvent, state, identifier.String(), 1)
+
+		if ConfigGlobal.BanditWebhookURL != "" && !ConfigGlobal.DisableUpload {
+			payload := banditWebhookPayload{Status0: event.Phase}
+			if err := postBanditEvent(payload, ConfigGlobal.BanditWebhookURL); err != nil {
+				log.Errorf("Bandit webhook error: %v", err)
+			} else {
+				log.Infof("Sent bandit event to webhook %s", ConfigGlobal.BanditWebhookURL)
+			}
+		}
 	}
 }

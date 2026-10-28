@@ -4,7 +4,7 @@
 
 /**
  * DashboardService is bound to the Wails frontend (see application.NewService
- * in albiondata-client.go). Its methods back-fill the dashboard window's
+ * in wbg-client.go). Its methods back-fill the dashboard window's
  * state when it's shown; ongoing updates arrive via the "status:changed",
  * "counters:snapshot", and "log:line" events instead.
  * @module
@@ -46,6 +46,24 @@ export function GetUploadCounts() {
     return $Call.ByID(1683242014).then(/** @type {($result: any) => any} */(($result) => {
         return $$createType3($result);
     }));
+}
+
+/**
+ * IsMarketDisabled reports whether market data parsing/uploading is
+ * currently disabled.
+ * @returns {$CancellablePromise<boolean>}
+ */
+export function IsMarketDisabled() {
+    return $Call.ByID(2574753209);
+}
+
+/**
+ * SetMarketDisabled is bound to the dashboard's market toggle.
+ * @param {boolean} disabled
+ * @returns {$CancellablePromise<void>}
+ */
+export function SetMarketDisabled(disabled) {
+    return $Call.ByID(983297455, disabled);
 }
 
 // Private type creation functions

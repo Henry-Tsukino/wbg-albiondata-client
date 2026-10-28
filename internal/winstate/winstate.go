@@ -25,7 +25,7 @@ func filePath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(dir, "albiondata-client", "window.json"), nil
+	return filepath.Join(dir, "wbg-client", "window.json"), nil
 }
 
 // Load returns the previously saved window bounds. The second return

@@ -40,15 +40,18 @@ rebuild the local binary with the same amd64-forcing flags
 target - see build-and-release.md for why arm64 was deliberately not
 added.
 
-## Target repo is compile-time hardcoded
+## Version rules (WBG)
 
-`client.ConfigGlobal.UpdateGithubOwner`/`UpdateGithubRepo` default to
-`"ao-data"`/`"albiondata-client"` (`client/config.go`). There *is* a
-viper-based override for these via `config.yaml`, but it's commented
-out in `setupWebsocketFlags()` ("Keeping for local development, but
-commenting out so it's not live") - so in a normal build there is no
-config-file or flag way to point the updater at a fork. Testing against
-a personal fork (e.g. `phendryx/albiondata-client`) currently means
-building a local binary with `UpdateGithubOwner`/`UpdateGithubRepo`
-edited directly in `client/config.go` before building - not committed,
-reverted before any real commit.
+- The binary's version is injected at build time and is **required**:
+  `VERSION=1.5.0 make build-windows` (scripts/version.sh rejects anything else).
+- The library parses versions with strict `semver.Make`, which rejects a leading
+  `v`, and ignores the parse error (both versions become 0.0.0 -> "no update").
+  So the GitHub release **tag must be `1.5.0`, not `v1.5.0`**.
+- A release must contain the asset `update-windows-amd64.exe.gz` (gzip of
+  `WBG-albion-data-client.exe`; produced in `dist/` by `scripts/build-windows.sh`).
+  `installer-WBG-tool.exe` is for fresh installs only.
+
+## Target repo
+
+`UpdateGithubOwner`/`UpdateGithubRepo` default to `Henry-Tsukino` /
+`wbg-albiondata-client` (constants in `client/config.go`).

@@ -1,5 +1,10 @@
 .PHONY: run frontend fmt validate-fmt build-windows build-linux build-darwin
 
+# The version is required for the build targets so that self-update works:
+#   make build-windows VERSION=1.5.0
+# (use plain 1.5.0, no leading "v" - the GitHub release tag must match)
+export VERSION
+
 run:
 	scripts/run.sh
 

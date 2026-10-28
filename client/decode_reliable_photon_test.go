@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"testing"
 
-	"github.com/ao-data/albiondata-client/client/photon"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/client/photon"
 )
 
 // buildPhotonPacket wraps a single reliable-message payload into a minimal

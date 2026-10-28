@@ -1,3 +1,3 @@
 #!/bin/bash
 cd -- "$(dirname "$BASH_SOURCE")"
-sudo ./albiondata-client-executable
+sudo ./WBG-albion-data-client-executable

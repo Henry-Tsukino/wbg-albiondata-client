@@ -3,8 +3,8 @@ package client
 import (
 	"testing"
 
-	"github.com/ao-data/albiondata-client/internal/dashboard"
-	"github.com/ao-data/albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
 )
 
 // TestCreateUploaders_ReusesUploaderForSameTarget guards against the

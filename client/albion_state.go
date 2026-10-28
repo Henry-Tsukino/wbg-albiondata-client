@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
-	"github.com/ao-data/albiondata-client/notification"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/notification"
 )
 
 // CacheSize limit size of messages in cache

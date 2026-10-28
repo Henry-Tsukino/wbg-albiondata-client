@@ -21,12 +21,19 @@ type Status struct {
 	// decoded normally). See client/albion_state.go's
 	// ShouldNotifyMarketDataEncrypted for how "encrypted" is decided.
 	EncryptionStatus string
+	// MarketDisabled reports whether market data parsing/uploading is
+	// currently disabled (via -no-market or config.yaml DisableMarket).
+	MarketDisabled bool
 }
 
 var (
 	statusMu   sync.Mutex
 	status     Status
 	statusEmit func(Status)
+	// marketHook is called when the market toggle changes, so the client
+	// package (which owns ConfigGlobal) can update its runtime flag
+	// without dashboard importing client.
+	marketHook func(bool)
 )
 
 // OnStatusChange registers the callback invoked whenever the status
@@ -186,6 +193,37 @@ func SetEncryptionStatus(encryptionStatus string) {
 
 	if changed && emit != nil {
 		emit(next)
+	}
+}
+
+// OnMarketChange registers a callback invoked when the market
+// enabled/disabled state is changed (e.g. from the dashboard toggle).
+func OnMarketChange(fn func(bool)) {
+	statusMu.Lock()
+	marketHook = fn
+	statusMu.Unlock()
+}
+
+// SetMarketDisabled records whether market data parsing/uploading is
+// currently disabled and notifies the registered hook so the runtime
+// flag is kept in sync.
+func SetMarketDisabled(disabled bool) {
+	statusMu.Lock()
+	next := status
+	next.MarketDisabled = disabled
+	changed := next != status
+	if changed {
+		status = next
+	}
+	emit := statusEmit
+	hook := marketHook
+	statusMu.Unlock()
+
+	if changed && emit != nil {
+		emit(next)
+	}
+	if hook != nil {
+		hook(disabled)
 	}
 }
 

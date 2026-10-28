@@ -2,8 +2,8 @@
   "RT_GROUP_ICON": {
     "APP": {
       "0000": [
-        "../icon/albiondata-client.png",
-        "../icon/albiondata-client.png"
+        "../icon/wbg.png",
+        "../icon/wbg.png"
       ]
     }
   },
@@ -11,10 +11,10 @@
     "#1": {
       "0409": {
         "identity": {
-          "name": "",
+          "name": "WBG.AlbionDataClient",
           "version": ""
         },
-        "description": "",
+        "description": "WBG Albion Data Client",
         "minimum-os": "win7",
         "execution-level": "as invoker",
         "ui-access": false,
@@ -42,15 +42,15 @@
         "info": {
           "0409": {
             "Comments": "",
-            "CompanyName": "",
-            "FileDescription": "",
+            "CompanyName": "WBG",
+            "FileDescription": "WBG Albion Data Client",
             "FileVersion": "",
-            "InternalName": "",
-            "LegalCopyright": "",
+            "InternalName": "WBG-albion-data-client",
+            "LegalCopyright": "WBG",
             "LegalTrademarks": "",
-            "OriginalFilename": "",
+            "OriginalFilename": "WBG-albion-data-client.exe",
             "PrivateBuild": "",
-            "ProductName": "",
+            "ProductName": "WBG Albion Data Client",
             "ProductVersion": "",
             "SpecialBuild": ""
           }

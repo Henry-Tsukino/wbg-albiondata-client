@@ -7,8 +7,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/ao-data/albiondata-client/lib"
-	"github.com/ao-data/albiondata-client/log"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/lib"
+	"github.com/Henry-Tsukino/wbg-albiondata-client/log"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -141,7 +141,7 @@ func decodeEvent(params map[uint8]interface{}) (event operation, err error) {
 	//	event = &eventRedZonePlayerNotification{}
 	case evRedZoneWorldMapEvent:
 		event = &eventRedZoneWorldMapEvent{}
-	case evFestivitiesUpdate:
+	case evFestivitiesUpdate, evConsumableVanityChargesAdded:
 		event = &eventFestivitiesUpdate{}
 	default:
 		return nil, nil
