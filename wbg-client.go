@@ -397,6 +397,12 @@ func startUpdater() {
 	dashboard.SetCustomPublicIngest(client.ConfigGlobal.PublicIngestBaseUrls != "https+pow://albion-online-data.com")
 	dashboard.SetMarketDisabled(client.ConfigGlobal.DisableMarket)
 
+	dashboard.SetUploadDisabled(client.ConfigGlobal.DisableUpload)
+	dashboard.OnUploadChange(func(disabled bool) {
+		client.ConfigGlobal.DisableUpload = disabled
+		client.PersistDisableUpload(disabled)
+	})
+
 	// Keep ConfigGlobal in sync when the dashboard toggle flips it.
 	dashboard.OnMarketChange(func(disabled bool) {
 		client.ConfigGlobal.DisableMarket = disabled

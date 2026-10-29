@@ -24,6 +24,9 @@ type Status struct {
 	// MarketDisabled reports whether market data parsing/uploading is
 	// currently disabled (via -no-market or config.yaml DisableMarket).
 	MarketDisabled bool
+	// UploadDisabled reports whether ALL data sending to remote servers
+	// is currently disabled (via -d or config.yaml DisableUpload).
+	UploadDisabled bool
 }
 
 var (
@@ -34,6 +37,8 @@ var (
 	// package (which owns ConfigGlobal) can update its runtime flag
 	// without dashboard importing client.
 	marketHook func(bool)
+	// uploadHook is the same for the "send no data at all" toggle.
+	uploadHook func(bool)
 )
 
 // OnStatusChange registers the callback invoked whenever the status
@@ -217,6 +222,37 @@ func SetMarketDisabled(disabled bool) {
 	}
 	emit := statusEmit
 	hook := marketHook
+	statusMu.Unlock()
+
+	if changed && emit != nil {
+		emit(next)
+	}
+	if hook != nil {
+		hook(disabled)
+	}
+}
+
+// OnUploadChange registers a callback invoked when the "send data"
+// state is changed (e.g. from the dashboard toggle).
+func OnUploadChange(fn func(bool)) {
+	statusMu.Lock()
+	uploadHook = fn
+	statusMu.Unlock()
+}
+
+// SetUploadDisabled records whether all data sending is currently
+// disabled and notifies the registered hook so the runtime flag is kept
+// in sync.
+func SetUploadDisabled(disabled bool) {
+	statusMu.Lock()
+	next := status
+	next.UploadDisabled = disabled
+	changed := next != status
+	if changed {
+		status = next
+	}
+	emit := statusEmit
+	hook := uploadHook
 	statusMu.Unlock()
 
 	if changed && emit != nil {

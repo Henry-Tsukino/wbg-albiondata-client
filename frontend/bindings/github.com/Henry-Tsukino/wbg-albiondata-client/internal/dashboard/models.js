@@ -145,6 +145,15 @@ export class Status {
              */
             this["MarketDisabled"] = false;
         }
+        if (!("UploadDisabled" in $$source)) {
+            /**
+             * UploadDisabled reports whether ALL data sending to remote servers
+             * is currently disabled (via -d or config.yaml DisableUpload).
+             * @member
+             * @type {boolean}
+             */
+            this["UploadDisabled"] = false;
+        }
 
         Object.assign(this, $$source);
     }

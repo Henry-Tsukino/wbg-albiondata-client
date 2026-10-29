@@ -15,7 +15,7 @@ WBG Albion Data Client ("the client") is a free, open-source program that runs o
 
 Like any internet connection, every server above can see your IP address. The client uploads no other kinds of data than those listed here.
 
-**What the WBG server is used for and how long data is kept:** **Personal data is not stored; it remains only in temporary logs, which the hosting provider keeps for about 14 days. Sensitive personal data (with the exception of a profile name) is neither collected nor stored at all. Other data from games is kept within messages sent by the Discord bot and in its database; this information is anonymous and non-sensitive—for example, details regarding daily in-game events that are the same for everyone.**
+**What the WBG server is used for and how long data is kept:** **Personal data is not stored; it remains only in temporary logs, which the hosting provider keeps for about 14 days. Sensitive personal data (with the exception of a profile name) is neither collected nor stored at all. Other data from games is kept within messages sent by the Discord bot and in its database; this information is anonymous and non-sensitive - for example, details regarding daily in-game events that are the same for everyone.**
 
 ## What stays on your computer
 
@@ -25,8 +25,8 @@ Like any internet connection, every server above can see your IP address. The cl
 
 ## Your controls
 
-- **Stop all uploads:** start the client with `-d` (for example, add it to the shortcut). Nothing is then sent to the Albion Online Data Project or the WBG server.
-- **Stop market data:** turn off market in the dashboard, start with `-no-market`, or set `DisableMarket: true` in `config.yaml`. This stops market parsing, market uploads and the market sale/expiry summaries. It does **not** stop skill, map, event or festivity uploads to the WBG server; use `-d` for that.
+- **Stop all uploads:** tick the opt-out checkbox on the privacy page of the installer (it writes `DisableUpload: true` to `config.yaml`; for silent installs pass `/DISABLEUPLOAD=1`), untick "Send data to servers" in the dashboard (saved to `config.yaml`), set `DisableUpload: true` in `config.yaml`, or start the client with `-d`. Nothing is then sent to the Albion Online Data Project or the WBG server.
+- **Stop market data:** turn off market in the dashboard, start with `-no-market`, or set `DisableMarket: true` in `config.yaml`. This stops market parsing, market uploads and the market sale/expiry summaries. It does **not** stop skill, map, event or festivity uploads to the WBG server; untick "Send data to servers", or use `DisableUpload: true` or `-d` for that.
 - **Send data elsewhere:** `-i` sets the public (market/gold) destination, `-p` the WBG server, `-bandit-webhook` the bandit-event URL.
 - **Local WebSocket feed:** off by default. Only if you set `EnableWebsockets: true` in `config.yaml` does the client open local port 8099 and stream the same data to the browser origins you list in `AllowedWebsocketHosts`.
 - **Uninstall:** use the Windows uninstaller (Settings, Apps), or on Linux delete `/usr/local/bin/WBG-albion-data-client` and `~/.local/share/applications/wbg-albion.desktop`.

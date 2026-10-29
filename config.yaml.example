@@ -4,3 +4,7 @@
 #
 # Skip market parsing/uploading entirely (less CPU on weak machines):
 # DisableMarket: False
+#
+# Send no data at all to any server (same as the -d flag; the installer's
+# opt-out checkbox sets this):
+# DisableUpload: False

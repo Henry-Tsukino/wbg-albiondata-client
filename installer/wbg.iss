@@ -69,6 +69,9 @@ Name: "{app}"; Flags: uninsalwaysuninstall
 Source: "..\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 ; Optional: put npcap-1.87.exe into the repo root to have it bundled and run by the installer.
 Source: "..\npcap-1.87.exe"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
+; Privacy policy: installed next to the program and shown on a wizard page.
+Source: "..\PRIVACY.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\PRIVACY.md"; Flags: dontcopy
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 
@@ -99,9 +102,86 @@ russian.Startup=Автозапуск
 
 french.LaunchWithWindows=Lancer avec Windows
 french.Startup=Démarrage automatique
+
+english.PrivacyTitle=Privacy policy and data sending
+english.PrivacySubtitle=Please read what this program sends over the internet before you install it.
+english.DisableSending=Do not send any data (offline mode). You can change this later in config.yaml (DisableUpload).
+
+russian.PrivacyTitle=Политика конфиденциальности и отправка данных
+russian.PrivacySubtitle=Прочитайте, какие данные программа отправляет в интернет, прежде чем устанавливать её.
+russian.DisableSending=Не отправлять никакие данные (автономный режим). Позже можно изменить в config.yaml (DisableUpload).
+
+french.PrivacyTitle=Politique de confidentialité et envoi de données
+french.PrivacySubtitle=Lisez quelles données ce programme envoie sur Internet avant de l'installer.
+french.DisableSending=Ne pas envoyer de données (mode hors ligne). Modifiable plus tard dans config.yaml (DisableUpload).
+
 [Code]
 var
   NpcapInstalled: Boolean;
+  PrivacyPage: TWizardPage;
+  DisableSendingCheck: TNewCheckBox;
+
+procedure InitializeWizard();
+var
+  PolicyMemo: TNewMemo;
+  PolicyFile: String;
+begin
+  // Page with the privacy policy and the opt-out checkbox (before the
+  // directory page, right after the license).
+  PrivacyPage := CreateCustomPage(wpLicense,
+    CustomMessage('PrivacyTitle'), CustomMessage('PrivacySubtitle'));
+
+  PolicyMemo := TNewMemo.Create(PrivacyPage);
+  PolicyMemo.Parent := PrivacyPage.Surface;
+  PolicyMemo.Left := 0;
+  PolicyMemo.Top := 0;
+  PolicyMemo.Width := PrivacyPage.SurfaceWidth;
+  PolicyMemo.Height := PrivacyPage.SurfaceHeight - ScaleY(48);
+  PolicyMemo.ReadOnly := True;
+  PolicyMemo.ScrollBars := ssVertical;
+  PolicyMemo.WordWrap := True;
+  ExtractTemporaryFile('PRIVACY.md');
+  PolicyFile := ExpandConstant('{tmp}\PRIVACY.md');
+  PolicyMemo.Lines.LoadFromFile(PolicyFile);
+
+  DisableSendingCheck := TNewCheckBox.Create(PrivacyPage);
+  DisableSendingCheck.Parent := PrivacyPage.Surface;
+  DisableSendingCheck.Left := 0;
+  DisableSendingCheck.Top := PolicyMemo.Top + PolicyMemo.Height + ScaleY(8);
+  DisableSendingCheck.Width := PrivacyPage.SurfaceWidth;
+  DisableSendingCheck.Height := ScaleY(36);
+  DisableSendingCheck.Caption := CustomMessage('DisableSending');
+  // Silent installs: /DISABLEUPLOAD=1 turns sending off.
+  DisableSendingCheck.Checked := ExpandConstant('{param:DISABLEUPLOAD|0}') = '1';
+end;
+
+// Writes "DisableUpload: true" into {app}\config.yaml (keeps other settings).
+procedure WriteDisableUpload();
+var
+  Path: String;
+  Lines: TArrayOfString;
+  I, N: Integer;
+  Found: Boolean;
+begin
+  Path := ExpandConstant('{app}\config.yaml');
+  Found := False;
+  if LoadStringsFromFile(Path, Lines) then
+  begin
+    for I := 0 to GetArrayLength(Lines) - 1 do
+      if Pos('DisableUpload:', Trim(Lines[I])) = 1 then
+      begin
+        Lines[I] := 'DisableUpload: true';
+        Found := True;
+      end;
+  end;
+  if not Found then
+  begin
+    N := GetArrayLength(Lines);
+    SetArrayLength(Lines, N + 1);
+    Lines[N] := 'DisableUpload: true';
+  end;
+  SaveStringsToFile(Path, Lines, False);
+end;
 
 function CheckNpcapInstalled(): Boolean;
 begin
@@ -138,6 +218,8 @@ begin
   // Устанавливаем Npcap в конце установки (после всех файлов), всегда, без проверки
   if CurStep = ssPostInstall then
   begin
+    if DisableSendingCheck.Checked then
+      WriteDisableUpload();
     FindAndInstallNpcap();
   end;
 end;

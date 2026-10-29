@@ -30,6 +30,12 @@ func (s *DashboardService) IsMarketDisabled() bool {
 	return GetStatus().MarketDisabled
 }
 
+// SetUploadDisabled is bound to the dashboard's "send data" toggle.
+func (s *DashboardService) SetUploadDisabled(disabled bool) {
+	log.Infof("UI CLICK -> SetUploadDisabled(%v)", disabled)
+	SetUploadDisabled(disabled)
+}
+
 // SetMarketDisabled is bound to the dashboard's market toggle.
 func (s *DashboardService) SetMarketDisabled(disabled bool) {
 	log.Infof("UI CLICK -> SetMarketDisabled(%v)", disabled)

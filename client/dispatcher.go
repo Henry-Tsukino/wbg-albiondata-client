@@ -54,6 +54,10 @@ func createUploaders(targets []string) []uploader {
 		if target == "" {
 			continue
 		}
+		// "noop" is the documented "send nowhere" target: no uploader.
+		if target == "noop" {
+			continue
+		}
 		if len(target) < 4 {
 			log.Infof("Got an ingest target that was less than 4 characters, not a valid ingest target: %v", target)
 			continue
@@ -64,12 +68,14 @@ func createUploaders(targets []string) []uploader {
 			continue
 		}
 
+		// strings.HasPrefix is length-safe; slicing target[0:8] panicked
+		// for any target shorter than 8 characters (e.g. "noop").
 		var u uploader
-		if target[0:8] == "http+pow" || target[0:9] == "https+pow" {
+		if strings.HasPrefix(target, "http+pow") || strings.HasPrefix(target, "https+pow") {
 			u = newHTTPUploaderPow(target)
-		} else if target[0:4] == "http" || target[0:5] == "https" {
+		} else if strings.HasPrefix(target, "http") {
 			u = newHTTPUploader(target)
-		} else if target[0:4] == "nats" {
+		} else if strings.HasPrefix(target, "nats") {
 			u = newNATSUploader(target)
 		} else {
 			log.Infof("An invalid ingest target was specified: %v", target)

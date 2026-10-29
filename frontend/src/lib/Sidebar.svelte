@@ -2,7 +2,7 @@
   import { onDestroy } from 'svelte';
   import { Browser, Events } from '@wailsio/runtime';
   import { DashboardService } from '../../bindings/github.com/Henry-Tsukino/wbg-albiondata-client/internal/dashboard/index.js';
-  import { setMarketDisabled } from './api.js';
+  import { setMarketDisabled, setUploadDisabled } from './api.js';
   import CountersPanel from './CountersPanel.svelte';
 
   const WIDTH_KEY = 'sidebar-width';
@@ -54,6 +54,7 @@
     DriverHelpURL: '',
     EncryptionStatus: '',
     MarketDisabled: false,
+    UploadDisabled: false,
   });
 
   DashboardService.GetStatus().then((s) => (status = s));
@@ -82,6 +83,17 @@
   function openDriverHelp(e) {
     e.preventDefault();
     Browser.OpenURL(status.DriverHelpURL);
+  }
+
+  async function toggleUpload() {
+    const previous = status.UploadDisabled;
+    status = { ...status, UploadDisabled: !previous };
+    try {
+      await setUploadDisabled(!previous);
+    } catch (e) {
+      console.error('SetUploadDisabled failed:', e);
+      status = { ...status, UploadDisabled: previous };
+    }
   }
 
   async function toggleMarket() {
@@ -126,6 +138,17 @@
       >
         <span class="box">{#if !status.MarketDisabled}<svg viewBox="0 0 9 9" width="9" height="9"><path d="M1 4.5 3.6 7 8 1.6" fill="none" stroke="var(--check-mark)" stroke-width="1.8" /></svg>{/if}</span>
         Parse market data
+      </button>
+
+      <button
+        class="xp-check"
+        onclick={toggleUpload}
+        role="checkbox"
+        aria-checked={!status.UploadDisabled}
+        aria-label="Toggle sending data to servers"
+      >
+        <span class="box">{#if !status.UploadDisabled}<svg viewBox="0 0 9 9" width="9" height="9"><path d="M1 4.5 3.6 7 8 1.6" fill="none" stroke="var(--check-mark)" stroke-width="1.8" /></svg>{/if}</span>
+        Send data to servers
       </button>
     </div>
   </section>

@@ -42,3 +42,17 @@ func TestSendMsgToPublicUploaders_IncrementsCounterByRecordCount(t *testing.T) {
 		t.Fatalf("marketorders.ingest counter = %d, want %d", after, before+50)
 	}
 }
+
+// TestCreateUploaders_ShortTargetsDoNotPanic guards against the panic from
+// slicing target[0:8] on targets shorter than 8 characters, such as the
+// documented "noop" value of the -i and -p flags.
+func TestCreateUploaders_ShortTargetsDoNotPanic(t *testing.T) {
+	for _, target := range []string{"noop", "abc", "http", "nats", "xxxxxxx"} {
+		got := createUploaders([]string{target})
+		if target == "noop" || target == "abc" || target == "xxxxxxx" {
+			if len(got) != 0 {
+				t.Errorf("target %q: got %d uploaders, want 0", target, len(got))
+			}
+		}
+	}
+}

@@ -102,6 +102,11 @@ func (config *config) SetupFlags() {
 	if viper.GetBool("DisableMarket") {
 		config.DisableMarket = true
 	}
+	// config.yaml DisableUpload: true is what the installer writes when the
+	// user opts out of data sending. Same effect as the -d flag.
+	if viper.GetBool("DisableUpload") {
+		config.DisableUpload = true
+	}
 
 	if config.OfflinePath != "" {
 		config.Offline = true
@@ -126,6 +131,12 @@ func (config *config) setupWebsocketFlags() {
 	// Setup the config file and parse values
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
+	// Also look next to the executable: autostart (registry Run key) starts
+	// the client with a different working directory, and the installer
+	// writes config.yaml into the install folder.
+	if exe, exeErr := os.Executable(); exeErr == nil {
+		viper.AddConfigPath(filepath.Dir(exe))
+	}
 	err := viper.ReadInConfig()
 
 	// if we cannot find the configuration file, set Websockets to false
@@ -404,26 +415,36 @@ func (config *config) setupDebugOperations() {
 // PersistDisableMarket writes the DisableMarket setting to config.yaml so
 // the dashboard's market toggle survives a restart. Creates the file if
 // it does not exist yet.
-func PersistDisableMarket(disabled bool) {
-	viper.Set("DisableMarket", disabled)
+func PersistDisableMarket(disabled bool) { persistBool("DisableMarket", disabled) }
+
+// PersistDisableUpload writes the DisableUpload setting to config.yaml so
+// the dashboard's "send data" toggle survives a restart.
+func PersistDisableUpload(disabled bool) { persistBool("DisableUpload", disabled) }
+
+func persistBool(key string, value bool) {
+	viper.Set(key, value)
 
 	path := "config.yaml"
-	line := fmt.Sprintf("DisableMarket: %v", disabled)
+	// Prefer the config file viper actually loaded (it may sit next to the exe).
+	if used := viper.ConfigFileUsed(); used != "" {
+		path = used
+	}
+	line := fmt.Sprintf("%s: %v", key, value)
 
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if err := os.WriteFile(path, []byte(line+"\n"), 0o644); err != nil {
-			log.Errorf("Could not persist DisableMarket: %v", err)
+			log.Errorf("Could not persist %s: %v", key, err)
 			return
 		}
-		log.Infof("Saved DisableMarket=%v to %s", disabled, path)
+		log.Infof("Saved %s=%v to %s", key, value, path)
 		return
 	}
 
 	lines := strings.Split(string(data), "\n")
 	found := false
 	for i, l := range lines {
-		if strings.HasPrefix(strings.TrimSpace(l), "DisableMarket:") {
+		if strings.HasPrefix(strings.TrimSpace(l), key+":") {
 			lines[i] = line
 			found = true
 			break
@@ -433,8 +454,8 @@ func PersistDisableMarket(disabled bool) {
 		lines = append(lines, line)
 	}
 	if err := os.WriteFile(path, []byte(strings.Join(lines, "\n")), 0o644); err != nil {
-		log.Errorf("Could not persist DisableMarket: %v", err)
+		log.Errorf("Could not persist %s: %v", key, err)
 		return
 	}
-	log.Infof("Saved DisableMarket=%v to %s", disabled, path)
+	log.Infof("Saved %s=%v to %s", key, value, path)
 }
