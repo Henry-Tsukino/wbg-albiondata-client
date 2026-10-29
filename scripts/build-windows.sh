@@ -27,9 +27,11 @@ if [ -f scripts/local.env ]; then
   source scripts/local.env
 fi
 
-# Inno Setup compiler path (default for this machine; override with ISCC=... or scripts/local.env).
+# Inno Setup compiler path. Empty by default => find_iscc() below searches the usual
+# places (Windows runner, Wine/PortProton/Bottles prefixes). Do NOT hard-code a
+# machine-specific path here: it breaks CI. Override with ISCC=... or scripts/local.env.
 # Plain assignment on purpose: `set ISCC=...` would overwrite the script arguments.
-ISCC="${ISCC:-/home/pinok/PortProton/prefixes/DEFAULT/drive_c/Inno Setup 7/ISCC.exe}"
+ISCC="${ISCC:-}"
 
 source scripts/version.sh "$@"
 
@@ -50,6 +52,13 @@ go-winres patch --product-version "${APP_VERSION}.0" --file-version "${APP_VERSI
 gzip -9 -c "dist/${APP_BIN}.exe" > dist/update-windows-amd64.exe.gz
 
 # ---- Installer -------------------------------------------------------------
+# SKIP_INSTALLER=1 builds only the exe + update asset (no Inno Setup needed).
+if [ "${SKIP_INSTALLER:-0}" = "1" ]; then
+  echo "==> SKIP_INSTALLER=1: installer step skipped"
+  ls -la dist
+  exit 0
+fi
+
 WINE_BIN="${WINE:-wine}"
 
 find_iscc() {

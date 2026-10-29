@@ -27,3 +27,6 @@ run.sh
 .worktrees/dist/
 frontend/node_modules/
 dist/
+
+scripts/local.env
+npcap-*.exe

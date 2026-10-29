@@ -36,3 +36,14 @@ patchelf --replace-needed libpcap.so.0.8 libpcap.so "dist/${APP_BIN}"
 "./dist/${APP_BIN}" -version
 
 gzip -9 -c "dist/${APP_BIN}" > dist/update-linux-amd64.gz
+
+# ---- GNU-Linux.tar.gz: binary + install.sh + license + instructions ----------
+# (the archive users download from the release page; see installer/linux/)
+stage="$(mktemp -d)"
+cp "dist/${APP_BIN}" "$stage/${APP_BIN}"
+cp LICENSE "$stage/LICENSE.txt"
+cp installer/linux/install.sh "installer/linux/инструкция.md" "$stage/"
+chmod 755 "$stage/${APP_BIN}" "$stage/install.sh"
+tar -C "$stage" -czf dist/GNU-Linux.tar.gz "${APP_BIN}" LICENSE.txt install.sh "инструкция.md"
+rm -rf "$stage"
+ls -la dist

@@ -70,9 +70,23 @@ shipped - see self-update.md for a concrete way this bites.
 `.github/workflows/build.yml` is a `workflow_call` reusable workflow: a
 matrix over `{linux, windows, darwin}`, each leg just running `make
 build-<os>` and uploading whatever that produces as a workflow
-artifact. `test-build.yml` (push/PR) and `release.yml` (on a GitHub
-release being created) both call it - `release.yml` adds a `publish`
-job that downloads the artifacts and attaches them to the release.
+artifact. `test-build.yml` (branch push/PR) and `release.yml` (on a pushed
+`x.y.z` tag) both call it - `release.yml` adds a `publish` job that
+downloads the artifacts and creates the GitHub release (fixed text from
+`.github/release-body.md` + auto-generated notes) with all assets.
+
+## Releasing
+
+```
+git tag 1.5.0 && git push origin 1.5.0     # plain x.y.z, NO leading "v"
+```
+
+CI builds everything and publishes the release by itself. Edit
+`.github/release-body.md` to change the fixed release text. The Windows
+leg installs Inno Setup via choco; `scripts/build-windows.sh` finds
+`ISCC.exe` automatically (never hard-code its path in the script - put a
+machine-specific one in git-ignored `scripts/local.env`). Set
+`SKIP_INSTALLER=1` to build only the exe and update asset.
 
 This exists because the three build paths used to be duplicated almost
 verbatim across two workflow files, and drifted: a fix to

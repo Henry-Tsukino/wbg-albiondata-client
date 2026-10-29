@@ -1,36 +1,53 @@
-# Create a GitHub release whose TAG is the plain version, e.g. 1.5.0
-# (NOT v1.5.0 - the self-updater's semver parsing rejects the "v").
+# Fully automatic release.
+#
+#   git tag 1.5.0 && git push origin 1.5.0
+#
+# builds Linux / Windows (+installer) / macOS, then creates the GitHub release
+# with the fixed text from .github/release-body.md plus auto-generated notes
+# (commits / PRs since the previous release) and attaches every asset.
+#
+# The tag MUST be plain x.y.z (NOT v1.5.0): the self-updater's strict semver
+# parsing rejects a leading "v" (see docs/self-update.md).
+
+name: Release
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   build:
     uses: ./.github/workflows/build.yml
     with:
-      version: ${{ github.event.release.tag_name }}
+      version: ${{ github.ref_name }}
 
   publish:
-    name: Publish release assets
+    name: Create release
     needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v6   # for .github/release-body.md
+
       - uses: actions/download-artifact@v6
         with:
           path: assets
           merge-multiple: true
 
-      - name: Upload assets to the release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release upload "${{ github.event.release.tag_name }}" \
-            assets/update-linux-amd64.gz \
-            assets/update-windows-amd64.exe.gz \
-            assets/update-darwin-amd64.gz \
-            assets/installer-WBG-tool.exe \
-            assets/WBG-albion-data-client-amd64-mac.zip \
-            --repo "${{ github.repository }}" --clobber
+      - name: Create release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: .github/release-body.md
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            assets/update-linux-amd64.gz
+            assets/GNU-Linux.tar.gz
+            assets/update-windows-amd64.exe.gz
+            assets/update-darwin-amd64.gz
+            assets/installer-WBG-tool.exe
+            assets/WBG-albion-data-client-amd64-mac.zip

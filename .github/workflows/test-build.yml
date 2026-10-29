@@ -1,7 +1,8 @@
-# .github/workflows/test-build.yml
+# Test build on every branch push / PR. Tag pushes are handled by release.yml.
 
 on:
   push:
+    branches: ["**"]
   pull_request:
 
 jobs:
