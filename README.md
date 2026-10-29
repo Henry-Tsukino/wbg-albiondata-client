@@ -6,6 +6,8 @@
 
 **Это форк [ao-data/albiondata-client](https://github.com/ao-data/albiondata-client). Для просмотра и использования официального проекта и его кода, пожалуйста, посетите оригинальный репозиторий.**
 
+**Code signing policy:** бесплатная подпись кода — [SignPath.io](https://signpath.io), сертификат — [SignPath Foundation](https://signpath.org) (free code signing provided by SignPath.io, certificate by SignPath Foundation). Подробности: [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md). Политика конфиденциальности (показывается при установке, отправку данных можно отключить): [PRIVACY.md](PRIVACY.md).
+
 **[Детальное описание работы проекта](https://github.com/Henry-Tsukino/wbg-albiondata-client?tab=readme-ov-file#описание-проекта) находится сразу под разделом работы с клиентом(установка/настройка/удаление)**
 
 ## Работа с клиентом

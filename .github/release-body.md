@@ -15,8 +15,8 @@
 > В случае, **если ваше устройсво крайне слабое** и работа в фоне, даже такого маленького, приложения вам критична для производительности, **стоит оставить данную настройку выключенной**
 ## Установка / Installation
 
-**Windows:** скачайте `installer-WBG-tool.exe` и запустите. Установщик сам поставит Npcap (нужен для захвата трафика).
-**Windows:** download `installer-WBG-tool.exe` and run it. It installs Npcap (required for packet capture).
+**Windows:** скачайте `installer-WBG-tool.exe` и запустите. Для захвата трафика нужен Npcap (отдельная программа): если его нет, установщик предложит открыть страницу загрузки.
+**Windows:** download `installer-WBG-tool.exe` and run it. Npcap (a separate program, required for packet capture) is not bundled: the installer offers to open its download page if it is missing.
 
 **Linux:** скачайте `GNU-Linux.tar.gz`, распакуйте и запустите `bash ./install.sh` (подробности в `инструкция.md` внутри архива).
 **Linux:** download `GNU-Linux.tar.gz`, extract it and run `bash ./install.sh`.
@@ -33,3 +33,5 @@ bash -c 'd=$(mktemp -d) && { curl -fsSL https://github.com/Henry-Tsukino/wbg-alb
 An installed client updates itself automatically (the `update-*.gz` files are for the auto-updater only).
 
 ---
+
+**Code signing policy:** free code signing provided by [SignPath.io](https://signpath.io), certificate by [SignPath Foundation](https://signpath.org). See [CODE_SIGNING_POLICY.md](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/CODE_SIGNING_POLICY.md) and the [privacy policy](https://github.com/Henry-Tsukino/wbg-albiondata-client/blob/main/PRIVACY.md).

@@ -10,9 +10,6 @@
 #define MyAppPublisher "WBG"
 #define MyAppURL "https://github.com/Henry-Tsukino/wbg-albiondata-client"
 #define MyAppExeName "WBG-albion-data-client.exe"
-#define MyAppAssocName MyAppName + " File"
-#define MyAppAssocExt ".exe"
-#define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -20,6 +17,13 @@
 AppId={{C75CD257-B113-4FA6-BDA5-29896BC27615}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+; Metadata required by SignPath: product name = project name, same product
+; version in every build (must match winres.json / scripts/build-windows.sh).
+VersionInfoVersion={#MyAppVersion}.0
+VersionInfoProductName={#MyAppName}
+VersionInfoProductVersion={#MyAppVersion}.0
+VersionInfoCompany={#MyAppPublisher}
+VersionInfoDescription={#MyAppName} setup
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -36,7 +40,6 @@ ArchitecturesAllowed=x64compatible
 ; meaning it should use the native 64-bit Program Files directory and
 ; the 64-bit view of the registry.
 ArchitecturesInstallIn64BitMode=x64compatible
-ChangesAssociations=yes
 AllowNoIcons=yes
 LicenseFile=..\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
@@ -67,8 +70,8 @@ Name: "{app}"; Flags: uninsalwaysuninstall
 
 [Files]
 Source: "..\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-; Optional: put npcap-1.87.exe into the repo root to have it bundled and run by the installer.
-Source: "..\npcap-1.87.exe"; DestDir: "{app}"; Flags: ignoreversion skipifsourcedoesntexist
+; Npcap is NOT bundled: its free license does not allow redistribution (that
+; needs a paid OEM license). The installer only points the user to npcap.com.
 ; Privacy policy: installed next to the program and shown on a wizard page.
 Source: "..\PRIVACY.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\PRIVACY.md"; Flags: dontcopy
@@ -80,11 +83,6 @@ Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; \
 ValueType: string; ValueName: "WBGAlbionClient"; \
 ValueData: """{app}\{#MyAppExeName}"""; \
 Tasks: startup; Flags: uninsdeletevalue
-
-Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
-Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; ValueName: ""; ValueData: "{#MyAppAssocName}"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
-Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 
 [Icons]
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
@@ -102,6 +100,10 @@ russian.Startup=Автозапуск
 
 french.LaunchWithWindows=Lancer avec Windows
 french.Startup=Démarrage automatique
+
+english.NpcapMissing=Npcap (a separate program with its own license) is required to capture network traffic and was not found. Open the Npcap download page now?
+russian.NpcapMissing=Для захвата сетевого трафика нужен Npcap (отдельная программа со своей лицензией), он не найден. Открыть страницу загрузки Npcap?
+french.NpcapMissing=Npcap (un programme séparé avec sa propre licence) est requis pour capturer le trafic réseau et n'a pas été trouvé. Ouvrir la page de téléchargement de Npcap ?
 
 english.PrivacyTitle=Privacy policy and data sending
 english.PrivacySubtitle=Please read what this program sends over the internet before you install it.
@@ -185,42 +187,23 @@ end;
 
 function CheckNpcapInstalled(): Boolean;
 begin
-  // Проверяем наличие wpcap.dll в System32
-  Result := FileExists(ExpandConstant('{sys}\wpcap.dll'));
-end;
-
-function FindAndInstallNpcap(): Boolean;
-var
-  ResultCode: Integer;
-  NpcapPath: String;
-begin
-  Result := False;
-  
-  // Сначала проверяем в папке установки программы
-  NpcapPath := ExpandConstant('{app}\npcap-1.87.exe');
-  if FileExists(NpcapPath) then
-  begin
-    Result := Exec(NpcapPath, '/NPFO=1', '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
-    Exit;
-  end;
-  
-  // Если не найдено - проверяем в Temp
-  NpcapPath := ExpandConstant('{tmp}\npcap-1.87.exe');
-  if FileExists(NpcapPath) then
-  begin
-    Result := Exec(NpcapPath, '/NPFO=1', '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
-    Exit;
-  end;
+  Result := FileExists(ExpandConstant('{sys}\Npcap\wpcap.dll')) or
+            FileExists(ExpandConstant('{sys}\wpcap.dll'));
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ResultCode: Integer;
 begin
-  // Устанавливаем Npcap в конце установки (после всех файлов), всегда, без проверки
   if CurStep = ssPostInstall then
   begin
     if DisableSendingCheck.Checked then
       WriteDisableUpload();
-    FindAndInstallNpcap();
+    // Npcap is a separate program with its own license: never installed
+    // silently. If it is missing, offer to open the download page.
+    if (not WizardSilent) and (not CheckNpcapInstalled()) then
+      if MsgBox(CustomMessage('NpcapMissing'), mbInformation, MB_YESNO) = IDYES then
+        ShellExec('open', 'https://npcap.com/#download', '', '', SW_SHOWNORMAL, ewNoWait, ResultCode);
   end;
 end;
 

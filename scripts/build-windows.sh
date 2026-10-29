@@ -35,18 +35,29 @@ ISCC="${ISCC:-}"
 
 source scripts/version.sh "$@"
 
+# PREBUILT_EXE=path: use an already built (and e.g. SignPath-signed) client
+# exe instead of compiling; only the update asset and installer are produced.
+if [ -n "${PREBUILT_EXE:-}" ]; then
+  PREBUILT_TMP="$(mktemp -d)"
+  cp "$PREBUILT_EXE" "$PREBUILT_TMP/${APP_BIN}.exe"
+fi
+
 rm -rf dist rsrc_windows_*
 mkdir -p dist
 
-go install github.com/tc-hib/go-winres@v0.3.1
-export PATH="$PATH:$(go env GOPATH)/bin"
+if [ -n "${PREBUILT_EXE:-}" ]; then
+  cp "$PREBUILT_TMP/${APP_BIN}.exe" "dist/${APP_BIN}.exe"
+else
+  go install github.com/tc-hib/go-winres@v0.3.1
+  export PATH="$PATH:$(go env GOPATH)/bin"
 
-(cd frontend && npm ci && npm run build)
+  (cd frontend && npm ci && npm run build)
 
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "$LDFLAGS" -o "dist/${APP_BIN}.exe" wbg-client.go
+  CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "$LDFLAGS" -o "dist/${APP_BIN}.exe" wbg-client.go
 
-# Icon + version info inside the exe
-go-winres patch --product-version "${APP_VERSION}.0" --file-version "${APP_VERSION}.0" "dist/${APP_BIN}.exe"
+  # Icon + version info inside the exe
+  go-winres patch --product-version "${APP_VERSION}.0" --file-version "${APP_VERSION}.0" "dist/${APP_BIN}.exe"
+fi
 
 # Self-update asset (exact name required by the updater)
 gzip -9 -c "dist/${APP_BIN}.exe" > dist/update-windows-amd64.exe.gz

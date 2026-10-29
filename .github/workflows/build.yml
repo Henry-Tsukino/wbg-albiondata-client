@@ -10,6 +10,11 @@ on:
         type: string
         required: false
         default: "0.0.1"
+      sign:
+        description: "Sign Windows binaries with SignPath (needs the SIGNPATH_* variables and secret)"
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build:
@@ -37,11 +42,18 @@ jobs:
               dist/WBG-albion-data-client
               dist/update-darwin-amd64.gz
               dist/WBG-albion-data-client-amd64-mac.zip
+    permissions:
+      contents: read
+      actions: read   # required by the SignPath action to verify the build origin
     defaults:
       run:
         shell: bash
     env:
       VERSION: ${{ inputs.version }}
+      # Signing is on only for releases, and only when SignPath is configured
+      # (repository variables SIGNPATH_ORGANIZATION_ID / SIGNPATH_PROJECT_SLUG,
+      # secret SIGNPATH_API_TOKEN). Otherwise unsigned builds are produced.
+      SIGN: ${{ inputs.sign && vars.SIGNPATH_ORGANIZATION_ID != '' }}
     steps:
       - uses: actions/checkout@v6
 
@@ -62,24 +74,63 @@ jobs:
         if: matrix.os == 'windows'
         run: choco install innosetup --no-progress -y
 
-      # Bundled into the installer (installer/wbg.iss expects npcap-1.87.exe in the
-      # repo root; if you bump the version, change the name in wbg.iss too).
-      - name: Download Npcap from npcap.com
-        if: matrix.os == 'windows'
-        env:
-          NPCAP_VERSION: "1.87"
-        run: |
-          curl -fL --retry 5 --retry-delay 5 --retry-all-errors \
-            -o "npcap-${NPCAP_VERSION}.exe" \
-            "https://npcap.com/dist/npcap-${NPCAP_VERSION}.exe"
-          size=$(wc -c < "npcap-${NPCAP_VERSION}.exe")
-          echo "npcap-${NPCAP_VERSION}.exe: ${size} bytes"
-          # sanity check: the real installer is ~1.3 MB; a tiny file means an HTML error page
-          [ "$size" -gt 500000 ] || { echo "Npcap download looks broken" >&2; exit 1; }
-          sha256sum "npcap-${NPCAP_VERSION}.exe"
-
       - name: Build
+        if: matrix.os != 'windows' || env.SIGN != 'true'
         run: make build-${{ matrix.os }}
+
+      # ---- Windows with SignPath: sign the exe first, then build the update
+      # asset and installer from the SIGNED exe, then sign the installer.
+      - name: Build Windows exe (unsigned)
+        if: matrix.os == 'windows' && env.SIGN == 'true'
+        run: SKIP_INSTALLER=1 make build-windows
+
+      - name: Upload unsigned exe
+        id: unsigned-exe
+        if: matrix.os == 'windows' && env.SIGN == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: unsigned-exe
+          path: dist/WBG-albion-data-client.exe
+
+      - name: Sign exe with SignPath
+        if: matrix.os == 'windows' && env.SIGN == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: release-signing
+          github-artifact-id: ${{ steps.unsigned-exe.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed-exe
+
+      - name: Build update asset and installer from the signed exe
+        if: matrix.os == 'windows' && env.SIGN == 'true'
+        run: PREBUILT_EXE="signed-exe/WBG-albion-data-client.exe" make build-windows
+
+      - name: Upload unsigned installer
+        id: unsigned-installer
+        if: matrix.os == 'windows' && env.SIGN == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: unsigned-installer
+          path: dist/installer-WBG-tool.exe
+
+      - name: Sign installer with SignPath
+        if: matrix.os == 'windows' && env.SIGN == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: release-signing
+          github-artifact-id: ${{ steps.unsigned-installer.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed-installer
+
+      - name: Use signed installer
+        if: matrix.os == 'windows' && env.SIGN == 'true'
+        run: cp signed-installer/installer-WBG-tool.exe dist/installer-WBG-tool.exe
 
       - name: Vet
         if: matrix.os == 'linux'

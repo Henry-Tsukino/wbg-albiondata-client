@@ -33,7 +33,7 @@ Like any internet connection, every server above can see your IP address. The cl
 
 ## Third parties
 
-The Albion Online Data Project, GitHub and Railway process data on their own terms; please read their privacy policies. The installer can set up Npcap, a separate program with its own license, from npcap.com.
+The Albion Online Data Project, GitHub and Railway process data on their own terms; please read their privacy policies: [Albion Data Project](https://www.albion-online-data.com/), [GitHub](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement), [Railway](https://railway.com/legal/privacy). Packet capture needs Npcap, a separate program with its own license and privacy terms ([npcap.com](https://npcap.com)). It is not bundled; the installer only offers to open its download page.
 
 ## Contact and changes
 
