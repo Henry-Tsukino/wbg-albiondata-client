@@ -15,7 +15,7 @@ WBG Albion Data Client ("the client") is a free, open-source program that runs o
 
 Like any internet connection, every server above can see your IP address. The client uploads no other kinds of data than those listed here.
 
-**What the WBG server is used for and how long data is kept:** **[FILL IN: purpose and retention period]**
+**What the WBG server is used for and how long data is kept:** **Personal data is not stored; it remains only in temporary logs, which the hosting provider keeps for about 14 days. Sensitive personal data (with the exception of a profile name) is neither collected nor stored at all. Other data from games is kept within messages sent by the Discord bot and in its database; this information is anonymous and non-sensitive—for example, details regarding daily in-game events that are the same for everyone.**
 
 ## What stays on your computer
 
@@ -37,4 +37,4 @@ The Albion Online Data Project, GitHub and Railway process data on their own ter
 
 ## Contact and changes
 
-Questions or deletion requests for data on the WBG server: **[FILL IN: contact, e.g. GitHub issues link or Discord]**. Changes to this policy are published in this file; see the git history.
+Questions or deletion requests for data on the WBG server: **contact me via GitHub issues link or Discord**. Changes to this policy are published in this file; see the git history.
